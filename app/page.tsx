@@ -117,7 +117,7 @@ export default function HomePage() {
             style={{ borderColor: 'rgba(212,175,55,0.4)', color: 'var(--amber)', backgroundColor: 'rgba(212,175,55,0.1)' }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" aria-hidden="true" />
-            KKN UGM 2026 · Portal Informasi Digital
+            KKN UNRIYO 2026 · Portal Informasi Digital
           </div>
 
           <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-tight drop-shadow-lg">

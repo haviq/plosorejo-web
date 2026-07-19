@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Galeri KKN 2026',
-  description: 'Dokumentasi foto kegiatan KKN UGM 2026 di Padukuhan Plosorejo.',
+  description: 'Dokumentasi foto kegiatan KKN UNRIYO 2026 di Padukuhan Plosorejo.',
 }
 
 const albums = [
@@ -12,7 +12,7 @@ const albums = [
     tanggal: '1 Juli 2026',
     emoji: '🎉',
     count: 12,
-    deskripsi: 'Upacara penyambutan 12 mahasiswa KKN UGM angkatan 2026 oleh perangkat padukuhan dan warga.',
+    deskripsi: 'Upacara penyambutan 12 mahasiswa KKN UNRIYO angkatan 2026 oleh perangkat padukuhan dan warga.',
     warna: 'var(--amber)',
   },
   {
@@ -93,14 +93,14 @@ export default function GaleriPage() {
           style={{ borderColor: 'var(--border)', color: 'var(--amber)', backgroundColor: 'rgba(245,158,11,0.08)' }}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
-          KKN UGM 2026 · Juli – Agustus
+          KKN UNRIYO 2026 · Juli – Agustus
         </div>
         <h1 className="text-4xl font-black">
           📸 Galeri{' '}
           <span className="gradient-text">Dokumentasi</span>
         </h1>
         <p className="text-gray-400 text-sm max-w-xl">
-          Dokumentasi foto kegiatan KKN UGM angkatan 2026 di Padukuhan Plosorejo
+          Dokumentasi foto kegiatan KKN UNRIYO angkatan 2026 di Padukuhan Plosorejo
           selama masa pengabdian 60 hari.
         </p>
       </section>
@@ -175,9 +175,9 @@ export default function GaleriPage() {
         aria-label="Informasi KKN"
       >
         <p className="text-2xl" aria-hidden="true">🎓</p>
-        <h2 className="font-black text-lg">KKN UGM Angkatan 2026</h2>
+        <h2 className="font-black text-lg">KKN UNRIYO Angkatan 2026</h2>
         <p className="text-sm text-gray-400 max-w-md mx-auto">
-          12 mahasiswa Universitas Gadjah Mada dari berbagai fakultas menjalankan pengabdian
+          12 mahasiswa Universitas Respati Yogyakarta dari berbagai fakultas menjalankan pengabdian
           masyarakat di Padukuhan Plosorejo selama 1 Juli — 31 Agustus 2026.
         </p>
         <div className="flex flex-wrap justify-center gap-2 pt-1">

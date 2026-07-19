@@ -2,7 +2,7 @@
 name: plosorejo-web
 description: "Website Padukuhan Plosorejo — Next.js 16 project conventions, structure, and development workflow."
 version: 1.0.0
-author: KKN UGM Kelompok 1
+author: KKN UNRIYO Unit 9
 license: MIT
 platforms: [linux]
 metadata:
@@ -14,7 +14,7 @@ metadata:
 # Plosorejo Web — Project Skill
 
 Website profil Padukuhan Plosorejo, Umbulharjo, Cangkringan, Sleman.
-Dibuat oleh KKN UGM Kelompok 1 · 2026.
+Dibuat oleh KKN UNRIYO Unit 9 · 2026.
 
 ## Project Info
 

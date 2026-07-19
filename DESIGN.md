@@ -1,7 +1,7 @@
 # DESIGN.md — Website Padukuhan Plosorejo
 
 > Design token reference & visual system for the Plosorejo web project.
-> Generated from PRD v1.0 · KKN UGM Kelompok 1 · 2026
+> Generated from PRD v1.0 · KKN UNRIYO Unit 9 · 2026
 
 ---
 
