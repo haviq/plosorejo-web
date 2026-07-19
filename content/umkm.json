@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "nama": "Koperasi Susu Plosorejo",
+    "pemilik": "Pak Harto Susanto",
+    "jenis": "Koperasi",
+    "produk": "Susu segar, yogurt, keju lokal",
+    "harga": "Rp 8.000/liter",
+    "emoji": "🥛",
+    "jamBuka": "05.00 – 10.00",
+    "whatsapp": "6281234560001",
+    "aktif": true
+  },
+  {
+    "id": 2,
+    "nama": "Warung Bu Siti",
+    "pemilik": "Bu Siti Rahayu",
+    "jenis": "Kuliner",
+    "produk": "Nasi pecel, gudeg, jajanan pasar",
+    "harga": "Rp 10.000 – 25.000",
+    "emoji": "🍽️",
+    "jamBuka": "06.00 – 14.00",
+    "whatsapp": "6281234560002",
+    "aktif": true
+  },
+  {
+    "id": 3,
+    "nama": "Kerajinan Bambu Maju",
+    "pemilik": "Pak Suryono",
+    "jenis": "Kerajinan",
+    "produk": "Anyaman bambu, perabotan, souvenir",
+    "harga": "Rp 25.000 – 500.000",
+    "emoji": "🪴",
+    "jamBuka": "08.00 – 17.00",
+    "whatsapp": "6281234560003",
+    "aktif": true
+  },
+  {
+    "id": 4,
+    "nama": "Tani Organik Lestari",
+    "pemilik": "Bu Rahayu Wulandari",
+    "jenis": "Pertanian",
+    "produk": "Sayuran organik, cabai, tomat, kangkung",
+    "harga": "Rp 5.000 – 20.000/kg",
+    "emoji": "🥬",
+    "jamBuka": "06.00 – 12.00",
+    "whatsapp": "6281234560004",
+    "aktif": true
+  },
+  {
+    "id": 5,
+    "nama": "Bengkel Las Mandiri",
+    "pemilik": "Pak Budi Santoso",
+    "jenis": "Jasa",
+    "produk": "Las listrik, pagar besi, kanopi, tralis",
+    "harga": "Mulai Rp 50.000",
+    "emoji": "🔧",
+    "jamBuka": "08.00 – 17.00",
+    "whatsapp": "6281234560005",
+    "aktif": true
+  },
+  {
+    "id": 6,
+    "nama": "Batik Tulis Nusantara",
+    "pemilik": "Bu Wati Hartono",
+    "jenis": "Kerajinan",
+    "produk": "Batik tulis motif Malang, kemeja, kain",
+    "harga": "Rp 150.000 – 1.200.000",
+    "emoji": "🎨",
+    "jamBuka": "09.00 – 16.00",
+    "whatsapp": "6281234560006",
+    "aktif": true
+  },
+  {
+    "id": 7,
+    "nama": "Usaha Salak Pondoh Prima",
+    "pemilik": "Pak Darmawan",
+    "jenis": "Pertanian",
+    "produk": "Salak pondoh segar, manisan salak, dodol salak",
+    "harga": "Rp 15.000/kg",
+    "emoji": "🍈",
+    "jamBuka": "07.00 – 18.00",
+    "whatsapp": "6281234560007",
+    "aktif": true
+  },
+  {
+    "id": 8,
+    "nama": "Konveksi Jahit Jaya",
+    "pemilik": "Bu Sulastri",
+    "jenis": "Jasa",
+    "produk": "Jahit seragam, alterasi baju, bordir custom",
+    "harga": "Mulai Rp 30.000",
+    "emoji": "🧵",
+    "jamBuka": "08.00 – 16.00",
+    "whatsapp": "6281234560008",
+    "aktif": true
+  }
+]

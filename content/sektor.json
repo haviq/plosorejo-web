@@ -1,0 +1,128 @@
+{
+  "peternakan": {
+    "nama": "Peternakan",
+    "deskripsi": "Padukuhan Plosorejo dikenal sebagai sentra sapi perah terbesar di Kecamatan Gondanglegi. Dengan ratusan ekor sapi Friesian Holstein, padukuhan ini menyuplai susu segar ke koperasi dan industri pengolahan susu regional.",
+    "icon": "🐄",
+    "stats": [
+      { "label": "Sapi Perah", "value": "312 ekor" },
+      { "label": "Produksi/Hari", "value": "2,8 ton" },
+      { "label": "Peternak Aktif", "value": "47 KK" },
+      { "label": "Grade Susu", "value": "A" }
+    ],
+    "items": [
+      "Sapi Friesian Holstein (FH) lokal",
+      "Sapi FH impor Australia",
+      "Kerbau perah lokal",
+      "Kambing Peranakan Etawah"
+    ]
+  },
+  "pertanian": {
+    "nama": "Pertanian",
+    "deskripsi": "Lahan pertanian Padukuhan Plosorejo dimanfaatkan untuk budidaya padi, salak pondoh, cabai merah, dan berbagai sayuran organik. Sistem irigasi terpadu mendukung dua kali panen padi per tahun.",
+    "icon": "🌾",
+    "stats": [
+      { "label": "Lahan Pertanian", "value": "87 ha" },
+      { "label": "Panen Padi/Musim", "value": "6,2 t/ha" },
+      { "label": "Petani Aktif", "value": "124 KK" },
+      { "label": "Komoditas", "value": "8 jenis" }
+    ],
+    "items": [
+      "Padi IR64 & Ciherang",
+      "Salak Pondoh",
+      "Cabai Merah Keriting",
+      "Jagung Hibrida",
+      "Kedelai Edamame",
+      "Sayuran Organik"
+    ]
+  },
+  "pariwisata": {
+    "nama": "Pariwisata",
+    "deskripsi": "Padukuhan Plosorejo menawarkan wisata alam, budaya, dan agrowisata yang menarik. Pemandangan Gunung Semeru dan Bromo dari lahan pertanian menjadi daya tarik utama wisatawan.",
+    "icon": "🏔️",
+    "stats": [
+      { "label": "Destinasi Wisata", "value": "3 lokasi" },
+      { "label": "Pengunjung/Bulan", "value": "~500 org" },
+      { "label": "Penginapan", "value": "4 homestay" },
+      { "label": "Pemandu Lokal", "value": "8 orang" }
+    ],
+    "items": [
+      "Agrowisata Kebun Salak",
+      "Wisata Edukasi Peternakan Sapi",
+      "Trekking Perbukitan Plosorejo"
+    ]
+  },
+  "pendidikan": {
+    "nama": "Pendidikan",
+    "deskripsi": "Padukuhan Plosorejo memiliki fasilitas pendidikan lengkap dari PAUD hingga SMA. Program beasiswa rutin diberikan kepada siswa berprestasi dari keluarga kurang mampu untuk mendorong angka partisipasi sekolah.",
+    "icon": "🎓",
+    "stats": [
+      { "label": "Lembaga Pendidikan", "value": "6 unit" },
+      { "label": "Siswa Aktif", "value": "842 siswa" },
+      { "label": "Penerima Beasiswa", "value": "10/tahun" },
+      { "label": "Tingkat Melek Huruf", "value": "98,7%" }
+    ],
+    "items": [
+      "PAUD Tunas Bangsa",
+      "TK Aisyiyah Plosorejo",
+      "SDN Plosorejo 1",
+      "SDN Plosorejo 2",
+      "SMP Negeri 2 Gondanglegi",
+      "SMA Negeri 1 Gondanglegi"
+    ]
+  },
+  "kesehatan": {
+    "nama": "Kesehatan",
+    "deskripsi": "Layanan kesehatan Padukuhan Plosorejo didukung oleh Posyandu aktif, bidan desa, dan akses mudah ke Puskesmas Gondanglegi. Program imunisasi dan kesehatan ibu-anak berjalan konsisten setiap bulan.",
+    "icon": "🏥",
+    "stats": [
+      { "label": "Posyandu Aktif", "value": "4 pos" },
+      { "label": "Balita Dipantau", "value": "143 anak" },
+      { "label": "Status Gizi Baik", "value": "98%" },
+      { "label": "Kader Posyandu", "value": "20 orang" }
+    ],
+    "items": [
+      "Posyandu Balita RT 01-04",
+      "Posyandu Lansia",
+      "Bidan Desa Plosorejo",
+      "Puskesmas Gondanglegi (2 km)"
+    ]
+  },
+  "budaya": {
+    "nama": "Budaya",
+    "deskripsi": "Warisan budaya Padukuhan Plosorejo kaya akan tradisi adat, kesenian lokal, dan ritual leluhur. Festival budaya tahunan menjadi ajang pelestarian dan promosi kekayaan budaya desa kepada masyarakat luas.",
+    "icon": "🎭",
+    "stats": [
+      { "label": "Kelompok Seni", "value": "8 grup" },
+      { "label": "Ritual Tahunan", "value": "4 acara" },
+      { "label": "Pengunjung Festival", "value": "2.000+" },
+      { "label": "Seniman Aktif", "value": "65 orang" }
+    ],
+    "items": [
+      "Tari Topeng Malang",
+      "Wayang Kulit",
+      "Karawitan Gamelan",
+      "Ludruk",
+      "Bersih Desa (Ritual Tahunan)",
+      "Maulid Nabi Tradisional"
+    ]
+  },
+  "umkm": {
+    "nama": "UMKM",
+    "deskripsi": "Sektor UMKM Padukuhan Plosorejo tumbuh pesat dengan berbagai usaha di bidang kuliner, kerajinan, pertanian, dan jasa. Koperasi desa memfasilitasi akses modal dan pemasaran bagi pelaku UMKM.",
+    "icon": "🏪",
+    "stats": [
+      { "label": "UMKM Aktif", "value": "89 usaha" },
+      { "label": "Tenaga Kerja", "value": "210 orang" },
+      { "label": "Omzet/Bulan", "value": "±Rp 180 jt" },
+      { "label": "Ekspor Produk", "value": "3 item" }
+    ],
+    "items": [
+      "Kuliner & Warung Makan",
+      "Kerajinan Bambu & Rotan",
+      "Batik Tulis Motif Malang",
+      "Olahan Hasil Ternak",
+      "Jasa & Bengkel",
+      "Agribisnis & Pertanian"
+    ]
+  }
+}
