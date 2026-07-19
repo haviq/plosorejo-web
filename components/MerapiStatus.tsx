@@ -30,7 +30,7 @@ export default function MerapiStatus() {
       className="rounded-xl border p-4 flex items-center gap-4"
       style={{ backgroundColor: cfg.bg, borderColor: 'var(--border)' }}
       role="status"
-      aria-label={`Status Gunung Semeru: ${level}`}
+      aria-label={`Status Gunung Merapi: ${level}`}
     >
       {/* Volcano icon */}
       <span className="text-2xl flex-shrink-0" aria-hidden="true">🌋</span>
@@ -38,7 +38,7 @@ export default function MerapiStatus() {
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
           <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">
-            Status Gunung Semeru
+            Status Gunung Merapi
           </span>
           <span
             className="flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full"

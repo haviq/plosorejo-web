@@ -34,7 +34,7 @@ const destinasi = [
     nama: 'Trekking Perbukitan Plosorejo',
     emoji: '🏔️',
     deskripsi:
-      'Jalur trekking ringan hingga sedang melalui perbukitan hijau dengan pemandangan Gunung Semeru dan hamparan sawah. Rute tersedia untuk pemula (2 km) dan menengah (5 km), dengan pemandu lokal berpengalaman.',
+      'Jalur trekking ringan hingga sedang melalui perbukitan hijau dengan pemandangan Gunung Merapi dan hamparan sawah. Rute tersedia untuk pemula (2 km) dan menengah (5 km), dengan pemandu lokal berpengalaman.',
     tiket: 'Rp 50.000/orang',
     jamBuka: '05.30 – 12.00',
     fasilitas: ['Pemandu trekking', 'Titik panorama', 'Warung transit', 'P3K'],

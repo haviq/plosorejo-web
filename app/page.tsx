@@ -92,45 +92,78 @@ export default function HomePage() {
     <div className="max-w-6xl mx-auto px-4 py-12 space-y-20">
 
       {/* ── Hero ── */}
-      <section className="text-center space-y-6 py-8">
+      <section className="relative -mx-4 -mt-12 mb-4 min-h-[92vh] flex items-center justify-center overflow-hidden">
+        {/* Background image — Gunung Merapi lereng */}
         <div
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border"
-          style={{ borderColor: 'var(--border)', color: 'var(--amber)', backgroundColor: 'rgba(245,158,11,0.08)' }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" aria-hidden="true" />
-          KKN UGM 2026 · Portal Informasi Digital
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80')",
+          }}
+          aria-hidden="true"
+        />
+        {/* Dark overlay gradient */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(to bottom, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.75) 60%, rgba(8,8,8,1) 100%)',
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Hero content */}
+        <div className="relative z-10 text-center space-y-6 px-4 max-w-4xl mx-auto py-24">
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border backdrop-blur-sm"
+            style={{ borderColor: 'rgba(212,175,55,0.4)', color: 'var(--amber)', backgroundColor: 'rgba(212,175,55,0.1)' }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" aria-hidden="true" />
+            KKN UGM 2026 · Portal Informasi Digital
+          </div>
+
+          <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-tight drop-shadow-lg">
+            Padukuhan{' '}
+            <span className="gradient-text">Plosorejo</span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-xl mx-auto drop-shadow">
+            Umbulharjo · Cangkringan · Sleman · DIY<br />
+            <span className="text-gray-400 text-sm">Sentra sapi perah di kaki Gunung Merapi</span>
+          </p>
+
+          {/* Merapi status widget */}
+          <div className="max-w-md mx-auto">
+            <MerapiStatus />
+          </div>
+
+          <div className="flex flex-wrap gap-3 justify-center pt-2">
+            <Link
+              href="/profil"
+              className="px-6 py-3 rounded-lg font-semibold text-sm text-black transition-opacity hover:opacity-85 shadow-lg"
+              style={{ background: 'var(--gradient)' }}
+            >
+              Lihat Profil Desa
+            </Link>
+            <Link
+              href="/sektor/peternakan"
+              className="px-6 py-3 rounded-lg font-semibold text-sm border backdrop-blur-sm transition-colors hover:bg-white/10 text-gray-200"
+              style={{ borderColor: 'rgba(255,255,255,0.25)' }}
+            >
+              🐄 Sentra Sapi Perah
+            </Link>
+            <Link
+              href="/berita"
+              className="px-6 py-3 rounded-lg font-semibold text-sm border backdrop-blur-sm transition-colors hover:bg-white/10 text-gray-200"
+              style={{ borderColor: 'rgba(255,255,255,0.25)' }}
+            >
+              Baca Berita
+            </Link>
+          </div>
         </div>
 
-        <h1 className="text-5xl sm:text-6xl font-black tracking-tight leading-tight">
-          Selamat Datang di{' '}
-          <span className="gradient-text">Desa Plosorejo</span>
-        </h1>
-
-        <p className="max-w-xl mx-auto text-gray-400 leading-relaxed">
-          Portal digital resmi Padukuhan Plosorejo, Kapanewon Cangkringan, Kabupaten Sleman.
-          Informasi terpadu tentang warga, UMKM, pertanian, peternakan, dan layanan desa.
-        </p>
-
-        {/* Merapi/Semeru status widget */}
-        <div className="max-w-md mx-auto">
-          <MerapiStatus />
-        </div>
-
-        <div className="flex flex-wrap gap-3 justify-center">
-          <Link
-            href="/profil"
-            className="px-5 py-2.5 rounded-lg font-semibold text-sm text-black transition-opacity hover:opacity-85"
-            style={{ background: 'var(--gradient)' }}
-          >
-            Lihat Profil Desa
-          </Link>
-          <Link
-            href="/berita"
-            className="px-5 py-2.5 rounded-lg font-semibold text-sm border transition-colors hover:border-gray-500 hover:text-white text-gray-400"
-            style={{ borderColor: 'var(--border)' }}
-          >
-            Baca Berita
-          </Link>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-gray-500">
+          <span className="text-xs">Scroll</span>
+          <span className="animate-bounce text-lg">↓</span>
         </div>
       </section>
 
