@@ -1,56 +1,82 @@
 @import 'tailwindcss';
 
 @theme inline {
-  /* Design system tokens */
-  --color-bg:     #0e0e0e;
-  --color-s1:     #141414;
-  --color-s2:     #1c1c1c;
-  --color-border: #242424;
-  --color-amber:  #f59e0b;
-  --color-green:  #22c55e;
+  /* Design system tokens — Desa Digital */
+  --color-bg:          #050505;
+  --color-s1:          #0d0d0d;
+  --color-s2:          #141414;
+  --color-border:      #1f1f1f;
+  --color-gold:        #d4af37;
+  --color-gold-dim:    #a08828;
+  --color-green:       #22c55e;
+  --color-text:        #f0ead6;
+  --color-muted:       #6b7280;
 
   /* Typography */
-  --font-sans: var(--font-inter);
+  --font-sans:    var(--font-inter);
+  --font-display: var(--font-playfair);
 }
 
 :root {
-  --bg:     #0e0e0e;
-  --s1:     #141414;
-  --s2:     #1c1c1c;
-  --border: #242424;
-  --amber:  #f59e0b;
-  --green:  #22c55e;
-  --gradient: linear-gradient(135deg, #f59e0b, #22c55e);
+  --bg:        #050505;
+  --s1:        #0d0d0d;
+  --s2:        #141414;
+  --border:    #1f1f1f;
+  --gold:      #d4af37;
+  --gold-dim:  #a08828;
+  --gold-glow: rgba(212, 175, 55, 0.12);
+  --green:     #22c55e;
+  --text:      #f0ead6;
+  --muted:     #6b7280;
 }
 
 html {
   background-color: var(--bg);
-  color: #e5e7eb;
+  color: var(--text);
   scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--bg);
-  color: #e5e7eb;
+  color: var(--text);
   min-height: 100vh;
 }
 
-/* Gradient text utility */
-.gradient-text {
-  background: var(--gradient);
+/* Gold gradient text */
+.gold-text {
+  background: linear-gradient(135deg, #d4af37, #f0c040);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Gradient border utility */
-.gradient-border {
-  position: relative;
-  border: 1px solid var(--border);
+/* Glassmorphism panel */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Legacy gradient text — kept for backward compat */
+.gradient-text {
+  background: linear-gradient(135deg, #d4af37, #f0c040);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--s1); }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--amber); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+/* Section label utility */
+.section-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}

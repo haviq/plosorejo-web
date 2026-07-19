@@ -3,21 +3,15 @@ import Link from 'next/link'
 import SektorCard from '@/components/SektorCard'
 import BeritaCard from '@/components/BeritaCard'
 import MerapiStatus from '@/components/MerapiStatus'
+import StatsBar from '@/components/StatsBar'
 import beritaData from '@/content/berita.json'
 import sektorData from '@/content/sektor.json'
 
 export const metadata: Metadata = {
   title: 'Beranda',
-  description: 'Portal digital Desa Plosorejo — data produksi susu, peta wilayah, dan layanan UMKM.',
+  description:
+    'Portal digital Padukuhan Plosorejo — sentra sapi perah, UMKM, dan pariwisata lereng Merapi, Cangkringan, Sleman.',
 }
-
-const stats = [
-  { label: 'Penduduk',      value: '4.821', unit: 'jiwa' },
-  { label: 'KK',            value: '1.347', unit: 'kepala keluarga' },
-  { label: 'Produksi Susu', value: '2,8 t', unit: 'per hari' },
-  { label: 'UMKM Aktif',    value: '89',    unit: 'usaha' },
-  { label: 'Luas Wilayah',  value: '12,6',  unit: 'km²' },
-]
 
 const sektorCards = [
   {
@@ -78,207 +72,422 @@ const sektorCards = [
   },
 ]
 
-const quickLinks = [
-  { href: '/susu',   emoji: '🥛', title: 'Produksi Susu',  desc: 'Dashboard data harian & bulanan',   accent: 'var(--amber)' },
-  { href: '/peta',   emoji: '🗺️', title: 'Peta Desa',      desc: 'Visualisasi interaktif wilayah',    accent: 'var(--green)' },
-  { href: '/galeri', emoji: '📸', title: 'Galeri KKN 2026', desc: 'Dokumentasi kegiatan pengabdian',  accent: '#818cf8' },
-  { href: '/kontak', emoji: '📬', title: 'Kontak',          desc: 'Hubungi perangkat padukuhan',      accent: '#34d399' },
+const potensiCards = [
+  {
+    href: '/sektor/peternakan',
+    emoji: '🐄',
+    kategori: 'Peternakan',
+    headline: '1.240 L/hari',
+    sub: 'Produksi susu segar Grade A',
+    img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=800&q=80',
+    imgAlt: 'Sapi perah Friesian Holstein',
+  },
+  {
+    href: '/sektor/umkm',
+    emoji: '🏪',
+    kategori: 'UMKM',
+    headline: '89 Usaha Aktif',
+    sub: 'Kuliner, kerajinan, & agribisnis',
+    img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80',
+    imgAlt: 'Pasar dan produk UMKM lokal',
+  },
+  {
+    href: '/sektor/pariwisata',
+    emoji: '🏔️',
+    kategori: 'Pariwisata',
+    headline: '3 Destinasi',
+    sub: 'Agrowisata & trekking Merapi',
+    img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    imgAlt: 'Pemandangan alam lereng Merapi',
+  },
 ]
 
 export default function HomePage() {
-  const latestBerita = beritaData.slice(0, 3)
-
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-20">
+    <div style={{ backgroundColor: 'var(--bg)' }}>
 
-      {/* ── Hero ── */}
-      <section className="relative -mx-4 -mt-12 mb-4 min-h-[92vh] flex items-center justify-center overflow-hidden">
-        {/* Background image — Gunung Merapi lereng */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80')",
-          }}
-          aria-hidden="true"
+      {/* ─── HERO ──────────────────────────────────────────────────────── */}
+      <section
+        className="relative min-h-screen flex flex-col justify-center items-center text-center overflow-hidden"
+        aria-label="Hero — Padukuhan Plosorejo"
+      >
+        {/* Background image */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=90"
+          alt="Pemandangan lereng Gunung Merapi"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+          fetchPriority="high"
         />
-        {/* Dark overlay gradient */}
+
+        {/* Layered overlays for dramatic depth */}
         <div
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(to bottom, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.75) 60%, rgba(8,8,8,1) 100%)',
+            zIndex: 1,
+            background:
+              'linear-gradient(to bottom, rgba(5,5,5,0.55) 0%, rgba(5,5,5,0.3) 40%, rgba(5,5,5,0.75) 75%, rgba(5,5,5,1) 100%)',
           }}
-          aria-hidden="true"
+        />
+        {/* Subtle vignette sides */}
+        <div
+          className="absolute inset-0"
+          style={{
+            zIndex: 2,
+            background:
+              'radial-gradient(ellipse at center, transparent 50%, rgba(5,5,5,0.6) 100%)',
+          }}
         />
 
         {/* Hero content */}
-        <div className="relative z-10 text-center space-y-6 px-4 max-w-4xl mx-auto py-24">
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium border backdrop-blur-sm"
-            style={{ borderColor: 'rgba(212,175,55,0.4)', color: 'var(--amber)', backgroundColor: 'rgba(212,175,55,0.1)' }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" aria-hidden="true" />
-            KKN UNRIYO 2026 · Portal Informasi Digital
-          </div>
+        <div className="relative px-6 max-w-4xl mx-auto flex flex-col items-center gap-6" style={{ zIndex: 3 }}>
 
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-tight drop-shadow-lg">
-            Padukuhan{' '}
-            <span className="gradient-text">Plosorejo</span>
+          {/* Location label */}
+          <p
+            className="section-label"
+            style={{ letterSpacing: '0.25em' }}
+          >
+            Padukuhan Plosorejo · Cangkringan · Sleman
+          </p>
+
+          {/* Main headline */}
+          <h1
+            className="leading-tight font-black"
+            style={{
+              fontFamily: 'var(--font-playfair), Georgia, serif',
+              fontSize: 'clamp(3rem, 8vw, 5.5rem)',
+              color: 'var(--text)',
+            }}
+          >
+            Desa yang Hidup,
+            <br />
+            <span className="gold-text">Potensi yang Nyata</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-xl mx-auto drop-shadow">
-            Umbulharjo · Cangkringan · Sleman · DIY<br />
-            <span className="text-gray-400 text-sm">Sentra sapi perah di kaki Gunung Merapi</span>
+          {/* Address */}
+          <p
+            className="text-sm md:text-base"
+            style={{ color: 'var(--muted)', letterSpacing: '0.03em' }}
+          >
+            Jl. Balong, Umbulharjo, Cangkringan, Sleman, DIY 55583
           </p>
 
           {/* Merapi status widget */}
-          <div className="max-w-md mx-auto">
+          <div className="w-full max-w-sm">
             <MerapiStatus />
           </div>
 
-          <div className="flex flex-wrap gap-3 justify-center pt-2">
+          {/* CTAs */}
+          <div className="flex flex-wrap justify-center gap-4 mt-2">
             <Link
               href="/profil"
-              className="px-6 py-3 rounded-lg font-semibold text-sm text-black transition-opacity hover:opacity-85 shadow-lg"
-              style={{ background: 'var(--gradient)' }}
+              className="px-7 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-105 hover:brightness-110"
+              style={{
+                backgroundColor: 'var(--gold)',
+                color: '#050505',
+                boxShadow: '0 0 24px rgba(212,175,55,0.35)',
+              }}
             >
-              Lihat Profil Desa
+              Jelajahi Padukuhan
             </Link>
             <Link
-              href="/sektor/peternakan"
-              className="px-6 py-3 rounded-lg font-semibold text-sm border backdrop-blur-sm transition-colors hover:bg-white/10 text-gray-200"
-              style={{ borderColor: 'rgba(255,255,255,0.25)' }}
+              href="/peta"
+              className="px-7 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-105"
+              style={{
+                border: '1px solid var(--gold)',
+                color: 'var(--gold)',
+                background: 'rgba(212,175,55,0.05)',
+              }}
             >
-              🐄 Sentra Sapi Perah
-            </Link>
-            <Link
-              href="/berita"
-              className="px-6 py-3 rounded-lg font-semibold text-sm border backdrop-blur-sm transition-colors hover:bg-white/10 text-gray-200"
-              style={{ borderColor: 'rgba(255,255,255,0.25)' }}
-            >
-              Baca Berita
+              Lihat Peta
             </Link>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1 text-gray-500">
-          <span className="text-xs">Scroll</span>
-          <span className="animate-bounce text-lg">↓</span>
-        </div>
-      </section>
-
-      {/* ── Statistik ── */}
-      <section aria-label="Statistik padukuhan">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-5 text-center">
-          Padukuhan dalam Angka
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
-          {stats.map(({ label, value, unit }) => (
-            <div
-              key={label}
-              className="rounded-xl border p-4 text-center"
-              style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-            >
-              <p className="text-2xl font-black gradient-text tabular-nums">{value}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{unit}</p>
-              <p className="text-xs text-gray-600 mt-0.5">{label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Quick links ── */}
-      <section aria-label="Akses cepat">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-5">
-          Akses Cepat
-        </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {quickLinks.map(({ href, emoji, title, desc, accent }) => (
-            <Link
-              key={href}
-              href={href}
-              className="rounded-xl border p-5 flex flex-col gap-3 hover:border-gray-600 transition-colors group"
-              style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-            >
-              <span
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-                style={{ backgroundColor: `${accent}18` }}
-                aria-hidden="true"
-              >
-                {emoji}
-              </span>
-              <div>
-                <p className="font-bold text-white group-hover:underline underline-offset-2">{title}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Sektor Unggulan ── */}
-      <section aria-label="Sektor unggulan padukuhan">
-        <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
-          <h2 className="text-2xl font-black">
-            Sektor <span className="gradient-text">Unggulan</span>
-          </h2>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sektorCards.map((s) => (
-            <SektorCard key={s.href} {...s} />
-          ))}
-        </div>
-      </section>
-
-      {/* ── Berita Terbaru ── */}
-      <section aria-label="Berita terbaru">
-        <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
-          <h2 className="text-2xl font-black">
-            Berita <span className="gradient-text">Terbaru</span>
-          </h2>
-          <Link
-            href="/berita"
-            className="text-sm font-medium transition-colors hover:text-white"
-            style={{ color: 'var(--amber)' }}
-          >
-            Lihat semua →
-          </Link>
-        </div>
-        <div className="grid sm:grid-cols-3 gap-5">
-          {latestBerita.map((b) => (
-            <BeritaCard
-              key={b.slug}
-              slug={b.slug}
-              judul={b.judul}
-              tanggal={b.tanggal}
-              kategori={b.kategori}
-              ringkasan={b.ringkasan}
-            />
-          ))}
-        </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section
-        className="rounded-2xl p-10 text-center space-y-4 border"
-        style={{ background: 'linear-gradient(135deg, rgba(245,158,11,0.08), rgba(34,197,94,0.08))', borderColor: 'var(--border)' }}
-        aria-label="Ajakan bergabung"
-      >
-        <h2 className="text-2xl font-black">
-          Punya usaha di Plosorejo?{' '}
-          <span className="gradient-text">Daftarkan sekarang.</span>
-        </h2>
-        <p className="text-gray-400 max-w-md mx-auto text-sm">
-          Tingkatkan visibilitas usaha Anda dan jangkau lebih banyak pelanggan
-          melalui portal desa Plosorejo.
-        </p>
-        <Link
-          href="/sektor/umkm"
-          className="inline-block px-6 py-3 rounded-lg font-semibold text-sm text-black transition-opacity hover:opacity-90"
-          style={{ background: 'var(--gradient)' }}
+        <div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+          style={{ zIndex: 3 }}
+          aria-hidden="true"
         >
-          Lihat Katalog UMKM
-        </Link>
+          <span className="text-xs tracking-widest uppercase" style={{ color: 'var(--muted)' }}>
+            Scroll
+          </span>
+          <div
+            className="w-px h-8 animate-pulse"
+            style={{ backgroundColor: 'var(--gold-dim)' }}
+          />
+        </div>
+      </section>
+
+      {/* ─── STATS BAR ─────────────────────────────────────────────────── */}
+      <StatsBar />
+
+      {/* ─── POTENSI UNGGULAN ──────────────────────────────────────────── */}
+      <section
+        className="py-24 px-6"
+        aria-labelledby="potensi-heading"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-12">
+            <p className="section-label mb-3">Potensi Unggulan</p>
+            <h2
+              id="potensi-heading"
+              className="font-bold text-3xl md:text-4xl"
+              style={{
+                fontFamily: 'var(--font-playfair), Georgia, serif',
+                color: 'var(--text)',
+              }}
+            >
+              Kekuatan Plosorejo
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {potensiCards.map((card) => (
+              <Link
+                key={card.href}
+                href={card.href}
+                className="group relative rounded-2xl overflow-hidden block"
+                style={{ aspectRatio: '4/5' }}
+                aria-label={`${card.kategori}: ${card.headline}`}
+              >
+                {/* Photo background */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={card.img}
+                  alt={card.imgAlt}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+
+                {/* Gradient overlay */}
+                <div
+                  className="absolute inset-0 transition-opacity duration-300"
+                  style={{
+                    background:
+                      'linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.5) 50%, rgba(5,5,5,0.15) 100%)',
+                  }}
+                />
+
+                {/* Gold glow on hover */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: 'linear-gradient(to top, rgba(212,175,55,0.12) 0%, transparent 60%)',
+                  }}
+                />
+
+                {/* Card content */}
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-lg" aria-hidden="true">{card.emoji}</span>
+                    <span className="section-label">{card.kategori}</span>
+                  </div>
+                  <p
+                    className="font-black text-2xl mb-1 transition-transform duration-300 group-hover:-translate-y-1"
+                    style={{
+                      fontFamily: 'var(--font-playfair), Georgia, serif',
+                      color: 'var(--text)',
+                    }}
+                  >
+                    {card.headline}
+                  </p>
+                  <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                    {card.sub}
+                  </p>
+                  <div
+                    className="mt-4 flex items-center gap-1 text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    Selengkapnya
+                    <span aria-hidden="true">→</span>
+                  </div>
+                </div>
+
+                {/* Corner border accent */}
+                <div
+                  className="absolute top-4 right-4 w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    borderTop: '1.5px solid var(--gold)',
+                    borderRight: '1.5px solid var(--gold)',
+                  }}
+                  aria-hidden="true"
+                />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── SEKTOR GRID ───────────────────────────────────────────────── */}
+      <section
+        className="py-24 px-6"
+        style={{ backgroundColor: 'var(--s1)' }}
+        aria-labelledby="sektor-heading"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-12">
+            <p className="section-label mb-3">Sektor Padukuhan</p>
+            <h2
+              id="sektor-heading"
+              className="font-bold text-3xl md:text-4xl"
+              style={{
+                fontFamily: 'var(--font-playfair), Georgia, serif',
+                color: 'var(--text)',
+              }}
+            >
+              7 Sektor Kehidupan
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {sektorCards.map((card) => (
+              <SektorCard key={card.href} {...card} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── BERITA TERBARU ────────────────────────────────────────────── */}
+      <section
+        className="py-24 px-6"
+        aria-labelledby="berita-heading"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <p className="section-label mb-3">Kabar Padukuhan</p>
+              <h2
+                id="berita-heading"
+                className="font-bold text-3xl md:text-4xl"
+                style={{
+                  fontFamily: 'var(--font-playfair), Georgia, serif',
+                  color: 'var(--text)',
+                }}
+              >
+                Berita Terbaru
+              </h2>
+            </div>
+            <Link
+              href="/berita"
+              className="text-sm font-medium transition-colors hidden sm:flex items-center gap-1"
+              style={{ color: 'var(--gold)' }}
+            >
+              Lihat Semua
+              <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(beritaData as Array<{
+              slug: string
+              judul: string
+              tanggal: string
+              kategori: string
+              ringkasan: string
+            }>)
+              .slice(0, 3)
+              .map((item) => (
+                <BeritaCard
+                  key={item.slug}
+                  slug={item.slug}
+                  judul={item.judul}
+                  tanggal={item.tanggal}
+                  kategori={item.kategori}
+                  ringkasan={item.ringkasan}
+                />
+              ))}
+          </div>
+
+          <div className="mt-8 sm:hidden text-center">
+            <Link
+              href="/berita"
+              className="text-sm font-medium"
+              style={{ color: 'var(--gold)' }}
+            >
+              Lihat Semua Berita →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA SECTION ───────────────────────────────────────────────── */}
+      <section
+        className="relative py-32 px-6 overflow-hidden text-center"
+        aria-label="Daftarkan UMKM Anda"
+      >
+        {/* Background photo */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80"
+          alt="Ladang sawah hijau subur"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ zIndex: 0 }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            zIndex: 1,
+            background: 'rgba(5,5,5,0.82)',
+          }}
+        />
+        {/* Gold radial glow */}
+        <div
+          className="absolute inset-0"
+          style={{
+            zIndex: 2,
+            background: 'radial-gradient(ellipse 60% 50% at 50% 100%, rgba(212,175,55,0.1) 0%, transparent 70%)',
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="relative max-w-2xl mx-auto" style={{ zIndex: 3 }}>
+          <p className="section-label mb-4">Bergabung</p>
+          <h2
+            className="font-black mb-4"
+            style={{
+              fontFamily: 'var(--font-playfair), Georgia, serif',
+              fontSize: 'clamp(2rem, 5vw, 3.25rem)',
+              color: 'var(--text)',
+              lineHeight: 1.2,
+            }}
+          >
+            Punya usaha di{' '}
+            <span className="gold-text">Plosorejo?</span>
+          </h2>
+          <p
+            className="text-base mb-8 max-w-md mx-auto leading-relaxed"
+            style={{ color: 'var(--muted)' }}
+          >
+            Daftarkan usaha Anda ke direktori digital Padukuhan Plosorejo.
+            Jangkau lebih banyak pelanggan dan akses program pemberdayaan UMKM.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              href="/sektor/umkm"
+              className="px-8 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-105 hover:brightness-110"
+              style={{
+                backgroundColor: 'var(--gold)',
+                color: '#050505',
+                boxShadow: '0 0 32px rgba(212,175,55,0.3)',
+              }}
+            >
+              Daftar UMKM
+            </Link>
+            <Link
+              href="/kontak"
+              className="px-8 py-3 rounded-xl font-semibold text-sm transition-all hover:scale-105"
+              style={{
+                border: '1px solid var(--border)',
+                color: 'var(--text)',
+                background: 'rgba(255,255,255,0.04)',
+              }}
+            >
+              Hubungi Kami
+            </Link>
+          </div>
+        </div>
       </section>
 
     </div>
