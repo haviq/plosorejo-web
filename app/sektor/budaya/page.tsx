@@ -11,9 +11,9 @@ const sektor = sektorData.budaya
 
 const kesenian = [
   {
-    nama: 'Tari Topeng Malang',
+    nama: 'Jathilan',
     kategori: 'Tari Tradisional',
-    deskripsi: 'Tari topeng khas Malang dengan kostum dan topeng berwarna warni. Ditampilkan dalam ritual bersih desa dan festival budaya.',
+    deskripsi: 'Kesenian kuda lumping khas lereng Merapi Yogyakarta dengan kostum dan atraksi yang memukau. Ditampilkan dalam ritual bersih desa dan festival budaya.',
     anggota: 18,
     aktif: true,
     emoji: '🎭',
@@ -40,7 +40,7 @@ const kesenian = [
   {
     nama: 'Ludruk Rukun Santoso',
     kategori: 'Teater Tradisional',
-    deskripsi: 'Kelompok ludruk tertua di kecamatan, berdiri sejak 1978. Memainkan lakon sosial dan komedi khas Jawa Timuran.',
+    deskripsi: 'Kelompok ludruk tertua di kecamatan, berdiri sejak 1978. Memainkan lakon sosial dan komedi khas Yogyakarta.',
     anggota: 25,
     aktif: true,
     emoji: '🎪',

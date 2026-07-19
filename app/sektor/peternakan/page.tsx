@@ -133,7 +133,7 @@ export default function PeternakanPage() {
         <h2 className="text-lg font-black">🤝 Koperasi Susu Plosorejo</h2>
         <p className="text-sm text-gray-300 leading-relaxed">
           Seluruh hasil produksi susu segar disetorkan melalui Koperasi Susu Plosorejo yang berdiri
-          sejak 1968. Koperasi mengelola chilling unit, distribusi ke KUD Malang, dan unit pengolahan
+          sejak 1968. Koperasi mengelola chilling unit, distribusi ke KUD Sleman, dan unit pengolahan
           susu menjadi yogurt serta keju lokal. Anggota koperasi mendapat akses pinjaman bergulir
           untuk pengembangan usaha peternakan.
         </p>
@@ -141,7 +141,7 @@ export default function PeternakanPage() {
           {[
             { label: 'Tahun Berdiri', val: '1968' },
             { label: 'Anggota Aktif', val: '47 peternak' },
-            { label: 'Mitra Utama', val: 'KUD Malang' },
+            { label: 'Mitra Utama', val: 'KUD Sleman' },
           ].map(({ label, val }) => (
             <div key={label}>
               <p className="text-sm font-bold" style={{ color: 'var(--amber)' }}>{val}</p>

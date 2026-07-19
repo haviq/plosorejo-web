@@ -34,7 +34,7 @@ export default function PetaPage() {
           🗺️ <span className="gradient-text">Peta Desa</span> Plosorejo
         </h1>
         <p className="text-gray-400 text-sm">
-          Visualisasi interaktif wilayah desa · Kecamatan Gondanglegi, Malang
+          Visualisasi interaktif wilayah desa · Kapanewon Cangkringan, Sleman
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export default function PetaPage() {
           { label: 'Luas Wilayah',  value: '12.6 km²'      },
           { label: 'Jumlah Dusun',  value: '4'             },
           { label: 'RT / RW',       value: '38 / 12'       },
-          { label: 'Koordinat',     value: '8.17°S 112.7°E' },
+          { label: 'Koordinat',     value: '7°36′S 110°27′E' },
         ].map(({ label, value }) => (
           <div key={label}>
             <p className="text-lg font-bold gradient-text tabular-nums">{value}</p>

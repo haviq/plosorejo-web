@@ -32,9 +32,9 @@ const infoWilayah = [
   { label: 'Jumlah Penduduk', value: '4.821 jiwa' },
   { label: 'Jumlah KK',       value: '1.347 KK' },
   { label: 'Ketinggian',      value: '±600 mdpl' },
-  { label: 'Kecamatan',       value: 'Gondanglegi' },
-  { label: 'Kabupaten',       value: 'Malang' },
-  { label: 'Kode Pos',        value: '65174' },
+  { label: 'Kecamatan',       value: 'Cangkringan' },
+  { label: 'Kabupaten',       value: 'Sleman' },
+  { label: 'Kode Pos',        value: '55583' },
 ]
 
 export default function ProfilPage() {
@@ -48,8 +48,8 @@ export default function ProfilPage() {
           <span className="gradient-text">Padukuhan Plosorejo</span>
         </h1>
         <p className="text-gray-400 max-w-2xl leading-relaxed">
-          Padukuhan Plosorejo terletak di Kecamatan Gondanglegi, Kabupaten Malang, Jawa Timur.
-          Dikenal sebagai sentra peternakan sapi perah dan pertanian organik di wilayah Malang Selatan.
+          Padukuhan Plosorejo terletak di Kapanewon Cangkringan, Kabupaten Sleman, Daerah Istimewa Yogyakarta.
+          Dikenal sebagai sentra peternakan sapi perah dan pertanian organik di lereng Gunung Merapi, wilayah Sleman.
         </p>
       </section>
 
@@ -89,12 +89,12 @@ export default function ProfilPage() {
             Sejak tahun 1960-an, Padukuhan Plosorejo berkembang sebagai sentra peternakan sapi
             perah dengan bantuan program pemerintah melalui Koperasi Unit Desa (KUD). Program ini
             membawa transformasi besar bagi perekonomian warga dan menjadikan susu segar sebagai
-            komoditas unggulan yang memasok kebutuhan industri susu di Jawa Timur.
+            komoditas unggulan yang memasok kebutuhan industri susu di DIY.
           </p>
           <p>
             Pada era reformasi, padukuhan ini mulai mengembangkan sektor pertanian organik,
             kerajinan tangan, dan pariwisata berbasis alam. Kini Padukuhan Plosorejo telah
-            menjadi salah satu contoh desa mandiri dan berdaya di Kabupaten Malang.
+            menjadi salah satu contoh desa mandiri dan berdaya di Kabupaten Sleman.
           </p>
         </div>
       </section>

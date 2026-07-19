@@ -107,7 +107,7 @@ export default function HomePage() {
         </h1>
 
         <p className="max-w-xl mx-auto text-gray-400 leading-relaxed">
-          Portal digital resmi Padukuhan Plosorejo, Kecamatan Gondanglegi, Kabupaten Malang.
+          Portal digital resmi Padukuhan Plosorejo, Kapanewon Cangkringan, Kabupaten Sleman.
           Informasi terpadu tentang warga, UMKM, pertanian, peternakan, dan layanan desa.
         </p>
 

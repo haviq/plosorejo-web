@@ -32,19 +32,19 @@ function makeIcon(color: string) {
   })
 }
 
-// Desa Plosorejo, Gondanglegi, Malang — approximate coords
-const CENTER: [number, number] = [-8.175, 112.632]
+// Padukuhan Plosorejo, Cangkringan, Sleman — lereng Merapi
+const CENTER: [number, number] = [-7.603, 110.448]
 
 const markers: { pos: [number, number]; label: string; type: 'farm' | 'umkm' | 'facility' }[] = [
-  { pos: [-8.172, 112.628], label: 'Peternakan Pak Harto',     type: 'farm'     },
-  { pos: [-8.177, 112.635], label: 'Peternakan Bu Rahayu',     type: 'farm'     },
-  { pos: [-8.170, 112.638], label: 'Peternakan Pak Suryono',   type: 'farm'     },
-  { pos: [-8.175, 112.630], label: 'Warung Bu Siti',           type: 'umkm'     },
-  { pos: [-8.180, 112.632], label: 'Bengkel Las Mandiri',      type: 'umkm'     },
-  { pos: [-8.178, 112.640], label: 'Batik Tulis Nusantara',    type: 'umkm'     },
-  { pos: [-8.174, 112.633], label: 'Balai Desa',               type: 'facility' },
-  { pos: [-8.173, 112.629], label: 'Puskesmas',                type: 'facility' },
-  { pos: [-8.176, 112.636], label: 'SDN Plosorejo 1',          type: 'facility' },
+  { pos: [-7.600, 110.445], label: 'Peternakan Pak Harto',     type: 'farm'     },
+  { pos: [-7.605, 110.452], label: 'Peternakan Bu Rahayu',     type: 'farm'     },
+  { pos: [-7.598, 110.455], label: 'Peternakan Pak Suryono',   type: 'farm'     },
+  { pos: [-7.603, 110.447], label: 'Warung Bu Siti',           type: 'umkm'     },
+  { pos: [-7.608, 110.449], label: 'Bengkel Las Mandiri',      type: 'umkm'     },
+  { pos: [-7.606, 110.457], label: 'Batik Tulis Nusantara',    type: 'umkm'     },
+  { pos: [-7.602, 110.450], label: 'Balai Desa',               type: 'facility' },
+  { pos: [-7.601, 110.446], label: 'Puskesmas',                type: 'facility' },
+  { pos: [-7.604, 110.453], label: 'SDN Plosorejo 1',          type: 'facility' },
 ]
 
 const TYPE_COLOR: Record<string, string> = {

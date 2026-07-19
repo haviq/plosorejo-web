@@ -9,7 +9,7 @@ const kontakList = [
   {
     icon: '🏠',
     label: 'Alamat',
-    value: 'Padukuhan Plosorejo, Desa Plosorejo, Kecamatan Gondanglegi, Kabupaten Malang, Jawa Timur 65174',
+    value: 'Padukuhan Plosorejo, Kalurahan Umbulharjo, Kapanewon Cangkringan, Kabupaten Sleman, DIY 55583',
   },
   {
     icon: '📞',
@@ -181,7 +181,7 @@ export default function KontakPage() {
           />
         </div>
         <p className="text-xs text-gray-600 mt-2 text-center">
-          Padukuhan Plosorejo · Kecamatan Gondanglegi, Kabupaten Malang · 8°10′S 112°42′E
+          Padukuhan Plosorejo · Kapanewon Cangkringan, Kabupaten Sleman · 7°36′S 110°27′E
         </p>
       </section>
 

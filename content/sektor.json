@@ -1,7 +1,7 @@
 {
   "peternakan": {
     "nama": "Peternakan",
-    "deskripsi": "Padukuhan Plosorejo dikenal sebagai sentra sapi perah terbesar di Kecamatan Gondanglegi. Dengan ratusan ekor sapi Friesian Holstein, padukuhan ini menyuplai susu segar ke koperasi dan industri pengolahan susu regional.",
+    "deskripsi": "Padukuhan Plosorejo dikenal sebagai sentra sapi perah terbesar di Kapanewon Cangkringan. Dengan ratusan ekor sapi Friesian Holstein, padukuhan ini menyuplai susu segar ke koperasi dan industri pengolahan susu regional.",
     "icon": "🐄",
     "stats": [
       { "label": "Sapi Perah", "value": "312 ekor" },
@@ -37,7 +37,7 @@
   },
   "pariwisata": {
     "nama": "Pariwisata",
-    "deskripsi": "Padukuhan Plosorejo menawarkan wisata alam, budaya, dan agrowisata yang menarik. Pemandangan Gunung Semeru dan Bromo dari lahan pertanian menjadi daya tarik utama wisatawan.",
+    "deskripsi": "Padukuhan Plosorejo menawarkan wisata alam, budaya, dan agrowisata yang menarik. Pemandangan Gunung Merapi dari lahan pertanian menjadi daya tarik utama wisatawan.",
     "icon": "🏔️",
     "stats": [
       { "label": "Destinasi Wisata", "value": "3 lokasi" },
@@ -66,13 +66,13 @@
       "TK Aisyiyah Plosorejo",
       "SDN Plosorejo 1",
       "SDN Plosorejo 2",
-      "SMP Negeri 2 Gondanglegi",
-      "SMA Negeri 1 Gondanglegi"
+      "SMP Negeri 2 Cangkringan",
+      "SMA Negeri 1 Cangkringan"
     ]
   },
   "kesehatan": {
     "nama": "Kesehatan",
-    "deskripsi": "Layanan kesehatan Padukuhan Plosorejo didukung oleh Posyandu aktif, bidan desa, dan akses mudah ke Puskesmas Gondanglegi. Program imunisasi dan kesehatan ibu-anak berjalan konsisten setiap bulan.",
+    "deskripsi": "Layanan kesehatan Padukuhan Plosorejo didukung oleh Posyandu aktif, bidan desa, dan akses mudah ke Puskesmas Cangkringan. Program imunisasi dan kesehatan ibu-anak berjalan konsisten setiap bulan.",
     "icon": "🏥",
     "stats": [
       { "label": "Posyandu Aktif", "value": "4 pos" },
@@ -84,7 +84,7 @@
       "Posyandu Balita RT 01-04",
       "Posyandu Lansia",
       "Bidan Desa Plosorejo",
-      "Puskesmas Gondanglegi (2 km)"
+      "Puskesmas Cangkringan (2 km)"
     ]
   },
   "budaya": {
@@ -98,7 +98,7 @@
       { "label": "Seniman Aktif", "value": "65 orang" }
     ],
     "items": [
-      "Tari Topeng Malang",
+      "Jathilan",
       "Wayang Kulit",
       "Karawitan Gamelan",
       "Ludruk",
@@ -119,7 +119,7 @@
     "items": [
       "Kuliner & Warung Makan",
       "Kerajinan Bambu & Rotan",
-      "Batik Tulis Motif Malang",
+      "Batik Tulis Motif Lereng Merapi",
       "Olahan Hasil Ternak",
       "Jasa & Bengkel",
       "Agribisnis & Pertanian"
