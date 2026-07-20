@@ -15,12 +15,20 @@ const poiGroups = [
   {
     label: 'UMKM',
     color: 'var(--green)',
-    items: ['Warung Bu Siti', 'Bengkel Las Mandiri', 'Batik Tulis Nusantara'],
+    items: ['Warung Bu Siti', 'Bengkel Las Mandiri', 'Batik Tulis Nusantara', 'Angkringan Wek-ji'],
   },
   {
     label: 'Fasilitas Desa',
     color: '#818cf8',
-    items: ['Balai Padukuhan', 'Masjid Asy Syams', 'SD Umbulharjo', 'TK ABA Balong', 'Gedung Serbaguna'],
+    items: [
+      'Masjid Asy Syams',
+      'Masjid Al Fath',
+      'Masjid Al Ghofur',
+      'SD Umbulharjo',
+      'SMP Taman Dewasa',
+      'Gedung Serbaguna',
+      'TK ABA Balong',
+    ],
   },
 ]
 

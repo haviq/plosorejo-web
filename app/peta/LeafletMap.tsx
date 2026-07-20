@@ -33,33 +33,39 @@ function makeIcon(color: string) {
 }
 
 // ============================================================
-// Lokasi real: Padukuhan Plosorejo / Balong, Umbulharjo,
-// Cangkringan, Sleman — di sekitar Masjid Asy Syams &
-// Jalan Menuju Lapangan Golf Umbulharjo-Kepuharjo
-// Sumber OSM Nominatim (Juli 2026)
+// Padukuhan Plosorejo / Balong, Umbulharjo, Cangkringan
+// Koordinat & landmark dari OpenStreetMap (Overpass, Juli 2026)
+// Batas RT = estimasi organik mengikuti jalan & cluster rumah
 // ============================================================
-const CENTER: [number, number] = [-7.6228, 110.4372]
 
-// Outer boundary organik — mengikuti cluster pemukiman
-// di sekitar Jl. Golf Umbulharjo / Balong (bukan kotak)
+// Center di antara Masjid Asy Syams & Jl. Raya Merapi Golf
+const CENTER: [number, number] = [-7.6234, 110.4372]
+
+// Outer boundary — envelope organik cluster pemukiman Balong
+// Mengikuti sebaran jalan: Anaryoto–Anjar Wiyanto–Masjid Asy Syams–SD
 const PADUKUHAN_POLYGON: [number, number][] = [
-  [-7.6168, 110.4338],
-  [-7.6162, 110.4365],
-  [-7.6168, 110.4392],
-  [-7.6185, 110.4408],
-  [-7.6210, 110.4416],
-  [-7.6238, 110.4414],
-  [-7.6262, 110.4405],
-  [-7.6278, 110.4388],
-  [-7.6282, 110.4365],
-  [-7.6275, 110.4342],
-  [-7.6255, 110.4328],
-  [-7.6228, 110.4324],
-  [-7.6200, 110.4328],
-  [-7.6180, 110.4334],
+  [-7.6186, 110.4340], // utara-barat dekat Adi Prawoto
+  [-7.6182, 110.4360],
+  [-7.6184, 110.4382],
+  [-7.6190, 110.4400],
+  [-7.6202, 110.4414], // utara-timur Anjar Wiyanto
+  [-7.6218, 110.4420],
+  [-7.6234, 110.4420], // timur Al Ghofur / Budi Sanyoto
+  [-7.6250, 110.4414],
+  [-7.6264, 110.4404],
+  [-7.6272, 110.4388], // selatan-timur
+  [-7.6274, 110.4370],
+  [-7.6268, 110.4350], // selatan Angkringan / SD
+  [-7.6258, 110.4336],
+  [-7.6242, 110.4328], // barat-selatan TK Ibnu Abbas
+  [-7.6224, 110.4326], // barat Anaryoto / Anto
+  [-7.6206, 110.4330],
+  [-7.6194, 110.4336],
 ]
 
-// 4 RT organik — bentuk tidak beraturan, mengikuti jalan/pemukiman
+// 4 RT organik — dipisah kira-kira oleh:
+//   - Jl. Raya Merapi Golf (N–S, ~110.4355)
+//   - Jl. Menuju Lapangan Golf (E–W, ~-7.6245)
 // Warna: kuning / merah / hijau / biru
 const RT_ZONES: {
   name: string
@@ -68,137 +74,105 @@ const RT_ZONES: {
   coords: [number, number][]
 }[] = [
   {
-    // RT 01 — barat laut (arah TK ABA Balong / utara)
+    // RT 01 — Barat Laut
+    // Adi Prawoto, Anaryoto, Anto, Masjid Al Fath
     name: 'RT 01',
     color: '#eab308',
     fillColor: '#eab308',
     coords: [
-      [-7.6168, 110.4338],
-      [-7.6162, 110.4365],
-      [-7.6168, 110.4380],
-      [-7.6188, 110.4384],
-      [-7.6205, 110.4376],
-      [-7.6208, 110.4355],
-      [-7.6200, 110.4336],
-      [-7.6180, 110.4334],
+      [-7.6186, 110.4340],
+      [-7.6182, 110.4360],
+      [-7.6188, 110.4372],
+      [-7.6210, 110.4370], // ke Jl. Golf E-W
+      [-7.6230, 110.4362],
+      [-7.6234, 110.4348], // Masjid Al Fath area
+      [-7.6224, 110.4326],
+      [-7.6206, 110.4330],
+      [-7.6194, 110.4336],
     ],
   },
   {
-    // RT 02 — timur laut (arah Jl. Golf ke utara-timur)
+    // RT 02 — Timur Laut
+    // Anjar Wiyanto, Masjid Al Ghofur, Budi Sanyoto
     name: 'RT 02',
     color: '#ef4444',
     fillColor: '#ef4444',
     coords: [
-      [-7.6168, 110.4380],
-      [-7.6168, 110.4392],
-      [-7.6185, 110.4408],
-      [-7.6210, 110.4416],
-      [-7.6225, 110.4408],
-      [-7.6222, 110.4386],
-      [-7.6205, 110.4376],
-      [-7.6188, 110.4384],
+      [-7.6188, 110.4372],
+      [-7.6184, 110.4382],
+      [-7.6190, 110.4400],
+      [-7.6202, 110.4414],
+      [-7.6218, 110.4420],
+      [-7.6234, 110.4420],
+      [-7.6240, 110.4406],
+      [-7.6236, 110.4386], // Budi Suharto / Bakir utara
+      [-7.6230, 110.4372],
+      [-7.6210, 110.4370],
     ],
   },
   {
-    // RT 03 — barat daya (arah SD Umbulharjo / selatan-barat)
+    // RT 03 — Barat Daya
+    // SD Umbulharjo, Gedung Serbaguna, SMP Taman Dewasa, Angkringan
     name: 'RT 03',
     color: '#22c55e',
     fillColor: '#22c55e',
     coords: [
-      [-7.6200, 110.4336],
-      [-7.6208, 110.4355],
-      [-7.6222, 110.4370],
-      [-7.6245, 110.4368],
-      [-7.6260, 110.4355],
-      [-7.6275, 110.4342],
-      [-7.6255, 110.4328],
-      [-7.6228, 110.4324],
+      [-7.6234, 110.4348],
+      [-7.6230, 110.4362],
+      [-7.6236, 110.4374], // ke Jl. Golf E-W
+      [-7.6252, 110.4376],
+      [-7.6264, 110.4368],
+      [-7.6268, 110.4350],
+      [-7.6258, 110.4336],
+      [-7.6242, 110.4328],
     ],
   },
   {
-    // RT 04 — tenggara (Masjid Asy Syams / selatan-timur)
+    // RT 04 — Tenggara
+    // Masjid Asy Syams, Bakir, Basuki, Bardi Puroyo, Budi Suharto
     name: 'RT 04',
     color: '#3b82f6',
     fillColor: '#3b82f6',
     coords: [
-      [-7.6205, 110.4376],
-      [-7.6222, 110.4386],
-      [-7.6225, 110.4408],
-      [-7.6238, 110.4414],
-      [-7.6262, 110.4405],
-      [-7.6278, 110.4388],
-      [-7.6282, 110.4365],
-      [-7.6260, 110.4355],
-      [-7.6245, 110.4368],
-      [-7.6222, 110.4370],
-      [-7.6208, 110.4355],
+      [-7.6230, 110.4372],
+      [-7.6236, 110.4386],
+      [-7.6240, 110.4406],
+      [-7.6234, 110.4420],
+      [-7.6250, 110.4414],
+      [-7.6264, 110.4404],
+      [-7.6272, 110.4388],
+      [-7.6274, 110.4370],
+      [-7.6264, 110.4368],
+      [-7.6252, 110.4376],
+      [-7.6236, 110.4374],
     ],
   },
 ]
 
-// Marker di titik OSM nyata + estimasi UMKM di sekitar
+// Marker: prioritas OSM real, sisanya estimasi lokal
 const markers: {
   pos: [number, number]
   label: string
   type: 'balai' | 'masjid' | 'farm' | 'umkm' | 'facility'
 }[] = [
-  // Landmark OSM (real)
-  {
-    pos: [-7.62428, 110.43829],
-    label: 'Masjid Asy Syams',
-    type: 'masjid',
-  },
-  {
-    pos: [-7.62505, 110.43628],
-    label: 'SD Umbulharjo',
-    type: 'facility',
-  },
-  {
-    pos: [-7.62532, 110.43587],
-    label: 'Gedung Serbaguna Umbulharjo',
-    type: 'balai',
-  },
-  {
-    pos: [-7.61769, 110.43537],
-    label: 'TK ABA Balong',
-    type: 'facility',
-  },
-  // Estimasi titik lokal di area Balong/Plosorejo
-  {
-    pos: [-7.6235, 110.4375],
-    label: 'Balai Padukuhan Plosorejo',
-    type: 'balai',
-  },
-  {
-    pos: [-7.6215, 110.4360],
-    label: 'Kandang Sapi Koperasi',
-    type: 'farm',
-  },
-  {
-    pos: [-7.6195, 110.4348],
-    label: 'Peternakan Pak Harto',
-    type: 'farm',
-  },
-  {
-    pos: [-7.6255, 110.4390],
-    label: 'Peternakan Bu Rahayu',
-    type: 'farm',
-  },
-  {
-    pos: [-7.6220, 110.4388],
-    label: 'Warung Bu Siti',
-    type: 'umkm',
-  },
-  {
-    pos: [-7.6265, 110.4372],
-    label: 'Bengkel Las Mandiri',
-    type: 'umkm',
-  },
-  {
-    pos: [-7.6208, 110.4395],
-    label: 'Batik Tulis Nusantara',
-    type: 'umkm',
-  },
+  // === Landmark OSM real ===
+  { pos: [-7.624274, 110.438280], label: 'Masjid Asy Syams',              type: 'masjid' },
+  { pos: [-7.622214, 110.435219], label: 'Masjid Al Fath',                type: 'masjid' },
+  { pos: [-7.622196, 110.440536], label: 'Masjid Al Ghofur',              type: 'masjid' },
+  { pos: [-7.625043, 110.436251], label: 'SD Umbulharjo',                 type: 'facility' },
+  { pos: [-7.624993, 110.435467], label: 'SMP Taman Dewasa',              type: 'facility' },
+  { pos: [-7.625309, 110.435846], label: 'Gedung Serbaguna Umbulharjo',   type: 'balai' },
+  { pos: [-7.617692, 110.435375], label: 'TK ABA Balong',                 type: 'facility' },
+  { pos: [-7.625888, 110.434990], label: 'Angkringan Wek-ji',             type: 'umkm' },
+
+  // === Estimasi titik lokal di area Balong ===
+  { pos: [-7.6238, 110.4375], label: 'Balai Padukuhan Plosorejo', type: 'balai' },
+  { pos: [-7.6218, 110.4358], label: 'Kandang Sapi Koperasi',    type: 'farm' },
+  { pos: [-7.6200, 110.4345], label: 'Peternakan Pak Harto',     type: 'farm' },
+  { pos: [-7.6252, 110.4395], label: 'Peternakan Bu Rahayu',     type: 'farm' },
+  { pos: [-7.6225, 110.4388], label: 'Warung Bu Siti',           type: 'umkm' },
+  { pos: [-7.6260, 110.4375], label: 'Bengkel Las Mandiri',      type: 'umkm' },
+  { pos: [-7.6215, 110.4405], label: 'Batik Tulis Nusantara',    type: 'umkm' },
 ]
 
 const TYPE_COLOR: Record<string, string> = {
@@ -224,7 +198,7 @@ export default function LeafletMap() {
     <MapContainer
       center={CENTER}
       zoom={16}
-      style={{ height: 520, width: '100%', borderRadius: '0.75rem', border: '1px solid var(--border)' }}
+      style={{ height: 540, width: '100%', borderRadius: '0.75rem', border: '1px solid var(--border)' }}
       zoomControl={false}
     >
       <TileLayer
@@ -239,7 +213,7 @@ export default function LeafletMap() {
         pathOptions={{
           color: '#d4af37',
           fillColor: '#d4af37',
-          fillOpacity: 0.04,
+          fillOpacity: 0.03,
           weight: 2.5,
         }}
       >
@@ -248,7 +222,7 @@ export default function LeafletMap() {
         </Tooltip>
       </Polygon>
 
-      {/* Batas wilayah per RT — bentuk organik */}
+      {/* Batas wilayah per RT — bentuk organik mengikuti jalan */}
       {RT_ZONES.map((rt) => (
         <Polygon
           key={rt.name}
@@ -256,7 +230,7 @@ export default function LeafletMap() {
           pathOptions={{
             color: rt.color,
             fillColor: rt.fillColor,
-            fillOpacity: 0.2,
+            fillOpacity: 0.22,
             weight: 2,
           }}
         >
