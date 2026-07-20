@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Profil Padukuhan',
@@ -11,26 +12,22 @@ const strukturOrg = [
   { jabatan: 'Bendahara Padukuhan',       nama: 'Bapak Agus Prayitno', rt: null },
 ]
 
+// RT Balong / Padukuhan Plosorejo — 4 RT (sesuai data lapangan)
 const rtList = [
-  { rt: 'RT 01', rw: 'RW 01', ketua: 'Pak Rudi Hartono',  kk: 89,  warga: 312 },
-  { rt: 'RT 02', rw: 'RW 01', ketua: 'Bu Eni Sulistyowati', kk: 76, warga: 278 },
-  { rt: 'RT 03', rw: 'RW 02', ketua: 'Pak Joko Santoso',  kk: 94,  warga: 341 },
-  { rt: 'RT 04', rw: 'RW 02', ketua: 'Bu Mulyani',        kk: 82,  warga: 295 },
-  { rt: 'RT 05', rw: 'RW 03', ketua: 'Pak Suyono',        kk: 71,  warga: 258 },
-  { rt: 'RT 06', rw: 'RW 03', ketua: 'Pak Wahyu Widodo',  kk: 88,  warga: 317 },
-  { rt: 'RT 07', rw: 'RW 04', ketua: 'Bu Kartini',        kk: 67,  warga: 241 },
-  { rt: 'RT 08', rw: 'RW 04', ketua: 'Pak Hadi Purnomo',  kk: 93,  warga: 334 },
-  { rt: 'RT 09', rw: 'RW 05', ketua: 'Bu Yayuk Suryani',  kk: 79,  warga: 283 },
-  { rt: 'RT 10', rw: 'RW 05', ketua: 'Pak Bambang Eko',   kk: 85,  warga: 306 },
-  { rt: 'RT 11', rw: 'RW 06', ketua: 'Pak Supardi',       kk: 72,  warga: 261 },
-  { rt: 'RT 12', rw: 'RW 06', ketua: 'Bu Srinatun',       kk: 80,  warga: 295 },
+  { rt: 'RT 01', rw: 'RW 01', ketua: 'Pak Rudi Hartono',   kk: 48, warga: 168, color: '#eab308' },
+  { rt: 'RT 02', rw: 'RW 01', ketua: 'Bu Eni Sulistyowati', kk: 42, warga: 151, color: '#ef4444' },
+  { rt: 'RT 03', rw: 'RW 01', ketua: 'Pak Joko Santoso',   kk: 51, warga: 179, color: '#22c55e' },
+  { rt: 'RT 04', rw: 'RW 01', ketua: 'Bu Mulyani',         kk: 45, warga: 160, color: '#3b82f6' },
 ]
 
+const totalKK = rtList.reduce((s, r) => s + r.kk, 0)
+const totalWarga = rtList.reduce((s, r) => s + r.warga, 0)
+
 const infoWilayah = [
-  { label: 'Luas Wilayah',    value: '12,6 km²' },
-  { label: 'Jumlah RT / RW',  value: '12 / 6' },
-  { label: 'Jumlah Penduduk', value: '4.821 jiwa' },
-  { label: 'Jumlah KK',       value: '1.347 KK' },
+  { label: 'Luas Wilayah',    value: '±45 ha' },
+  { label: 'Jumlah RT / RW',  value: '4 / 1' },
+  { label: 'Jumlah Penduduk', value: `${totalWarga.toLocaleString('id-ID')} jiwa` },
+  { label: 'Jumlah KK',       value: `${totalKK} KK` },
   { label: 'Ketinggian',      value: '±600 mdpl' },
   { label: 'Kecamatan',       value: 'Cangkringan' },
   { label: 'Kabupaten',       value: 'Sleman' },
@@ -48,8 +45,9 @@ export default function ProfilPage() {
           <span className="gradient-text">Padukuhan Plosorejo</span>
         </h1>
         <p className="text-gray-400 max-w-2xl leading-relaxed">
-          Padukuhan Plosorejo terletak di Kapanewon Cangkringan, Kabupaten Sleman, Daerah Istimewa Yogyakarta.
-          Dikenal sebagai sentra peternakan sapi perah dan pertanian organik di lereng Gunung Merapi, wilayah Sleman.
+          Padukuhan Plosorejo terletak di Jl. Balong, Kalurahan Umbulharjo, Kapanewon Cangkringan,
+          Kabupaten Sleman, DIY 55583. Dikenal sebagai sentra peternakan sapi perah dan UMKM
+          olahan susu di lereng Gunung Merapi.
         </p>
       </section>
 
@@ -80,21 +78,21 @@ export default function ProfilPage() {
           style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
         >
           <p>
-            Padukuhan Plosorejo merupakan salah satu dari empat padukuhan di Desa Plosorejo yang
-            telah berdiri sejak zaman penjajahan Belanda. Nama &ldquo;Plosorejo&rdquo; berasal dari
-            kata dalam bahasa Jawa yang berarti &ldquo;tempat yang makmur dan subur&rdquo;,
-            mencerminkan kesuburan tanah dan kemakmuran warganya.
+            Padukuhan Plosorejo merupakan salah satu padukuhan di Kalurahan Umbulharjo,
+            Kapanewon Cangkringan. Nama &ldquo;Plosorejo&rdquo; berasal dari bahasa Jawa yang
+            berarti &ldquo;tempat yang makmur dan subur&rdquo;, mencerminkan kesuburan tanah
+            lereng Merapi dan kemakmuran warganya.
           </p>
           <p>
             Sejak tahun 1960-an, Padukuhan Plosorejo berkembang sebagai sentra peternakan sapi
-            perah dengan bantuan program pemerintah melalui Koperasi Unit Desa (KUD). Program ini
-            membawa transformasi besar bagi perekonomian warga dan menjadikan susu segar sebagai
-            komoditas unggulan yang memasok kebutuhan industri susu di DIY.
+            perah dengan dukungan koperasi susu. Program ini membawa transformasi besar bagi
+            perekonomian warga dan menjadikan susu segar sebagai komoditas unggulan yang
+            memasok kebutuhan industri susu di DIY.
           </p>
           <p>
-            Pada era reformasi, padukuhan ini mulai mengembangkan sektor pertanian organik,
-            kerajinan tangan, dan pariwisata berbasis alam. Kini Padukuhan Plosorejo telah
-            menjadi salah satu contoh desa mandiri dan berdaya di Kabupaten Sleman.
+            Pada era modern, padukuhan ini mengembangkan sektor UMKM olahan susu, pertanian
+            salak pondoh, kerajinan, dan pariwisata berbasis alam. Kini Plosorejo menjadi
+            salah satu contoh padukuhan mandiri di lereng Merapi, Kabupaten Sleman.
           </p>
         </div>
       </section>
@@ -172,9 +170,29 @@ export default function ProfilPage() {
         </div>
       </section>
 
-      {/* Tabel RT/RW */}
+      {/* Tabel RT/RW — 4 RT */}
       <section aria-label="Daftar RT dan RW">
-        <h2 className="text-2xl font-black mb-5">Daftar RT / RW</h2>
+        <div className="flex items-end justify-between gap-4 mb-5 flex-wrap">
+          <h2 className="text-2xl font-black">Daftar RT / RW Balong</h2>
+          <Link
+            href="/peta"
+            className="text-xs font-semibold px-3 py-1.5 rounded-lg border transition-opacity hover:opacity-85"
+            style={{ borderColor: 'var(--amber)', color: 'var(--amber)' }}
+          >
+            Lihat di Peta →
+          </Link>
+        </div>
+
+        {/* Color legend */}
+        <div className="flex flex-wrap gap-3 mb-4">
+          {rtList.map(({ rt, color }) => (
+            <span key={rt} className="flex items-center gap-1.5 text-xs text-gray-400">
+              <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }} aria-hidden="true" />
+              {rt}
+            </span>
+          ))}
+        </div>
+
         <div
           className="rounded-xl border overflow-hidden"
           style={{ borderColor: 'var(--border)' }}
@@ -200,7 +218,12 @@ export default function ProfilPage() {
                       backgroundColor: i % 2 === 0 ? 'var(--s1)' : 'transparent',
                     }}
                   >
-                    <td className="px-4 py-3 font-semibold" style={{ color: 'var(--amber)' }}>{row.rt}</td>
+                    <td className="px-4 py-3 font-semibold">
+                      <span className="inline-flex items-center gap-2" style={{ color: row.color }}>
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: row.color }} aria-hidden="true" />
+                        {row.rt}
+                      </span>
+                    </td>
                     <td className="px-4 py-3 text-gray-400">{row.rw}</td>
                     <td className="px-4 py-3 text-white">{row.ketua}</td>
                     <td className="px-4 py-3 tabular-nums text-gray-300">{row.kk}</td>
@@ -208,9 +231,20 @@ export default function ProfilPage() {
                   </tr>
                 ))}
               </tbody>
+              <tfoot>
+                <tr className="border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--s2)' }}>
+                  <td className="px-4 py-3 font-bold text-white" colSpan={3}>Total</td>
+                  <td className="px-4 py-3 font-bold tabular-nums" style={{ color: 'var(--amber)' }}>{totalKK}</td>
+                  <td className="px-4 py-3 font-bold tabular-nums" style={{ color: 'var(--amber)' }}>{totalWarga}</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
+        <p className="text-xs text-gray-600 mt-3">
+          * Data penduduk placeholder — diganti hasil survei lapangan. Koordinat batas RT di peta
+          adalah estimasi dan perlu validasi GPS.
+        </p>
       </section>
 
     </div>

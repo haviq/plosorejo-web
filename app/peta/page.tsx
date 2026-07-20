@@ -3,14 +3,14 @@ import MapLoader from './MapLoader'
 
 export const metadata: Metadata = {
   title: 'Peta Desa',
-  description: 'Peta interaktif wilayah Desa Plosorejo — titik usaha, sumber air, dan lahan pertanian.',
+  description: 'Peta interaktif Padukuhan Plosorejo — batas wilayah RT Balong, fasilitas, dan titik UMKM.',
 }
 
 const poiGroups = [
   {
     label: 'Peternakan Susu',
     color: 'var(--amber)',
-    items: ['Peternakan Pak Harto', 'Peternakan Bu Rahayu', 'Peternakan Pak Suryono'],
+    items: ['Kandang Sapi Koperasi', 'Peternakan Pak Harto', 'Peternakan Bu Rahayu'],
   },
   {
     label: 'UMKM',
@@ -20,8 +20,15 @@ const poiGroups = [
   {
     label: 'Fasilitas Desa',
     color: '#818cf8',
-    items: ['Balai Desa', 'Puskesmas', 'SDN Plosorejo 1'],
+    items: ['Balai Padukuhan', 'Masjid RT Balong', 'SD Umbulharjo', 'Puskesmas Cangkringan'],
   },
+]
+
+const rtLegend = [
+  { name: 'RT 01', color: '#eab308' },
+  { name: 'RT 02', color: '#ef4444' },
+  { name: 'RT 03', color: '#22c55e' },
+  { name: 'RT 04', color: '#3b82f6' },
 ]
 
 export default function PetaPage() {
@@ -31,12 +38,38 @@ export default function PetaPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-black mb-1" style={{ color: '#e5e7eb' }}>
-          🗺️ <span className="gradient-text">Peta Desa</span> Plosorejo
+          🗺️ <span className="gradient-text">Peta</span> Padukuhan Plosorejo
         </h1>
         <p className="text-gray-400 text-sm">
-          Visualisasi interaktif wilayah desa · Kapanewon Cangkringan, Sleman
+          Batas wilayah per RT · Jl. Balong, Umbulharjo, Cangkringan, Sleman
         </p>
       </div>
+
+      {/* RT color legend */}
+      <section aria-label="Legenda batas RT">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mr-1">
+            Batas RT
+          </span>
+          {rtLegend.map(({ name, color }) => (
+            <span
+              key={name}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
+              style={{ color, borderColor: `${color}55`, backgroundColor: `${color}14` }}
+            >
+              <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: color }} aria-hidden="true" />
+              {name}
+            </span>
+          ))}
+          <span
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
+            style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.35)', backgroundColor: 'rgba(212,175,55,0.08)' }}
+          >
+            <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: '#d4af37' }} aria-hidden="true" />
+            Outer Padukuhan
+          </span>
+        </div>
+      </section>
 
       {/* Map — client component owns the dynamic Leaflet import */}
       <section aria-label="Peta interaktif desa">
@@ -83,10 +116,10 @@ export default function PetaPage() {
         aria-label="Informasi wilayah"
       >
         {[
-          { label: 'Luas Wilayah',  value: '12.6 km²'      },
-          { label: 'Jumlah Dusun',  value: '4'             },
-          { label: 'RT / RW',       value: '38 / 12'       },
-          { label: 'Koordinat',     value: '7°36′S 110°27′E' },
+          { label: 'Luas Wilayah', value: '±45 ha' },
+          { label: 'Jumlah RT',    value: '4' },
+          { label: 'Jumlah RW',    value: '1' },
+          { label: 'Koordinat',    value: '7°36′S 110°27′E' },
         ].map(({ label, value }) => (
           <div key={label}>
             <p className="text-lg font-bold gradient-text tabular-nums">{value}</p>
@@ -94,6 +127,11 @@ export default function PetaPage() {
           </div>
         ))}
       </section>
+
+      <p className="text-xs text-gray-600 text-center">
+        * Polygon batas RT adalah estimasi berdasarkan area Jl. Balong / Padukuhan Plosorejo.
+        Validasi GPS lapangan diperlukan untuk akurasi resmi.
+      </p>
 
     </div>
   )

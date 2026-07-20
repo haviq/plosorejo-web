@@ -25,7 +25,7 @@ const lembagaPendidikan = [
     siswa: 65,
     guru: 6,
     akreditasi: 'A',
-    alamat: 'RT 05, Padukuhan Plosorejo',
+    alamat: 'RT 02, Padukuhan Plosorejo',
     color: '#f59e0b',
   },
   {
@@ -43,7 +43,7 @@ const lembagaPendidikan = [
     siswa: 187,
     guru: 14,
     akreditasi: 'B',
-    alamat: 'RT 08, Padukuhan Plosorejo',
+    alamat: 'RT 04, Padukuhan Plosorejo',
     color: 'var(--amber)',
   },
   {

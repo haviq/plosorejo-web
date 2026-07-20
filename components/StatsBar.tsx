@@ -3,10 +3,10 @@
 import StatCounter from '@/components/StatCounter'
 
 const stats = [
-  { value: '847',  label: 'Jiwa' },
-  { value: '5',    label: 'RT' },
+  { value: '658',  label: 'Jiwa' },
+  { value: '4',    label: 'RT' },
   { value: '142',  label: 'Sapi Perah' },
-  { value: '12',   label: 'UMKM' },
+  { value: '8',    label: 'UMKM' },
   { value: '3',    label: 'Destinasi Wisata' },
 ]
 

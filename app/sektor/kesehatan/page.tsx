@@ -11,7 +11,7 @@ const sektor = sektorData.kesehatan
 
 const posyandu = [
   {
-    nama: 'Posyandu Melati (RT 01–03)',
+    nama: 'Posyandu Melati (RT 01–02)',
     jenis: 'Balita',
     jadwal: 'Setiap Senin pertama',
     kader: 5,
@@ -20,30 +20,12 @@ const posyandu = [
     color: '#34d399',
   },
   {
-    nama: 'Posyandu Mawar (RT 04–06)',
+    nama: 'Posyandu Mawar (RT 03–04)',
     jenis: 'Balita',
     jadwal: 'Setiap Selasa pertama',
     kader: 5,
     sasaran: 42,
     lokasi: 'Rumah Kader Ibu Mulyani',
-    color: '#34d399',
-  },
-  {
-    nama: 'Posyandu Dahlia (RT 07–09)',
-    jenis: 'Balita',
-    jadwal: 'Setiap Rabu pertama',
-    kader: 5,
-    sasaran: 35,
-    lokasi: 'Balai RT 08',
-    color: '#34d399',
-  },
-  {
-    nama: 'Posyandu Anggrek (RT 10–12)',
-    jenis: 'Balita',
-    jadwal: 'Setiap Kamis pertama',
-    kader: 5,
-    sasaran: 28,
-    lokasi: 'Mushola Al-Ikhlas RT 11',
     color: '#34d399',
   },
   {

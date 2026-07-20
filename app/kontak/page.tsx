@@ -9,7 +9,7 @@ const kontakList = [
   {
     icon: '🏠',
     label: 'Alamat',
-    value: 'Padukuhan Plosorejo, Kalurahan Umbulharjo, Kapanewon Cangkringan, Kabupaten Sleman, DIY 55583',
+    value: 'Jl. Balong, Padukuhan Plosorejo, Kalurahan Umbulharjo, Kapanewon Cangkringan, Kabupaten Sleman, DIY 55583',
   },
   {
     icon: '📞',
@@ -170,7 +170,7 @@ export default function KontakPage() {
           style={{ borderColor: 'var(--border)' }}
         >
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3950.8!2d112.7!3d-8.17!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMTAnMTIuMCJTIDExMsKwNDInMDAuMCJF!5e0!3m2!1sid!2sid!4v1"
+            src="https://www.google.com/maps?q=-7.6032,110.4478&hl=id&z=15&output=embed"
             width="100%"
             height="400"
             style={{ border: 0, display: 'block' }}
@@ -181,7 +181,7 @@ export default function KontakPage() {
           />
         </div>
         <p className="text-xs text-gray-600 mt-2 text-center">
-          Padukuhan Plosorejo · Kapanewon Cangkringan, Kabupaten Sleman · 7°36′S 110°27′E
+          Jl. Balong · Padukuhan Plosorejo · Cangkringan, Sleman · 7°36′11.5″S 110°26′52.1″E
         </p>
       </section>
 

@@ -1,3 +1,5 @@
+'use client'
+
 interface UMKMItem {
   id: number
   nama: string
@@ -23,8 +25,29 @@ const jenisColor: Record<string, string> = {
   Jasa: '#60a5fa',
 }
 
+/** Parse "05.00 – 10.00" / "08.00 - 17.00" → open status in Asia/Jakarta */
+function isOpenNow(jamBuka: string, now = new Date()): boolean {
+  const match = jamBuka.match(/(\d{1,2})[.:](\d{2})\s*[–\-—]\s*(\d{1,2})[.:](\d{2})/)
+  if (!match) return false
+
+  const [, h1, m1, h2, m2] = match
+  // Convert current time to Asia/Jakarta (UTC+7)
+  const utc = now.getTime() + now.getTimezoneOffset() * 60_000
+  const jkt = new Date(utc + 7 * 60 * 60_000)
+  const minutes = jkt.getHours() * 60 + jkt.getMinutes()
+
+  const open  = Number(h1) * 60 + Number(m1)
+  const close = Number(h2) * 60 + Number(m2)
+  if (close <= open) {
+    // overnight range, e.g. 22.00 – 05.00
+    return minutes >= open || minutes < close
+  }
+  return minutes >= open && minutes < close
+}
+
 export default function UMKMCard({ item }: UMKMCardProps) {
   const color = jenisColor[item.jenis] ?? '#9ca3af'
+  const open = item.aktif && isOpenNow(item.jamBuka)
   const waUrl = `https://wa.me/${item.whatsapp}?text=${encodeURIComponent(`Halo, saya tertarik dengan produk ${item.nama}. Boleh saya tahu info lebih lanjut?`)}`
 
   return (
@@ -47,13 +70,25 @@ export default function UMKMCard({ item }: UMKMCardProps) {
         </div>
       </div>
 
-      {/* Badge jenis */}
-      <span
-        className="self-start text-xs font-semibold px-2 py-0.5 rounded-full"
-        style={{ color, backgroundColor: `${color}18` }}
-      >
-        {item.jenis}
-      </span>
+      {/* Badge jenis + open/closed */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span
+          className="self-start text-xs font-semibold px-2 py-0.5 rounded-full"
+          style={{ color, backgroundColor: `${color}18` }}
+        >
+          {item.jenis}
+        </span>
+        <span
+          className="self-start text-xs font-semibold px-2 py-0.5 rounded-full border"
+          style={{
+            color: open ? 'var(--green)' : '#9ca3af',
+            borderColor: open ? 'rgba(34,197,94,0.35)' : 'var(--border)',
+            backgroundColor: open ? 'rgba(34,197,94,0.12)' : 'transparent',
+          }}
+        >
+          {open ? '● Buka' : '○ Tutup'}
+        </span>
+      </div>
 
       {/* Produk */}
       <p className="text-sm text-gray-300 line-clamp-2">{item.produk}</p>
