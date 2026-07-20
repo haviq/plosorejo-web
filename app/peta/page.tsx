@@ -3,7 +3,7 @@ import MapLoader from './MapLoader'
 
 export const metadata: Metadata = {
   title: 'Peta Desa',
-  description: 'Peta interaktif Padukuhan Plosorejo — batas wilayah RT Balong, fasilitas, dan titik UMKM.',
+  description: 'Peta interaktif Padukuhan Plosorejo — batas wilayah RT/RW Balong, fasilitas, dan titik UMKM.',
 }
 
 const poiGroups = [
@@ -33,10 +33,10 @@ const poiGroups = [
 ]
 
 const rtLegend = [
-  { name: 'RT 01', color: '#eab308' },
-  { name: 'RT 02', color: '#ef4444' },
-  { name: 'RT 03', color: '#22c55e' },
-  { name: 'RT 04', color: '#3b82f6' },
+  { name: 'RT 01 / RW 01', color: '#eab308' },
+  { name: 'RT 02 / RW 01', color: '#ef4444' },
+  { name: 'RT 03 / RW 01', color: '#22c55e' },
+  { name: 'RT 04 / RW 01', color: '#3b82f6' },
 ]
 
 export default function PetaPage() {
@@ -49,12 +49,12 @@ export default function PetaPage() {
           🗺️ <span className="gradient-text">Peta</span> Padukuhan Plosorejo
         </h1>
         <p className="text-gray-400 text-sm">
-          Batas wilayah per RT · Jl. Balong, Umbulharjo, Cangkringan, Sleman
+          Batas wilayah RT & RW · Jl. Balong, Umbulharjo, Cangkringan, Sleman
         </p>
       </div>
 
-      {/* RT color legend */}
-      <section aria-label="Legenda batas RT">
+      {/* RT / RW legend */}
+      <section aria-label="Legenda batas RT dan RW" className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mr-1">
             Batas RT
@@ -69,17 +69,36 @@ export default function PetaPage() {
               {name}
             </span>
           ))}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mr-1">
+            Batas RW
+          </span>
           <span
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
-            style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.35)', backgroundColor: 'rgba(212,175,55,0.08)' }}
+            style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)', backgroundColor: 'rgba(212,175,55,0.1)' }}
           >
             <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: '#d4af37' }} aria-hidden="true" />
-            Outer Padukuhan
+            RW 01 (seluruh padukuhan)
+          </span>
+          <span
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
+            style={{ color: '#f0ead6', borderColor: 'rgba(240,234,214,0.35)', backgroundColor: 'rgba(240,234,214,0.06)' }}
+          >
+            <span
+              className="w-4 h-0.5"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(90deg,#f0ead6 0 4px,transparent 4px 7px)',
+              }}
+              aria-hidden="true"
+            />
+            Garis batas antar-RT
           </span>
         </div>
       </section>
 
-      {/* Map — client component owns the dynamic Leaflet import */}
+      {/* Map */}
       <section aria-label="Peta interaktif desa">
         <MapLoader />
       </section>
@@ -137,7 +156,7 @@ export default function PetaPage() {
       </section>
 
       <p className="text-xs text-gray-600 text-center">
-        * Polygon batas RT adalah estimasi berdasarkan area Jl. Balong / Padukuhan Plosorejo.
+        * Batas RT/RW adalah estimasi organik berdasarkan cluster pemukiman & jalan OSM.
         Validasi GPS lapangan diperlukan untuk akurasi resmi.
       </p>
 

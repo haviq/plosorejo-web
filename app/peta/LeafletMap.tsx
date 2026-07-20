@@ -1,7 +1,16 @@
 'use client'
 
 import { useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl, Polygon, Tooltip } from 'react-leaflet'
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  ZoomControl,
+  Polygon,
+  Polyline,
+  Tooltip,
+} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
@@ -34,67 +43,100 @@ function makeIcon(color: string) {
 
 // ============================================================
 // Padukuhan Plosorejo / Balong, Umbulharjo, Cangkringan
-// Koordinat & landmark dari OpenStreetMap (Overpass, Juli 2026)
-// Batas RT = estimasi organik mengikuti jalan & cluster rumah
+// Struktur: 1 RW (RW 01) · 4 RT (RT 01–04)
+// Koordinat OSM real + batas organik mengikuti jalan
 // ============================================================
 
-// Center di antara Masjid Asy Syams & Jl. Raya Merapi Golf
 const CENTER: [number, number] = [-7.6234, 110.4372]
 
-// Outer boundary — envelope organik cluster pemukiman Balong
-// Mengikuti sebaran jalan: Anaryoto–Anjar Wiyanto–Masjid Asy Syams–SD
-const PADUKUHAN_POLYGON: [number, number][] = [
-  [-7.6186, 110.4340], // utara-barat dekat Adi Prawoto
-  [-7.6182, 110.4360],
-  [-7.6184, 110.4382],
-  [-7.6190, 110.4400],
-  [-7.6202, 110.4414], // utara-timur Anjar Wiyanto
-  [-7.6218, 110.4420],
-  [-7.6234, 110.4420], // timur Al Ghofur / Budi Sanyoto
-  [-7.6250, 110.4414],
-  [-7.6264, 110.4404],
-  [-7.6272, 110.4388], // selatan-timur
-  [-7.6274, 110.4370],
-  [-7.6268, 110.4350], // selatan Angkringan / SD
-  [-7.6258, 110.4336],
-  [-7.6242, 110.4328], // barat-selatan TK Ibnu Abbas
-  [-7.6224, 110.4326], // barat Anaryoto / Anto
-  [-7.6206, 110.4330],
-  [-7.6194, 110.4336],
+// RW 01 = outer boundary padukuhan (organik)
+const RW_ZONES: {
+  name: string
+  color: string
+  coords: [number, number][]
+}[] = [
+  {
+    name: 'RW 01',
+    color: '#d4af37',
+    coords: [
+      [-7.6186, 110.4340],
+      [-7.6182, 110.4360],
+      [-7.6184, 110.4382],
+      [-7.6190, 110.4400],
+      [-7.6202, 110.4414],
+      [-7.6218, 110.4420],
+      [-7.6234, 110.4420],
+      [-7.6250, 110.4414],
+      [-7.6264, 110.4404],
+      [-7.6272, 110.4388],
+      [-7.6274, 110.4370],
+      [-7.6268, 110.4350],
+      [-7.6258, 110.4336],
+      [-7.6242, 110.4328],
+      [-7.6224, 110.4326],
+      [-7.6206, 110.4330],
+      [-7.6194, 110.4336],
+    ],
+  },
 ]
 
-// 4 RT organik — dipisah kira-kira oleh:
-//   - Jl. Raya Merapi Golf (N–S, ~110.4355)
-//   - Jl. Menuju Lapangan Golf (E–W, ~-7.6245)
-// Warna: kuning / merah / hijau / biru
+// Garis batas internal (lebih tegas) — sumbu jalan utama
+// N–S ~ Jl. Raya Merapi Golf · E–W ~ Jl. Menuju Lapangan Golf
+const BOUNDARY_LINES: { name: string; coords: [number, number][] }[] = [
+  {
+    name: 'Batas RT (utara–selatan)',
+    coords: [
+      [-7.6185, 110.4371],
+      [-7.6210, 110.4370],
+      [-7.6230, 110.4372],
+      [-7.6252, 110.4375],
+      [-7.6270, 110.4369],
+    ],
+  },
+  {
+    name: 'Batas RT (barat–timur)',
+    coords: [
+      [-7.6232, 110.4328],
+      [-7.6234, 110.4348],
+      [-7.6230, 110.4362],
+      [-7.6230, 110.4372],
+      [-7.6236, 110.4386],
+      [-7.6240, 110.4406],
+      [-7.6234, 110.4420],
+    ],
+  },
+]
+
+// 4 RT di dalam RW 01
 const RT_ZONES: {
   name: string
+  rw: string
   color: string
   fillColor: string
   coords: [number, number][]
 }[] = [
   {
-    // RT 01 — Barat Laut
-    // Adi Prawoto, Anaryoto, Anto, Masjid Al Fath
+    // Barat Laut — Adi Prawoto, Anaryoto, Masjid Al Fath
     name: 'RT 01',
+    rw: 'RW 01',
     color: '#eab308',
     fillColor: '#eab308',
     coords: [
       [-7.6186, 110.4340],
       [-7.6182, 110.4360],
       [-7.6188, 110.4372],
-      [-7.6210, 110.4370], // ke Jl. Golf E-W
+      [-7.6210, 110.4370],
       [-7.6230, 110.4362],
-      [-7.6234, 110.4348], // Masjid Al Fath area
+      [-7.6234, 110.4348],
       [-7.6224, 110.4326],
       [-7.6206, 110.4330],
       [-7.6194, 110.4336],
     ],
   },
   {
-    // RT 02 — Timur Laut
-    // Anjar Wiyanto, Masjid Al Ghofur, Budi Sanyoto
+    // Timur Laut — Anjar Wiyanto, Masjid Al Ghofur
     name: 'RT 02',
+    rw: 'RW 01',
     color: '#ef4444',
     fillColor: '#ef4444',
     coords: [
@@ -105,21 +147,21 @@ const RT_ZONES: {
       [-7.6218, 110.4420],
       [-7.6234, 110.4420],
       [-7.6240, 110.4406],
-      [-7.6236, 110.4386], // Budi Suharto / Bakir utara
+      [-7.6236, 110.4386],
       [-7.6230, 110.4372],
       [-7.6210, 110.4370],
     ],
   },
   {
-    // RT 03 — Barat Daya
-    // SD Umbulharjo, Gedung Serbaguna, SMP Taman Dewasa, Angkringan
+    // Barat Daya — SD Umbulharjo, Gedung Serbaguna
     name: 'RT 03',
+    rw: 'RW 01',
     color: '#22c55e',
     fillColor: '#22c55e',
     coords: [
       [-7.6234, 110.4348],
       [-7.6230, 110.4362],
-      [-7.6236, 110.4374], // ke Jl. Golf E-W
+      [-7.6236, 110.4374],
       [-7.6252, 110.4376],
       [-7.6264, 110.4368],
       [-7.6268, 110.4350],
@@ -128,9 +170,9 @@ const RT_ZONES: {
     ],
   },
   {
-    // RT 04 — Tenggara
-    // Masjid Asy Syams, Bakir, Basuki, Bardi Puroyo, Budi Suharto
+    // Tenggara — Masjid Asy Syams, Bakir, Basuki
     name: 'RT 04',
+    rw: 'RW 01',
     color: '#3b82f6',
     fillColor: '#3b82f6',
     coords: [
@@ -149,30 +191,26 @@ const RT_ZONES: {
   },
 ]
 
-// Marker: prioritas OSM real, sisanya estimasi lokal
 const markers: {
   pos: [number, number]
   label: string
   type: 'balai' | 'masjid' | 'farm' | 'umkm' | 'facility'
 }[] = [
-  // === Landmark OSM real ===
-  { pos: [-7.624274, 110.438280], label: 'Masjid Asy Syams',              type: 'masjid' },
-  { pos: [-7.622214, 110.435219], label: 'Masjid Al Fath',                type: 'masjid' },
-  { pos: [-7.622196, 110.440536], label: 'Masjid Al Ghofur',              type: 'masjid' },
-  { pos: [-7.625043, 110.436251], label: 'SD Umbulharjo',                 type: 'facility' },
-  { pos: [-7.624993, 110.435467], label: 'SMP Taman Dewasa',              type: 'facility' },
-  { pos: [-7.625309, 110.435846], label: 'Gedung Serbaguna Umbulharjo',   type: 'balai' },
-  { pos: [-7.617692, 110.435375], label: 'TK ABA Balong',                 type: 'facility' },
-  { pos: [-7.625888, 110.434990], label: 'Angkringan Wek-ji',             type: 'umkm' },
-
-  // === Estimasi titik lokal di area Balong ===
-  { pos: [-7.6238, 110.4375], label: 'Balai Padukuhan Plosorejo', type: 'balai' },
-  { pos: [-7.6218, 110.4358], label: 'Kandang Sapi Koperasi',    type: 'farm' },
-  { pos: [-7.6200, 110.4345], label: 'Peternakan Pak Harto',     type: 'farm' },
-  { pos: [-7.6252, 110.4395], label: 'Peternakan Bu Rahayu',     type: 'farm' },
-  { pos: [-7.6225, 110.4388], label: 'Warung Bu Siti',           type: 'umkm' },
-  { pos: [-7.6260, 110.4375], label: 'Bengkel Las Mandiri',      type: 'umkm' },
-  { pos: [-7.6215, 110.4405], label: 'Batik Tulis Nusantara',    type: 'umkm' },
+  { pos: [-7.624274, 110.438280], label: 'Masjid Asy Syams',            type: 'masjid' },
+  { pos: [-7.622214, 110.435219], label: 'Masjid Al Fath',              type: 'masjid' },
+  { pos: [-7.622196, 110.440536], label: 'Masjid Al Ghofur',            type: 'masjid' },
+  { pos: [-7.625043, 110.436251], label: 'SD Umbulharjo',               type: 'facility' },
+  { pos: [-7.624993, 110.435467], label: 'SMP Taman Dewasa',            type: 'facility' },
+  { pos: [-7.625309, 110.435846], label: 'Gedung Serbaguna Umbulharjo', type: 'balai' },
+  { pos: [-7.617692, 110.435375], label: 'TK ABA Balong',               type: 'facility' },
+  { pos: [-7.625888, 110.434990], label: 'Angkringan Wek-ji',           type: 'umkm' },
+  { pos: [-7.6238, 110.4375],     label: 'Balai Padukuhan Plosorejo',   type: 'balai' },
+  { pos: [-7.6218, 110.4358],     label: 'Kandang Sapi Koperasi',       type: 'farm' },
+  { pos: [-7.6200, 110.4345],     label: 'Peternakan Pak Harto',        type: 'farm' },
+  { pos: [-7.6252, 110.4395],     label: 'Peternakan Bu Rahayu',        type: 'farm' },
+  { pos: [-7.6225, 110.4388],     label: 'Warung Bu Siti',              type: 'umkm' },
+  { pos: [-7.6260, 110.4375],     label: 'Bengkel Las Mandiri',         type: 'umkm' },
+  { pos: [-7.6215, 110.4405],     label: 'Batik Tulis Nusantara',       type: 'umkm' },
 ]
 
 const TYPE_COLOR: Record<string, string> = {
@@ -198,7 +236,7 @@ export default function LeafletMap() {
     <MapContainer
       center={CENTER}
       zoom={16}
-      style={{ height: 540, width: '100%', borderRadius: '0.75rem', border: '1px solid var(--border)' }}
+      style={{ height: 560, width: '100%', borderRadius: '0.75rem', border: '1px solid var(--border)' }}
       zoomControl={false}
     >
       <TileLayer
@@ -207,22 +245,61 @@ export default function LeafletMap() {
       />
       <ZoomControl position="bottomright" />
 
-      {/* Outer boundary Padukuhan — organik */}
-      <Polygon
-        positions={PADUKUHAN_POLYGON}
-        pathOptions={{
-          color: '#d4af37',
-          fillColor: '#d4af37',
-          fillOpacity: 0.03,
-          weight: 2.5,
-        }}
-      >
-        <Tooltip sticky>
-          <span style={{ fontWeight: 600 }}>Batas Padukuhan Plosorejo (Balong)</span>
-        </Tooltip>
-      </Polygon>
+      {/* ===== RW boundary (outer) ===== */}
+      {RW_ZONES.map((rw) => (
+        <Polygon
+          key={rw.name}
+          positions={rw.coords}
+          pathOptions={{
+            color: rw.color,
+            fillColor: rw.color,
+            fillOpacity: 0.02,
+            weight: 3.5,
+            opacity: 0.95,
+          }}
+        >
+          <Tooltip sticky>
+            <span style={{ fontWeight: 700 }}>
+              {rw.name} · Batas wilayah padukuhan
+            </span>
+          </Tooltip>
+          <Tooltip permanent direction="center" offset={[0, -90]}>
+            <span style={{
+              fontWeight: 800,
+              fontSize: '13px',
+              letterSpacing: '0.04em',
+              color: rw.color,
+              textShadow: '0 1px 3px rgba(0,0,0,0.9)',
+              background: 'rgba(0,0,0,0.72)',
+              padding: '3px 10px',
+              borderRadius: '999px',
+              border: `1.5px solid ${rw.color}`,
+            }}>
+              {rw.name}
+            </span>
+          </Tooltip>
+        </Polygon>
+      ))}
 
-      {/* Batas wilayah per RT — bentuk organik mengikuti jalan */}
+      {/* ===== Garis batas internal RT (lebih tegas) ===== */}
+      {BOUNDARY_LINES.map((line) => (
+        <Polyline
+          key={line.name}
+          positions={line.coords}
+          pathOptions={{
+            color: '#f0ead6',
+            weight: 2.5,
+            opacity: 0.75,
+            dashArray: '8 5',
+          }}
+        >
+          <Tooltip sticky>
+            <span style={{ fontWeight: 600 }}>{line.name}</span>
+          </Tooltip>
+        </Polyline>
+      ))}
+
+      {/* ===== RT zones ===== */}
       {RT_ZONES.map((rt) => (
         <Polygon
           key={rt.name}
@@ -230,24 +307,61 @@ export default function LeafletMap() {
           pathOptions={{
             color: rt.color,
             fillColor: rt.fillColor,
-            fillOpacity: 0.22,
-            weight: 2,
+            fillOpacity: 0.24,
+            weight: 2.5,
+            opacity: 0.95,
           }}
         >
-          <Tooltip permanent direction="center" className="rt-label">
+          <Tooltip sticky>
+            <div style={{ fontWeight: 700 }}>
+              {rt.name} / {rt.rw}
+              <div style={{ fontWeight: 400, fontSize: 11, marginTop: 2, color: '#6b7280' }}>
+                Klik untuk detail batas wilayah
+              </div>
+            </div>
+          </Tooltip>
+          <Tooltip permanent direction="center">
             <span style={{
-              fontWeight: 700,
+              fontWeight: 800,
               fontSize: '12px',
               color: rt.color,
-              textShadow: '0 1px 3px rgba(0,0,0,0.85)',
-              background: 'rgba(0,0,0,0.65)',
-              padding: '2px 7px',
-              borderRadius: '4px',
-              border: `1px solid ${rt.color}`,
+              textShadow: '0 1px 3px rgba(0,0,0,0.9)',
+              background: 'rgba(0,0,0,0.72)',
+              padding: '3px 8px',
+              borderRadius: '6px',
+              border: `1.5px solid ${rt.color}`,
+              display: 'inline-block',
+              lineHeight: 1.25,
+              textAlign: 'center',
             }}>
               {rt.name}
+              <br />
+              <span style={{ fontWeight: 600, fontSize: '10px', opacity: 0.9 }}>{rt.rw}</span>
             </span>
           </Tooltip>
+          <Popup>
+            <div style={{ minWidth: 160 }}>
+              <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 4 }}>
+                {rt.name} / {rt.rw}
+              </div>
+              <div style={{ fontSize: 12, color: '#6b7280' }}>
+                Batas wilayah administratif Padukuhan Plosorejo (Balong)
+              </div>
+              <div style={{
+                marginTop: 8,
+                display: 'inline-block',
+                width: 12,
+                height: 12,
+                borderRadius: 3,
+                background: rt.color,
+                verticalAlign: 'middle',
+                marginRight: 6,
+              }} />
+              <span style={{ fontSize: 12, color: rt.color, fontWeight: 700 }}>
+                Warna zona {rt.name}
+              </span>
+            </div>
+          </Popup>
         </Polygon>
       ))}
 
