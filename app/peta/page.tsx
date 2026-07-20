@@ -20,7 +20,7 @@ const poiGroups = [
   {
     label: 'Fasilitas Desa',
     color: '#818cf8',
-    items: ['Balai Padukuhan', 'Masjid RT Balong', 'SD Umbulharjo', 'Puskesmas Cangkringan'],
+    items: ['Balai Padukuhan', 'Masjid Asy Syams', 'SD Umbulharjo', 'TK ABA Balong', 'Gedung Serbaguna'],
   },
 ]
 
@@ -119,7 +119,7 @@ export default function PetaPage() {
           { label: 'Luas Wilayah', value: '±45 ha' },
           { label: 'Jumlah RT',    value: '4' },
           { label: 'Jumlah RW',    value: '1' },
-          { label: 'Koordinat',    value: '7°36′S 110°27′E' },
+          { label: 'Koordinat',    value: '7°37′S 110°26′E' },
         ].map(({ label, value }) => (
           <div key={label}>
             <p className="text-lg font-bold gradient-text tabular-nums">{value}</p>

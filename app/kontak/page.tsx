@@ -170,7 +170,7 @@ export default function KontakPage() {
           style={{ borderColor: 'var(--border)' }}
         >
           <iframe
-            src="https://www.google.com/maps?q=-7.6032,110.4478&hl=id&z=15&output=embed"
+            src="https://www.google.com/maps?q=-7.62428,110.43829&hl=id&z=16&output=embed"
             width="100%"
             height="400"
             style={{ border: 0, display: 'block' }}
@@ -181,7 +181,7 @@ export default function KontakPage() {
           />
         </div>
         <p className="text-xs text-gray-600 mt-2 text-center">
-          Jl. Balong · Padukuhan Plosorejo · Cangkringan, Sleman · 7°36′11.5″S 110°26′52.1″E
+          Jl. Balong · Padukuhan Plosorejo · Cangkringan, Sleman · 7°37′27″S 110°26′18″E
         </p>
       </section>
 
