@@ -21,12 +21,15 @@ Admin konten non-IT friendly untuk website Padukuhan Plosorejo.
 4. Dataset: `production`
 5. Salin **Project ID**
 
+> Project ID Plosorejo: `p7xgykwm`  
+> Organization: `oul4xr266`
+
 ### 2. Isi environment
 
 Lokal (`.env.local`):
 
 ```bash
-NEXT_PUBLIC_SANITY_PROJECT_ID=xxxx
+NEXT_PUBLIC_SANITY_PROJECT_ID=p7xgykwm
 NEXT_PUBLIC_SANITY_DATASET=production
 NEXT_PUBLIC_SANITY_API_VERSION=2025-01-01
 ```
