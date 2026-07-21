@@ -19,8 +19,8 @@
     "leaflet": "^1.9.4",
     "next": "16.2.10",
     "next-sanity": "^13.1.4",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
     "react-leaflet": "^5.0.0",
     "sanity": "^6.5.0",
     "styled-components": "^6.4.4"
