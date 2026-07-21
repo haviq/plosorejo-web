@@ -1,20 +1,23 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import beritaData from '@/content/berita.json'
+import { getBeritaBySlug, getBeritaList, getBeritaSlugs } from '@/lib/data'
 import { formatTanggal } from '@/lib/utils'
 
 interface Props {
   params: Promise<{ slug: string }>
 }
 
+export const revalidate = 60
+
 export async function generateStaticParams() {
-  return beritaData.map((b) => ({ slug: b.slug }))
+  const slugs = await getBeritaSlugs()
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const berita = beritaData.find((b) => b.slug === slug)
+  const berita = await getBeritaBySlug(slug)
   if (!berita) return { title: 'Berita tidak ditemukan' }
   return {
     title: berita.judul,
@@ -33,12 +36,13 @@ const kategoriColor: Record<string, string> = {
 
 export default async function BeritaDetailPage({ params }: Props) {
   const { slug } = await params
-  const berita = beritaData.find((b) => b.slug === slug)
+  const berita = await getBeritaBySlug(slug)
   if (!berita) notFound()
 
   const color = kategoriColor[berita.kategori] ?? '#9ca3af'
   const paragraphs = berita.isi.split('\n\n').filter(Boolean)
-  const lainnya = beritaData.filter((b) => b.slug !== slug).slice(0, 3)
+  const all = await getBeritaList()
+  const lainnya = all.filter((b) => b.slug !== slug).slice(0, 3)
 
   return (
     <div className="page-shell max-w-4xl space-y-10">

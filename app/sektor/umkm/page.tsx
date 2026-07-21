@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import UMKMCatalog from '@/components/UMKMCatalog'
-import umkmData from '@/content/umkm.json'
-import sektorData from '@/content/sektor.json'
-import type { UMKMItem } from '@/lib/types'
+import { getSektorMap, getUMKMList } from '@/lib/data'
 
 export const metadata: Metadata = {
   title: 'UMKM Padukuhan',
@@ -11,10 +9,18 @@ export const metadata: Metadata = {
     'Direktori lengkap UMKM aktif di Padukuhan Plosorejo — kuliner, kerajinan, jasa, dan pertanian.',
 }
 
-const sektor = sektorData.umkm
-const items = umkmData as UMKMItem[]
+export const revalidate = 60
 
-export default function UMKMPage() {
+export default async function UMKMPage() {
+  const [items, sektorMap] = await Promise.all([getUMKMList(), getSektorMap()])
+  const sektor = sektorMap.umkm || {
+    nama: 'UMKM',
+    deskripsi: 'Direktori UMKM Padukuhan Plosorejo.',
+    icon: '🏪',
+    stats: [],
+    items: [],
+  }
+
   return (
     <div className="page-shell space-y-10">
       <PageHeader
@@ -35,20 +41,22 @@ export default function UMKMPage() {
         ))}
       </section>
 
-      <section aria-label="Jenis UMKM">
-        <h2 className="section-label mb-3">Bidang Usaha</h2>
-        <div className="flex flex-wrap gap-2">
-          {sektor.items.map((item) => (
-            <span
-              key={item}
-              className="badge border"
-              style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-      </section>
+      {sektor.items.length > 0 && (
+        <section aria-label="Jenis UMKM">
+          <h2 className="section-label mb-3">Bidang Usaha</h2>
+          <div className="flex flex-wrap gap-2">
+            {sektor.items.map((item) => (
+              <span
+                key={item}
+                className="badge border"
+                style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+              >
+                {item}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section aria-label="Katalog UMKM" className="space-y-4">
         <h2 className="section-label">Direktori Usaha</h2>

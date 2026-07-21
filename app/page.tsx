@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import SektorCard from '@/components/SektorCard'
 import BeritaCard from '@/components/BeritaCard'
-import MerapiStatus from '@/components/MerapiStatus'
+import MerapiStatusServer from '@/components/MerapiStatusServer'
 import StatsBar from '@/components/StatsBar'
 import beritaData from '@/content/berita.json'
 import sektorData from '@/content/sektor.json'
@@ -175,7 +175,7 @@ export default function HomePage() {
 
           {/* Merapi status widget */}
           <div className="w-full max-w-sm">
-            <MerapiStatus />
+            <MerapiStatusServer />
           </div>
 
           {/* CTAs */}

@@ -1,7 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-
 type Level = 'Normal' | 'Waspada' | 'Siaga' | 'Awas'
 
 const levelConfig: Record<Level, { color: string; bg: string; desc: string }> = {
@@ -27,24 +25,28 @@ const levelConfig: Record<Level, { color: string; bg: string; desc: string }> = 
   },
 }
 
-export default function MerapiStatus() {
-  const [level, setLevel] = useState<Level>('Normal')
-  const [lastUpdate, setLastUpdate] = useState('')
+interface MerapiStatusProps {
+  level?: Level
+  deskripsi?: string
+  updatedAt?: string
+}
 
-  useEffect(() => {
-    setLevel('Normal')
-    setLastUpdate(
-      new Date().toLocaleDateString('id-ID', {
+export default function MerapiStatus({
+  level = 'Normal',
+  deskripsi,
+  updatedAt,
+}: MerapiStatusProps) {
+  const cfg = levelConfig[level] || levelConfig.Normal
+  const desc = deskripsi || cfg.desc
+  const lastUpdate = updatedAt
+    ? new Date(updatedAt).toLocaleDateString('id-ID', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-      }),
-    )
-  }, [])
-
-  const cfg = levelConfig[level]
+      })
+    : ''
 
   return (
     <div
@@ -75,7 +77,7 @@ export default function MerapiStatus() {
           </span>
         </div>
         <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
-          {cfg.desc}
+          {desc}
         </p>
         {lastUpdate && (
           <p className="text-xs mt-1" style={{ color: 'var(--muted2)' }}>

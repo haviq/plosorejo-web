@@ -1,99 +1,19 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import GaleriGrid from '@/components/GaleriGrid'
-import type { GaleriAlbum } from '@/lib/types'
+import { getGaleriList } from '@/lib/data'
 
 export const metadata: Metadata = {
   title: 'Galeri KKN 2026',
   description: 'Dokumentasi foto kegiatan KKN UNRIYO 2026 di Padukuhan Plosorejo.',
 }
 
-const albums: GaleriAlbum[] = [
-  {
-    id: 1,
-    judul: 'Penyambutan Tim KKN',
-    tanggal: '1 Juli 2026',
-    emoji: '🎉',
-    count: 12,
-    deskripsi:
-      'Upacara penyambutan 12 mahasiswa KKN UNRIYO angkatan 2026 oleh perangkat padukuhan dan warga.',
-    warna: 'var(--gold)',
-  },
-  {
-    id: 2,
-    judul: 'Kegiatan Posyandu',
-    tanggal: '5 Juli 2026',
-    emoji: '🏥',
-    count: 18,
-    deskripsi:
-      'Mahasiswa KKN membantu pelaksanaan Posyandu Balita — penimbangan, imunisasi, dan penyuluhan gizi.',
-    warna: '#34d399',
-  },
-  {
-    id: 3,
-    judul: 'Pelatihan Pupuk Organik',
-    tanggal: '8 Juli 2026',
-    emoji: '🌱',
-    count: 15,
-    deskripsi:
-      'Workshop pembuatan pupuk organik dari kotoran sapi bersama kelompok tani Maju Bersama.',
-    warna: 'var(--green)',
-  },
-  {
-    id: 4,
-    judul: 'Panen Raya Padi',
-    tanggal: '10 Juli 2026',
-    emoji: '🌾',
-    count: 24,
-    deskripsi:
-      'Dokumentasi kegiatan panen raya padi serentak yang diikuti ratusan petani Padukuhan Plosorejo.',
-    warna: 'var(--gold)',
-  },
-  {
-    id: 5,
-    judul: 'Pelatihan UMKM Digital',
-    tanggal: '12 Juli 2026',
-    emoji: '💻',
-    count: 9,
-    deskripsi:
-      'Pelatihan pemasaran digital dan penggunaan media sosial untuk pelaku UMKM padukuhan.',
-    warna: '#818cf8',
-  },
-  {
-    id: 6,
-    judul: 'Kunjungan Peternakan',
-    tanggal: '14 Juli 2026',
-    emoji: '🐄',
-    count: 20,
-    deskripsi:
-      'Tim KKN mengunjungi peternakan sapi perah unggulan dan mempelajari proses produksi susu.',
-    warna: 'var(--gold)',
-  },
-  {
-    id: 7,
-    judul: 'Lomba Mewarnai Anak',
-    tanggal: '16 Juli 2026',
-    emoji: '🎨',
-    count: 30,
-    deskripsi:
-      'Lomba mewarnai tingkat PAUD dan TK sebagai bagian dari program pengembangan karakter anak.',
-    warna: '#f97316',
-  },
-  {
-    id: 8,
-    judul: 'Pengerjaan Web Desa',
-    tanggal: '18 Juli 2026',
-    emoji: '🌐',
-    count: 8,
-    deskripsi:
-      'Tim divisi teknologi KKN mengerjakan portal informasi digital Padukuhan Plosorejo.',
-    warna: '#60a5fa',
-  },
-]
+export const revalidate = 60
 
-const totalFoto = albums.reduce((sum, a) => sum + a.count, 0)
+export default async function GaleriPage() {
+  const albums = await getGaleriList()
+  const totalFoto = albums.reduce((sum, a) => sum + a.count, 0)
 
-export default function GaleriPage() {
   return (
     <div className="page-shell space-y-10">
       <PageHeader
