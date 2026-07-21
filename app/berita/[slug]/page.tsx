@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import beritaData from '@/content/berita.json'
+import { formatTanggal } from '@/lib/utils'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -25,14 +26,9 @@ const kategoriColor: Record<string, string> = {
   Pertanian: 'var(--green)',
   Kesehatan: '#34d399',
   KKN: '#818cf8',
-  Budaya: 'var(--amber)',
+  Budaya: 'var(--gold)',
   Pendidikan: '#60a5fa',
-  Peternakan: 'var(--amber)',
-}
-
-function formatTanggal(iso: string) {
-  const d = new Date(iso)
-  return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  Peternakan: 'var(--gold)',
 }
 
 export default async function BeritaDetailPage({ params }: Props) {
@@ -45,82 +41,82 @@ export default async function BeritaDetailPage({ params }: Props) {
   const lainnya = beritaData.filter((b) => b.slug !== slug).slice(0, 3)
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-12 space-y-10">
-
-      {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/" className="hover:text-white transition-colors">Beranda</Link>
+    <div className="page-shell max-w-4xl space-y-10">
+      <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm" style={{ color: 'var(--muted)' }}>
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          Beranda
+        </Link>
         <span aria-hidden="true">/</span>
-        <Link href="/berita" className="hover:text-white transition-colors">Berita</Link>
+        <Link href="/berita" className="hover:opacity-80 transition-opacity">
+          Berita
+        </Link>
         <span aria-hidden="true">/</span>
-        <span className="text-gray-400 line-clamp-1">{berita.judul}</span>
+        <span className="line-clamp-1" style={{ color: 'var(--text)' }}>
+          {berita.judul}
+        </span>
       </nav>
 
-      {/* Artikel */}
       <article className="space-y-6">
-        {/* Kategori + tanggal */}
         <div className="flex items-center gap-3 flex-wrap">
-          <span
-            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={{ color, backgroundColor: `${color}18` }}
-          >
+          <span className="badge" style={{ color, backgroundColor: `${color}18` }}>
             {berita.kategori}
           </span>
-          <time dateTime={berita.tanggal} className="text-xs text-gray-500">
-            {formatTanggal(berita.tanggal)}
+          <time dateTime={berita.tanggal} className="text-xs" style={{ color: 'var(--muted)' }}>
+            {formatTanggal(berita.tanggal, {
+              weekday: 'long',
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })}
           </time>
         </div>
 
-        {/* Judul */}
-        <h1 className="text-3xl sm:text-4xl font-black leading-tight text-white">
+        <h1
+          className="font-black leading-tight"
+          style={{
+            fontFamily: 'var(--font-playfair), Georgia, serif',
+            fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
+            color: 'var(--text)',
+          }}
+        >
           {berita.judul}
         </h1>
 
-        {/* Ringkasan */}
         <p
-          className="text-base text-gray-300 leading-relaxed border-l-2 pl-4 italic"
-          style={{ borderColor: color }}
+          className="text-base leading-relaxed border-l-2 pl-4 italic"
+          style={{ borderColor: color, color: 'var(--muted)' }}
         >
           {berita.ringkasan}
         </p>
 
-        {/* Divider */}
         <hr style={{ borderColor: 'var(--border)' }} />
 
-        {/* Body */}
         <div className="space-y-4">
           {paragraphs.map((p, i) => (
-            <p key={i} className="text-gray-300 leading-relaxed text-sm">
+            <p key={i} className="leading-relaxed text-sm md:text-base" style={{ color: 'var(--text)' }}>
               {p}
             </p>
           ))}
         </div>
       </article>
 
-      {/* Berita lainnya */}
       {lainnya.length > 0 && (
-        <section aria-label="Berita lainnya">
-          <h2 className="text-lg font-black mb-4">Berita Lainnya</h2>
+        <section aria-label="Berita lainnya" className="space-y-4">
+          <h2 className="section-label">Berita Lainnya</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {lainnya.map((b) => {
               const c = kategoriColor[b.kategori] ?? '#9ca3af'
               return (
-                <Link
-                  key={b.slug}
-                  href={`/berita/${b.slug}`}
-                  className="rounded-xl border p-4 flex flex-col gap-2 hover:border-gray-600 transition-colors"
-                  style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-                >
-                  <span
-                    className="self-start text-xs font-semibold px-2 py-0.5 rounded-full"
-                    style={{ color: c, backgroundColor: `${c}18` }}
-                  >
+                <Link key={b.slug} href={`/berita/${b.slug}`} className="card-surface p-4 flex flex-col gap-2">
+                  <span className="self-start badge" style={{ color: c, backgroundColor: `${c}18` }}>
                     {b.kategori}
                   </span>
-                  <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">
+                  <p className="text-sm font-semibold line-clamp-2 leading-snug" style={{ color: 'var(--text)' }}>
                     {b.judul}
                   </p>
-                  <p className="text-xs text-gray-500">{formatTanggal(b.tanggal)}</p>
+                  <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                    {formatTanggal(b.tanggal)}
+                  </p>
                 </Link>
               )
             })}
@@ -128,15 +124,9 @@ export default async function BeritaDetailPage({ params }: Props) {
         </section>
       )}
 
-      {/* Back */}
-      <Link
-        href="/berita"
-        className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors"
-        aria-label="Kembali ke daftar berita"
-      >
+      <Link href="/berita" className="btn-ghost" aria-label="Kembali ke daftar berita">
         ← Kembali ke Berita
       </Link>
-
     </div>
   )
 }

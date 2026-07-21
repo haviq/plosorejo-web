@@ -1,55 +1,48 @@
 import type { Metadata } from 'next'
-import UMKMCard from '@/components/UMKMCard'
+import PageHeader from '@/components/PageHeader'
+import UMKMCatalog from '@/components/UMKMCatalog'
 import umkmData from '@/content/umkm.json'
 import sektorData from '@/content/sektor.json'
+import type { UMKMItem } from '@/lib/types'
 
 export const metadata: Metadata = {
   title: 'UMKM Padukuhan',
-  description: 'Direktori lengkap UMKM aktif di Padukuhan Plosorejo — kuliner, kerajinan, jasa, dan pertanian.',
+  description:
+    'Direktori lengkap UMKM aktif di Padukuhan Plosorejo — kuliner, kerajinan, jasa, dan pertanian.',
 }
 
 const sektor = sektorData.umkm
+const items = umkmData as UMKMItem[]
 
 export default function UMKMPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-10">
+    <div className="page-shell space-y-10">
+      <PageHeader
+        eyebrow="Sektor Ekonomi"
+        title="UMKM"
+        highlight="Padukuhan"
+        description={sektor.deskripsi}
+      />
 
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          {sektor.icon} <span className="gradient-text">UMKM</span> Padukuhan
-        </h1>
-        <p className="text-gray-400 text-sm max-w-xl">{sektor.deskripsi}</p>
-      </section>
-
-      {/* Stats */}
-      <section
-        className="grid grid-cols-2 sm:grid-cols-4 gap-4"
-        aria-label="Statistik UMKM"
-      >
+      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik UMKM">
         {sektor.stats.map(({ label, value }) => (
-          <div
-            key={label}
-            className="rounded-xl border p-4 text-center"
-            style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-          >
-            <p className="text-xl font-bold gradient-text tabular-nums">{value}</p>
-            <p className="text-xs text-gray-500 mt-1">{label}</p>
+          <div key={label} className="card-surface p-4 text-center">
+            <p className="stat-value text-xl">{value}</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+              {label}
+            </p>
           </div>
         ))}
       </section>
 
-      {/* Jenis UMKM */}
       <section aria-label="Jenis UMKM">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3">
-          Bidang Usaha
-        </h2>
+        <h2 className="section-label mb-3">Bidang Usaha</h2>
         <div className="flex flex-wrap gap-2">
           {sektor.items.map((item) => (
             <span
               key={item}
-              className="px-3 py-1 rounded-full text-xs border"
-              style={{ borderColor: 'var(--border)', color: '#9ca3af' }}
+              className="badge border"
+              style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
             >
               {item}
             </span>
@@ -57,45 +50,38 @@ export default function UMKMPage() {
         </div>
       </section>
 
-      {/* Katalog */}
-      <section aria-label="Katalog UMKM">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-5">
-          Direktori Usaha ({umkmData.length} usaha terdaftar)
-        </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {umkmData.map((item) => (
-            <UMKMCard key={item.id} item={item} />
-          ))}
-        </div>
+      <section aria-label="Katalog UMKM" className="space-y-4">
+        <h2 className="section-label">Direktori Usaha</h2>
+        <UMKMCatalog items={items} />
       </section>
 
-      {/* CTA Daftar */}
       <section
-        className="rounded-xl border p-8 text-center space-y-3"
+        className="card-surface p-8 text-center space-y-4"
         style={{
-          background: 'linear-gradient(135deg, rgba(245,158,11,0.06), rgba(34,197,94,0.06))',
-          borderColor: 'var(--border)',
+          background:
+            'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(34,197,94,0.05))',
         }}
         aria-label="Daftarkan UMKM"
       >
-        <h2 className="text-xl font-black">
+        <h2
+          className="text-xl font-black"
+          style={{ fontFamily: 'var(--font-playfair), Georgia, serif' }}
+        >
           Punya usaha di Plosorejo?{' '}
-          <span className="gradient-text">Daftarkan sekarang.</span>
+          <span className="gold-text">Daftarkan sekarang.</span>
         </h2>
-        <p className="text-gray-400 text-sm max-w-md mx-auto">
+        <p className="text-sm max-w-md mx-auto" style={{ color: 'var(--muted)' }}>
           Tingkatkan visibilitas usaha Anda dan jangkau lebih banyak pelanggan melalui portal desa.
         </p>
         <a
           href="https://wa.me/6281234567890?text=Saya%20ingin%20mendaftarkan%20UMKM%20saya%20di%20Padukuhan%20Plosorejo"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block px-6 py-2.5 rounded-lg font-semibold text-sm text-black transition-opacity hover:opacity-85"
-          style={{ background: 'var(--gradient)' }}
+          className="btn-primary"
         >
           Daftar via WhatsApp
         </a>
       </section>
-
     </div>
   )
 }

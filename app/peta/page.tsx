@@ -41,7 +41,7 @@ const rtLegend = [
 
 export default function PetaPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-8">
+    <div className="page-shell space-y-10">
 
       {/* Header */}
       <div>

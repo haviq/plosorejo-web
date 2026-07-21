@@ -8,6 +8,7 @@ const navLinks = [
   { href: '/profil', label: 'Profil' },
   { href: '/berita', label: 'Berita' },
   { href: '/galeri', label: 'Galeri' },
+  { href: '/peta',   label: 'Peta' },
   { href: '/kontak', label: 'Kontak' },
 ]
 

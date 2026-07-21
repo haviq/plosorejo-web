@@ -91,7 +91,7 @@ const programBeasiswa = [
 
 export default function PendidikanPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
+    <div className="page-shell space-y-10">
 
       {/* Header */}
       <section className="space-y-3">

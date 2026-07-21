@@ -41,7 +41,7 @@ const perangkat = [
 
 export default function KontakPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-12">
+    <div className="page-shell space-y-12">
 
       {/* Header */}
       <section className="space-y-3">

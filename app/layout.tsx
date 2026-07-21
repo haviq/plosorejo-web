@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import Nav from '@/components/Nav'
+import Footer from '@/components/Footer'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -15,6 +16,7 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://plosorejo.vercel.app'),
   title: {
     default: 'Plosorejo — Padukuhan Digital',
     template: '%s | Plosorejo',
@@ -22,6 +24,24 @@ export const metadata: Metadata = {
   description:
     'Portal digital Padukuhan Plosorejo, Cangkringan, Sleman — sentra peternakan sapi perah, UMKM, dan pariwisata lereng Merapi.',
   keywords: ['Plosorejo', 'Cangkringan', 'Sleman', 'desa digital', 'sapi perah', 'UMKM', 'Merapi'],
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    siteName: 'Plosorejo Padukuhan Digital',
+    title: 'Plosorejo — Padukuhan Digital',
+    description:
+      'Portal digital Padukuhan Plosorejo — sentra sapi perah, UMKM, dan pariwisata lereng Merapi.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Plosorejo — Padukuhan Digital',
+    description:
+      'Portal digital Padukuhan Plosorejo — sentra sapi perah, UMKM, dan pariwisata lereng Merapi.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default function RootLayout({
@@ -35,12 +55,7 @@ export default function RootLayout({
       >
         <Nav />
         <main className="flex-1">{children}</main>
-        <footer
-          className="border-t text-center text-xs py-5"
-          style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
-        >
-          © {new Date().getFullYear()} Padukuhan Plosorejo · KKN UNRIYO Unit 9 2026
-        </footer>
+        <Footer />
       </body>
     </html>
   )

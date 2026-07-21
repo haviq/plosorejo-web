@@ -10,7 +10,7 @@ interface SektorCardProps {
 }
 
 const accentMap = {
-  amber: 'var(--amber)',
+  amber: 'var(--gold)',
   green: 'var(--green)',
   indigo: '#818cf8',
 }
@@ -28,39 +28,42 @@ export default function SektorCard({
   return (
     <Link
       href={href}
-      className="group rounded-xl border p-5 flex flex-col gap-4 transition-colors hover:border-current"
-      style={{
-        backgroundColor: 'var(--s1)',
-        borderColor: 'var(--border)',
-        // @ts-expect-error CSS custom property
-        '--tw-border-opacity': 1,
-      }}
+      className="card-surface group p-5 flex flex-col gap-4 h-full"
       aria-label={`Lihat sektor ${nama}`}
     >
-      {/* Icon + title */}
       <div className="flex items-center gap-3">
         <span
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+          className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
           style={{ backgroundColor: `${color}18` }}
           aria-hidden="true"
         >
           {icon}
         </span>
-        <h3 className="font-bold text-white group-hover:underline underline-offset-2">
+        <h3
+          className="font-bold group-hover:underline underline-offset-2"
+          style={{ color: 'var(--text)' }}
+        >
           {nama}
         </h3>
       </div>
 
-      {/* Description */}
-      <p className="text-sm text-gray-400 leading-relaxed line-clamp-2">{deskripsi}</p>
+      <p className="text-sm leading-relaxed line-clamp-2" style={{ color: 'var(--muted)' }}>
+        {deskripsi}
+      </p>
 
-      {/* Stats row */}
       {stats.length > 0 && (
-        <div className="grid grid-cols-2 gap-2 mt-auto pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
+        <div
+          className="grid grid-cols-2 gap-2 mt-auto pt-3 border-t"
+          style={{ borderColor: 'var(--border)' }}
+        >
           {stats.slice(0, 2).map(({ label, value }) => (
             <div key={label}>
-              <p className="text-sm font-bold tabular-nums" style={{ color }}>{value}</p>
-              <p className="text-xs text-gray-500">{label}</p>
+              <p className="text-sm font-bold tabular-nums" style={{ color }}>
+                {value}
+              </p>
+              <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                {label}
+              </p>
             </div>
           ))}
         </div>

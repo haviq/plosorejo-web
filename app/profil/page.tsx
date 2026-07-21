@@ -36,7 +36,7 @@ const infoWilayah = [
 
 export default function ProfilPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12 space-y-16">
+    <div className="page-shell space-y-16">
 
       {/* Header */}
       <section className="space-y-4">
