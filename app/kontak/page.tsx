@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 
 export const metadata: Metadata = {
   title: 'Kontak',
@@ -34,42 +35,32 @@ const kontakList = [
 ]
 
 const perangkat = [
-  { nama: 'Slamet Widodo',  jabatan: 'Dukuh / Kepala Padukuhan', wa: '6281234567890' },
-  { nama: 'Sri Lestari',    jabatan: 'Sekretaris Padukuhan',      wa: '6281234567891' },
-  { nama: 'Agus Prayitno',  jabatan: 'Bendahara Padukuhan',       wa: '6281234567892' },
+  { nama: 'Slamet Widodo', jabatan: 'Dukuh / Kepala Padukuhan', wa: '6281234567890', icon: '👑' },
+  { nama: 'Sri Lestari', jabatan: 'Sekretaris Padukuhan', wa: '6281234567891', icon: '📋' },
+  { nama: 'Agus Prayitno', jabatan: 'Bendahara Padukuhan', wa: '6281234567892', icon: '💰' },
 ]
 
 export default function KontakPage() {
   return (
-    <div className="page-shell space-y-12">
-
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          📬 Kontak{' '}
-          <span className="gradient-text">Kami</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-xl">
-          Hubungi perangkat Padukuhan Plosorejo untuk informasi lebih lanjut, pengaduan,
-          atau keperluan administrasi.
-        </p>
-      </section>
+    <div className="page-shell space-y-14">
+      <PageHeader
+        eyebrow="Hubungi Kami"
+        title="Kontak"
+        highlight="Padukuhan"
+        description="Hubungi perangkat Padukuhan Plosorejo untuk informasi lebih lanjut, pengaduan, atau keperluan administrasi."
+      />
 
       <div className="grid lg:grid-cols-2 gap-8">
-
         {/* Info Kontak */}
         <section className="space-y-4" aria-label="Informasi kontak">
-          <h2 className="text-lg font-bold text-gray-300">Informasi Kontak</h2>
-          <div
-            className="rounded-xl border divide-y"
-            style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)', '--tw-divide-opacity': '1' } as React.CSSProperties}
-          >
+          <h2 className="section-label">Informasi Kontak</h2>
+          <div className="card-surface divide-y" style={{ '--tw-divide-opacity': '1' } as React.CSSProperties}>
             {kontakList.map(({ icon, label, value }) => (
               <div key={label} className="flex items-start gap-4 p-4" style={{ borderColor: 'var(--border)' }}>
                 <span className="text-xl mt-0.5 flex-shrink-0" aria-hidden="true">{icon}</span>
                 <div>
-                  <p className="text-xs text-gray-500 font-medium">{label}</p>
-                  <p className="text-sm text-gray-200 mt-0.5">{value}</p>
+                  <p className="text-xs font-medium" style={{ color: 'var(--muted)' }}>{label}</p>
+                  <p className="text-sm mt-0.5" style={{ color: 'var(--text)' }}>{value}</p>
                 </div>
               </div>
             ))}
@@ -78,33 +69,24 @@ export default function KontakPage() {
 
         {/* Perangkat Desa */}
         <section className="space-y-4" aria-label="Kontak perangkat desa">
-          <h2 className="text-lg font-bold text-gray-300">Perangkat Padukuhan</h2>
+          <h2 className="section-label">Perangkat Padukuhan</h2>
           <div className="space-y-3">
-            {perangkat.map(({ nama, jabatan, wa }) => (
-              <div
-                key={nama}
-                className="rounded-xl border p-4 flex items-center justify-between gap-4"
-                style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-              >
+            {perangkat.map(({ nama, jabatan, wa, icon }) => (
+              <div key={nama} className="card-surface p-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0"
-                    style={{ backgroundColor: 'rgba(245,158,11,0.12)' }}
-                    aria-hidden="true"
-                  >
-                    👤
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0" style={{ backgroundColor: 'var(--gold-dim)' }} aria-hidden="true">
+                    {icon}
                   </div>
                   <div>
-                    <p className="font-semibold text-white text-sm">{nama}</p>
-                    <p className="text-xs text-gray-500">{jabatan}</p>
+                    <p className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{nama}</p>
+                    <p className="text-xs" style={{ color: 'var(--muted)' }}>{jabatan}</p>
                   </div>
                 </div>
                 <a
                   href={`https://wa.me/${wa}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-black flex-shrink-0 transition-opacity hover:opacity-85"
-                  style={{ background: 'var(--gradient)' }}
+                  className="btn-primary text-xs py-1.5 px-3 flex-shrink-0"
                   aria-label={`WhatsApp ${nama}`}
                 >
                   WA
@@ -113,62 +95,58 @@ export default function KontakPage() {
             ))}
           </div>
 
-          {/* Formulir singkat */}
-          <div
-            className="rounded-xl border p-5 space-y-4 mt-4"
-            style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-          >
-            <h3 className="font-semibold text-white">Kirim Pesan</h3>
-            <p className="text-xs text-gray-500">
+          {/* Kirim Pesan */}
+          <div className="card-surface p-5 space-y-4 mt-4">
+            <h3 className="font-semibold" style={{ color: 'var(--text)' }}>Kirim Pesan</h3>
+            <p className="text-xs" style={{ color: 'var(--muted)' }}>
               Isi form di bawah ini dan kami akan merespons dalam 1×24 jam.
             </p>
-            <form
-              action={`https://wa.me/6281234567890?text=`}
-              target="_blank"
-              className="space-y-3"
-              aria-label="Form pesan ke padukuhan"
-            >
+            <div className="space-y-3" aria-label="Form pesan ke padukuhan">
               <div>
-                <label htmlFor="nama-pengirim" className="block text-xs text-gray-400 mb-1">Nama</label>
+                <label htmlFor="nama-pengirim" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>Nama</label>
                 <input
                   id="nama-pengirim"
                   type="text"
                   placeholder="Nama Anda"
-                  className="w-full rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 border outline-none focus:border-amber-500 transition-colors"
-                  style={{ backgroundColor: 'var(--s2)', borderColor: 'var(--border)' }}
+                  className="w-full rounded-lg px-3 py-2 text-sm border outline-none transition-colors"
+                  style={{
+                    backgroundColor: 'var(--s2)',
+                    borderColor: 'var(--border)',
+                    color: 'var(--text)',
+                  }}
                 />
               </div>
               <div>
-                <label htmlFor="pesan" className="block text-xs text-gray-400 mb-1">Pesan</label>
+                <label htmlFor="pesan" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>Pesan</label>
                 <textarea
                   id="pesan"
                   rows={3}
                   placeholder="Tulis pesan Anda..."
-                  className="w-full rounded-lg px-3 py-2 text-sm text-white placeholder-gray-600 border outline-none focus:border-amber-500 transition-colors resize-none"
-                  style={{ backgroundColor: 'var(--s2)', borderColor: 'var(--border)' }}
+                  className="w-full rounded-lg px-3 py-2 text-sm border outline-none transition-colors resize-none"
+                  style={{
+                    backgroundColor: 'var(--s2)',
+                    borderColor: 'var(--border)',
+                    color: 'var(--text)',
+                  }}
                 />
               </div>
               <a
                 href="https://wa.me/6281234567890"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-full text-center px-4 py-2 rounded-lg text-sm font-semibold text-black transition-opacity hover:opacity-85"
-                style={{ background: 'var(--gradient)' }}
+                className="btn-primary w-full text-center block"
               >
                 Kirim via WhatsApp
               </a>
-            </form>
+            </div>
           </div>
         </section>
       </div>
 
-      {/* Google Maps embed */}
-      <section aria-label="Lokasi padukuhan di peta">
-        <h2 className="text-lg font-bold text-gray-300 mb-4">Lokasi Padukuhan</h2>
-        <div
-          className="rounded-xl overflow-hidden border"
-          style={{ borderColor: 'var(--border)' }}
-        >
+      {/* Google Maps */}
+      <section aria-label="Lokasi padukuhan di peta" className="space-y-4">
+        <h2 className="section-label">Lokasi Padukuhan</h2>
+        <div className="card-surface overflow-hidden">
           <iframe
             src="https://www.google.com/maps?q=-7.62428,110.43829&hl=id&z=16&output=embed"
             width="100%"
@@ -180,11 +158,10 @@ export default function KontakPage() {
             title="Lokasi Padukuhan Plosorejo di Google Maps"
           />
         </div>
-        <p className="text-xs text-gray-600 mt-2 text-center">
+        <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
           Jl. Balong · Padukuhan Plosorejo · Cangkringan, Sleman · 7°37′27″S 110°26′18″E
         </p>
       </section>
-
     </div>
   )
 }
