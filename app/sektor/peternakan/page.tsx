@@ -21,7 +21,7 @@ const kelompokPeternak = [
 
 const gradeColor: Record<string, string> = {
   'A': 'var(--green)', 'A+': 'var(--green)',
-  'B+': 'var(--amber)', 'B': '#f97316',
+  'B+': 'var(--gold)', 'B': '#f97316',
 }
 
 export default function PeternakanPage() {
@@ -99,7 +99,7 @@ export default function PeternakanPage() {
                   >
                     <td className="px-4 py-3 text-[var(--text)] font-medium">{row.nama}</td>
                     <td className="px-4 py-3 tabular-nums text-[var(--text)]">{row.ekor} ekor</td>
-                    <td className="px-4 py-3 tabular-nums font-semibold" style={{ color: 'var(--amber)' }}>{row.produksi}</td>
+                    <td className="px-4 py-3 tabular-nums font-semibold" style={{ color: 'var(--gold)' }}>{row.produksi}</td>
                     <td className="px-4 py-3">
                       <span
                         className="px-2 py-0.5 rounded-full text-xs font-bold"
@@ -142,7 +142,7 @@ export default function PeternakanPage() {
             { label: 'Mitra Utama', val: 'KUD Sleman' },
           ].map(({ label, val }) => (
             <div key={label}>
-              <p className="text-sm font-bold" style={{ color: 'var(--amber)' }}>{val}</p>
+              <p className="text-sm font-bold" style={{ color: 'var(--gold)' }}>{val}</p>
               <p className="text-xs text-[var(--muted)]">{label}</p>
             </div>
           ))}

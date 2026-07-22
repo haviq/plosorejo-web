@@ -18,7 +18,7 @@ const komoditas = [
     panen: '6,2 t/ha',
     musim: '2× / tahun',
     emoji: '🌾',
-    color: 'var(--amber)',
+    color: 'var(--gold)',
   },
   {
     nama: 'Salak Pondoh',
@@ -45,7 +45,7 @@ const komoditas = [
     panen: '8,5 t/ha',
     musim: '2× / tahun',
     emoji: '🌽',
-    color: 'var(--amber)',
+    color: 'var(--gold)',
   },
   {
     nama: 'Kedelai Edamame',
@@ -70,7 +70,7 @@ const komoditas = [
 const jadwalMusimTanam = [
   { musim: 'MT I (Nov – Feb)',  komoditas: 'Padi IR64',       status: 'Selesai',    color: 'var(--green)' },
   { musim: 'MT II (Mar – Jun)', komoditas: 'Padi Ciherang',   status: 'Selesai',    color: 'var(--green)' },
-  { musim: 'MT III (Jul – Okt)',komoditas: 'Cabai & Jagung',  status: 'Berjalan',   color: 'var(--amber)' },
+  { musim: 'MT III (Jul – Okt)',komoditas: 'Cabai & Jagung',  status: 'Berjalan',   color: 'var(--gold)' },
 ]
 
 export default function PertanianPage() {

@@ -36,7 +36,7 @@ const lembagaPendidikan = [
     guru: 18,
     akreditasi: 'A',
     alamat: 'RT 01, Padukuhan Plosorejo',
-    color: 'var(--amber)',
+    color: 'var(--gold)',
   },
   {
     nama: 'SDN Plosorejo 2',
@@ -45,7 +45,7 @@ const lembagaPendidikan = [
     guru: 14,
     akreditasi: 'B',
     alamat: 'RT 04, Padukuhan Plosorejo',
-    color: 'var(--amber)',
+    color: 'var(--gold)',
   },
   {
     nama: 'SMP Negeri 2 Cangkringan',
@@ -68,7 +68,7 @@ const lembagaPendidikan = [
 ]
 
 const jenjangColor: Record<string, string> = {
-  PAUD: '#f97316', TK: 'var(--amber)', SD: 'var(--amber)',
+  PAUD: '#f97316', TK: 'var(--gold)', SD: 'var(--gold)',
   SMP: 'var(--green)', SMA: '#60a5fa', SMK: '#60a5fa',
 }
 
@@ -145,7 +145,7 @@ export default function PendidikanPage() {
                   <p className="text-xs text-[var(--muted2)]">Guru</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold" style={{ color: akreditasi === 'A' ? 'var(--green)' : 'var(--amber)' }}>
+                  <p className="text-sm font-bold" style={{ color: akreditasi === 'A' ? 'var(--green)' : 'var(--gold)' }}>
                     {akreditasi}
                   </p>
                   <p className="text-xs text-[var(--muted2)]">Akreditasi</p>
@@ -171,7 +171,7 @@ export default function PendidikanPage() {
                 <p className="text-xs text-[var(--muted)]">{syarat}</p>
               </div>
               <div className="text-right flex-shrink-0">
-                <p className="font-black text-lg tabular-nums" style={{ color: 'var(--amber)' }}>{nilai}</p>
+                <p className="font-black text-lg tabular-nums" style={{ color: 'var(--gold)' }}>{nilai}</p>
                 <p className="text-xs text-[var(--muted2)]">per tahun</p>
               </div>
             </div>

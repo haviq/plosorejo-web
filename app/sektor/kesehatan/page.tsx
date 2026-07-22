@@ -172,7 +172,7 @@ export default function KesehatanPage() {
         <div className="space-y-3">
           {programKesehatan.map(({ nama, target, capaian, status }) => {
             const isGood = status === 'Baik'
-            const statusColor = isGood ? 'var(--green)' : 'var(--amber)'
+            const statusColor = isGood ? 'var(--green)' : 'var(--gold)'
             const pct = parseInt(capaian)
             return (
               <div

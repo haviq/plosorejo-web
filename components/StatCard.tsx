@@ -17,7 +17,7 @@ export default function StatCard({
   icon,
 }: StatCardProps) {
   const accentColor = {
-    amber:   'var(--amber)',
+    amber:   'var(--gold)',
     green:   'var(--green)',
     neutral: '#6b7280',
   }[accent]

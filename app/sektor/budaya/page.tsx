@@ -18,7 +18,7 @@ const kesenian = [
     anggota: 18,
     aktif: true,
     emoji: '🎭',
-    color: 'var(--amber)',
+    color: 'var(--gold)',
   },
   {
     nama: 'Wayang Kulit Lakon Kuno',
@@ -63,7 +63,7 @@ const kesenian = [
     anggota: 30,
     aktif: true,
     emoji: '🐴',
-    color: 'var(--amber)',
+    color: 'var(--gold)',
   },
 ]
 

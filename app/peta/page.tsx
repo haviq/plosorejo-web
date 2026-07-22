@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 const poiGroups = [
   {
     label: 'Peternakan Susu',
-    color: 'var(--amber)',
+    color: 'var(--gold)',
     items: ['Kandang Sapi Koperasi', 'Peternakan Pak Harto', 'Peternakan Bu Rahayu'],
   },
   {

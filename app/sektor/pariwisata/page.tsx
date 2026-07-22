@@ -29,7 +29,7 @@ const destinasi = [
     tiket: 'Rp 30.000/orang',
     jamBuka: '06.00 – 10.00',
     fasilitas: ['Sesi pemerahan', 'Icip susu segar', 'Pembelian produk', 'Foto bersama sapi'],
-    color: 'var(--amber)',
+    color: 'var(--gold)',
   },
   {
     nama: 'Trekking Perbukitan Plosorejo',
@@ -143,7 +143,7 @@ export default function PariwisataPage() {
               style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
             >
               <h3 className="font-bold text-[var(--text)]">{nama}</h3>
-              <p className="text-lg font-black" style={{ color: 'var(--amber)' }}>{harga}</p>
+              <p className="text-lg font-black" style={{ color: 'var(--gold)' }}>{harga}</p>
               <p className="text-xs text-[var(--muted)]">Min. {min}</p>
               <ul className="space-y-1.5 pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
                 {include.map((item) => (
