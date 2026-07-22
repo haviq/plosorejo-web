@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
+import KontakForm from '@/components/KontakForm'
 
 export const metadata: Metadata = {
   title: 'Kontak',
@@ -101,44 +102,7 @@ export default function KontakPage() {
             <p className="text-xs" style={{ color: 'var(--muted)' }}>
               Isi form di bawah ini dan kami akan merespons dalam 1×24 jam.
             </p>
-            <div className="space-y-3" aria-label="Form pesan ke padukuhan">
-              <div>
-                <label htmlFor="nama-pengirim" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>Nama</label>
-                <input
-                  id="nama-pengirim"
-                  type="text"
-                  placeholder="Nama Anda"
-                  className="w-full rounded-lg px-3 py-2 text-sm border outline-none transition-colors"
-                  style={{
-                    backgroundColor: 'var(--s2)',
-                    borderColor: 'var(--border)',
-                    color: 'var(--text)',
-                  }}
-                />
-              </div>
-              <div>
-                <label htmlFor="pesan" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>Pesan</label>
-                <textarea
-                  id="pesan"
-                  rows={3}
-                  placeholder="Tulis pesan Anda..."
-                  className="w-full rounded-lg px-3 py-2 text-sm border outline-none transition-colors resize-none"
-                  style={{
-                    backgroundColor: 'var(--s2)',
-                    borderColor: 'var(--border)',
-                    color: 'var(--text)',
-                  }}
-                />
-              </div>
-              <a
-                href="https://wa.me/6281234567890"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-primary w-full text-center block"
-              >
-                Kirim via WhatsApp
-              </a>
-            </div>
+            <KontakForm />
           </div>
         </section>
       </div>

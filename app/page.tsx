@@ -79,7 +79,7 @@ const potensiCards = [
     kategori: 'Peternakan',
     headline: '1.240 L/hari',
     sub: 'Produksi susu segar Grade A',
-    img: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=800&q=80',
+    img: '/images/placeholder-card.svg',
     imgAlt: 'Sapi perah Friesian Holstein',
   },
   {
@@ -88,7 +88,7 @@ const potensiCards = [
     kategori: 'UMKM',
     headline: '89 Usaha Aktif',
     sub: 'Kuliner, kerajinan, & agribisnis',
-    img: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80',
+    img: '/images/placeholder-card.svg',
     imgAlt: 'Pasar dan produk UMKM lokal',
   },
   {
@@ -97,7 +97,7 @@ const potensiCards = [
     kategori: 'Pariwisata',
     headline: '3 Destinasi',
     sub: 'Agrowisata & trekking Merapi',
-    img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    img: '/images/placeholder-card.svg',
     imgAlt: 'Pemandangan alam lereng Merapi',
   },
 ]
@@ -114,7 +114,7 @@ export default function HomePage() {
         {/* Background image */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&q=90"
+          src="/images/hero-merapi.svg"
           alt="Pemandangan lereng Gunung Merapi"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ zIndex: 0 }}
@@ -420,7 +420,7 @@ export default function HomePage() {
         {/* Background photo */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1920&q=80"
+          src="/images/hero-merapi.svg"
           alt="Ladang sawah hijau subur"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ zIndex: 0 }}
