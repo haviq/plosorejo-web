@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import sektorData from '@/content/sektor.json'
 
@@ -26,15 +27,12 @@ const gradeColor: Record<string, string> = {
 export default function PeternakanPage() {
   return (
     <div className="page-shell space-y-10">
-
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          {sektor.icon} Peternakan{' '}
-          <span className="gradient-text">Sapi Perah</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">{sektor.deskripsi}</p>
-      </section>
+      <PageHeader
+        eyebrow="Sektor unggulan sapi perah"
+        title="Peternakan"
+        highlight="Sapi Perah"
+        description={sektor.deskripsi}
+      />
 
       {/* Stat cards */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik peternakan">
@@ -65,7 +63,7 @@ export default function PeternakanPage() {
               >
                 🐄
               </span>
-              <p className="text-sm text-gray-200">{item}</p>
+              <p className="text-sm text-[var(--text)]">{item}</p>
             </div>
           ))}
         </div>
@@ -83,7 +81,7 @@ export default function PeternakanPage() {
               <thead>
                 <tr style={{ backgroundColor: 'var(--s2)' }}>
                   {['Kelompok', 'Jumlah Sapi', 'Produksi', 'Grade', 'Status'].map(h => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                       {h}
                     </th>
                   ))}
@@ -99,8 +97,8 @@ export default function PeternakanPage() {
                       backgroundColor: i % 2 === 0 ? 'var(--s1)' : 'transparent',
                     }}
                   >
-                    <td className="px-4 py-3 text-white font-medium">{row.nama}</td>
-                    <td className="px-4 py-3 tabular-nums text-gray-300">{row.ekor} ekor</td>
+                    <td className="px-4 py-3 text-[var(--text)] font-medium">{row.nama}</td>
+                    <td className="px-4 py-3 tabular-nums text-[var(--text)]">{row.ekor} ekor</td>
                     <td className="px-4 py-3 tabular-nums font-semibold" style={{ color: 'var(--amber)' }}>{row.produksi}</td>
                     <td className="px-4 py-3">
                       <span
@@ -131,7 +129,7 @@ export default function PeternakanPage() {
         aria-label="Informasi koperasi susu"
       >
         <h2 className="text-lg font-black">🤝 Koperasi Susu Plosorejo</h2>
-        <p className="text-sm text-gray-300 leading-relaxed">
+        <p className="text-sm text-[var(--text)] leading-relaxed">
           Seluruh hasil produksi susu segar disetorkan melalui Koperasi Susu Plosorejo yang berdiri
           sejak 1968. Koperasi mengelola chilling unit, distribusi ke KUD Sleman, dan unit pengolahan
           susu menjadi yogurt serta keju lokal. Anggota koperasi mendapat akses pinjaman bergulir
@@ -145,7 +143,7 @@ export default function PeternakanPage() {
           ].map(({ label, val }) => (
             <div key={label}>
               <p className="text-sm font-bold" style={{ color: 'var(--amber)' }}>{val}</p>
-              <p className="text-xs text-gray-500">{label}</p>
+              <p className="text-xs text-[var(--muted)]">{label}</p>
             </div>
           ))}
         </div>

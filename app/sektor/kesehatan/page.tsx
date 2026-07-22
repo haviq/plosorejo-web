@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import sektorData from '@/content/sektor.json'
 
@@ -76,15 +77,12 @@ const programKesehatan = [
 export default function KesehatanPage() {
   return (
     <div className="page-shell space-y-10">
-
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          {sektor.icon} Kesehatan{' '}
-          <span className="gradient-text">Masyarakat</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">{sektor.deskripsi}</p>
-      </section>
+      <PageHeader
+        eyebrow="Layanan kesehatan warga"
+        title="Kesehatan"
+        highlight="Masyarakat"
+        description={sektor.deskripsi}
+      />
 
       {/* Stats */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik kesehatan">
@@ -109,7 +107,7 @@ export default function KesehatanPage() {
               style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
             >
               <div className="flex items-start justify-between gap-2">
-                <h3 className="font-bold text-white text-sm leading-tight">{nama}</h3>
+                <h3 className="font-bold text-[var(--text)] text-sm leading-tight">{nama}</h3>
                 <span
                   className="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
                   style={{ color, backgroundColor: `${color}18` }}
@@ -118,7 +116,7 @@ export default function KesehatanPage() {
                 </span>
               </div>
 
-              <div className="space-y-1.5 text-xs text-gray-400">
+              <div className="space-y-1.5 text-xs text-[var(--muted)]">
                 <p>📅 {jadwal}</p>
                 <p>📍 {lokasi}</p>
               </div>
@@ -126,11 +124,11 @@ export default function KesehatanPage() {
               <div className="grid grid-cols-2 gap-2 pt-2 border-t text-center" style={{ borderColor: 'var(--border)' }}>
                 <div>
                   <p className="text-sm font-bold tabular-nums" style={{ color }}>{kader}</p>
-                  <p className="text-xs text-gray-600">Kader</p>
+                  <p className="text-xs text-[var(--muted2)]">Kader</p>
                 </div>
                 <div>
                   <p className="text-sm font-bold tabular-nums" style={{ color }}>{sasaran}</p>
-                  <p className="text-xs text-gray-600">Sasaran</p>
+                  <p className="text-xs text-[var(--muted2)]">Sasaran</p>
                 </div>
               </div>
             </div>
@@ -156,9 +154,9 @@ export default function KesehatanPage() {
                 {emoji}
               </span>
               <div className="space-y-1">
-                <h3 className="font-bold text-white">{nama}</h3>
-                <p className="text-sm text-gray-400">{deskripsi}</p>
-                <div className="flex flex-wrap gap-4 text-xs text-gray-500 pt-1">
+                <h3 className="font-bold text-[var(--text)]">{nama}</h3>
+                <p className="text-sm text-[var(--muted)]">{deskripsi}</p>
+                <div className="flex flex-wrap gap-4 text-xs text-[var(--muted)] pt-1">
                   <span>🕐 {jam}</span>
                   <span>📍 {lokasi}</span>
                 </div>
@@ -183,9 +181,9 @@ export default function KesehatanPage() {
                 style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
               >
                 <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
-                  <p className="text-sm font-semibold text-white">{nama}</p>
+                  <p className="text-sm font-semibold text-[var(--text)]">{nama}</p>
                   <div className="flex items-center gap-3 text-xs">
-                    <span className="text-gray-500">Target: {target}</span>
+                    <span className="text-[var(--muted)]">Target: {target}</span>
                     <span className="font-bold" style={{ color: statusColor }}>{capaian}</span>
                   </div>
                 </div>

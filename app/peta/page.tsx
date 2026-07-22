@@ -45,10 +45,10 @@ export default function PetaPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black mb-1" style={{ color: '#e5e7eb' }}>
-          🗺️ <span className="gradient-text">Peta</span> Padukuhan Plosorejo
+        <h1 className="text-3xl font-black mb-1" style={{ color: 'var(--text)' }}>
+          🗺️ <span className="gold-text">Peta</span> Padukuhan Plosorejo
         </h1>
-        <p className="text-gray-400 text-sm">
+        <p className="text-[var(--muted)] text-sm">
           Batas wilayah RT & RW · Jl. Balong, Umbulharjo, Cangkringan, Sleman
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function PetaPage() {
       {/* RT / RW legend */}
       <section aria-label="Legenda batas RT dan RW" className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mr-1">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mr-1">
             Batas RT
           </span>
           {rtLegend.map(({ name, color }) => (
@@ -72,7 +72,7 @@ export default function PetaPage() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mr-1">
+          <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mr-1">
             Batas RW
           </span>
           <span
@@ -105,7 +105,7 @@ export default function PetaPage() {
 
       {/* Legend / POI groups */}
       <section aria-label="Legenda peta">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
           Titik Penting
         </h2>
         <div className="grid sm:grid-cols-3 gap-4">
@@ -121,11 +121,11 @@ export default function PetaPage() {
                   style={{ backgroundColor: color }}
                   aria-hidden="true"
                 />
-                <span className="text-sm font-semibold text-white">{label}</span>
+                <span className="text-sm font-semibold text-[var(--text)]">{label}</span>
               </div>
               <ul className="space-y-1">
                 {items.map(item => (
-                  <li key={item} className="text-xs text-gray-400 flex items-center gap-2">
+                  <li key={item} className="text-xs text-[var(--muted)] flex items-center gap-2">
                     <span className="w-1 h-1 rounded-full bg-gray-600" aria-hidden="true" />
                     {item}
                   </li>
@@ -149,13 +149,13 @@ export default function PetaPage() {
           { label: 'Koordinat',    value: '7°37′S 110°26′E' },
         ].map(({ label, value }) => (
           <div key={label}>
-            <p className="text-lg font-bold gradient-text tabular-nums">{value}</p>
-            <p className="text-xs text-gray-500 mt-0.5">{label}</p>
+            <p className="text-lg font-bold gold-text tabular-nums">{value}</p>
+            <p className="text-xs text-[var(--muted)] mt-0.5">{label}</p>
           </div>
         ))}
       </section>
 
-      <p className="text-xs text-gray-600 text-center">
+      <p className="text-xs text-[var(--muted2)] text-center">
         * Batas RT/RW adalah estimasi organik berdasarkan cluster pemukiman & jalan OSM.
         Validasi GPS lapangan diperlukan untuk akurasi resmi.
       </p>

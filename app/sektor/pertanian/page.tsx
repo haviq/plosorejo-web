@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import sektorData from '@/content/sektor.json'
 
@@ -75,15 +76,12 @@ const jadwalMusimTanam = [
 export default function PertanianPage() {
   return (
     <div className="page-shell space-y-10">
-
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          {sektor.icon} Pertanian{' '}
-          <span className="gradient-text">Plosorejo</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">{sektor.deskripsi}</p>
-      </section>
+      <PageHeader
+        eyebrow="Komoditas dan kelompok tani"
+        title="Pertanian"
+        highlight="Plosorejo"
+        description={sektor.deskripsi}
+      />
 
       {/* Stats */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik pertanian">
@@ -116,8 +114,8 @@ export default function PertanianPage() {
                   {emoji}
                 </span>
                 <div>
-                  <h3 className="font-bold text-white">{nama}</h3>
-                  <p className="text-xs text-gray-500">{varietas}</p>
+                  <h3 className="font-bold text-[var(--text)]">{nama}</h3>
+                  <p className="text-xs text-[var(--muted)]">{varietas}</p>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-2 pt-2 border-t text-center" style={{ borderColor: 'var(--border)' }}>
@@ -128,7 +126,7 @@ export default function PertanianPage() {
                 ].map(({ l, v }) => (
                   <div key={l}>
                     <p className="text-xs font-semibold tabular-nums" style={{ color }}>{v}</p>
-                    <p className="text-xs text-gray-600">{l}</p>
+                    <p className="text-xs text-[var(--muted2)]">{l}</p>
                   </div>
                 ))}
               </div>
@@ -148,8 +146,8 @@ export default function PertanianPage() {
               style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
             >
               <div>
-                <p className="font-semibold text-white text-sm">{musim}</p>
-                <p className="text-xs text-gray-500 mt-0.5">{k}</p>
+                <p className="font-semibold text-[var(--text)] text-sm">{musim}</p>
+                <p className="text-xs text-[var(--muted)] mt-0.5">{k}</p>
               </div>
               <span
                 className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
@@ -170,7 +168,7 @@ export default function PertanianPage() {
         aria-label="Sistem irigasi"
       >
         <h2 className="text-lg font-black">💧 Sistem Irigasi Terpadu</h2>
-        <p className="text-sm text-gray-300 leading-relaxed">
+        <p className="text-sm text-[var(--text)] leading-relaxed">
           Padukuhan Plosorejo dilengkapi jaringan irigasi teknis sepanjang 8,4 km yang mengalirkan
           air dari Sungai Lesti melalui saluran primer dan sekunder ke seluruh lahan pertanian.
           Program pompanisasi juga tersedia untuk lahan yang tidak terjangkau irigasi gravitasi,
@@ -184,7 +182,7 @@ export default function PertanianPage() {
           ].map(({ label, val }) => (
             <div key={label}>
               <p className="text-sm font-bold" style={{ color: 'var(--green)' }}>{val}</p>
-              <p className="text-xs text-gray-500">{label}</p>
+              <p className="text-xs text-[var(--muted)]">{label}</p>
             </div>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import sektorData from '@/content/sektor.json'
 
@@ -100,15 +101,12 @@ const ritualTahunan = [
 export default function BudayaPage() {
   return (
     <div className="page-shell space-y-10">
-
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          {sektor.icon} Budaya{' '}
-          <span className="gradient-text">&amp; Tradisi</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">{sektor.deskripsi}</p>
-      </section>
+      <PageHeader
+        eyebrow="Seni, tradisi, dan kearifan lokal"
+        title="Budaya"
+        highlight="& Tradisi"
+        description={sektor.deskripsi}
+      />
 
       {/* Stats */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik budaya">
@@ -141,7 +139,7 @@ export default function BudayaPage() {
                   {emoji}
                 </span>
                 <div>
-                  <h3 className="font-bold text-white text-sm leading-tight">{nama}</h3>
+                  <h3 className="font-bold text-[var(--text)] text-sm leading-tight">{nama}</h3>
                   <span
                     className="text-xs font-medium"
                     style={{ color }}
@@ -150,9 +148,9 @@ export default function BudayaPage() {
                   </span>
                 </div>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">{deskripsi}</p>
+              <p className="text-xs text-[var(--muted)] leading-relaxed">{deskripsi}</p>
               <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
-                <span className="text-xs text-gray-500">{anggota} anggota aktif</span>
+                <span className="text-xs text-[var(--muted)]">{anggota} anggota aktif</span>
                 <span
                   className="flex items-center gap-1 text-xs"
                   style={{ color: 'var(--green)' }}
@@ -179,13 +177,13 @@ export default function BudayaPage() {
               <div className="flex items-center gap-3">
                 <span className="text-3xl" aria-hidden="true">{emoji}</span>
                 <div>
-                  <h3 className="font-black text-white">{nama}</h3>
-                  <p className="text-xs text-gray-500">{waktu}</p>
+                  <h3 className="font-black text-[var(--text)]">{nama}</h3>
+                  <p className="text-xs text-[var(--muted)]">{waktu}</p>
                 </div>
               </div>
-              <p className="text-sm text-gray-300 leading-relaxed">{deskripsi}</p>
+              <p className="text-sm text-[var(--text)] leading-relaxed">{deskripsi}</p>
               <div
-                className="flex items-center gap-2 pt-2 border-t text-xs text-gray-500"
+                className="flex items-center gap-2 pt-2 border-t text-xs text-[var(--muted)]"
                 style={{ borderColor: 'var(--border)' }}
               >
                 <span>👥</span>
@@ -207,7 +205,7 @@ export default function BudayaPage() {
       >
         <p className="text-3xl" aria-hidden="true">🎎</p>
         <h2 className="font-black text-xl">Lestarikan Warisan Leluhur</h2>
-        <p className="text-sm text-gray-400 max-w-md mx-auto">
+        <p className="text-sm text-[var(--muted)] max-w-md mx-auto">
           Bergabunglah dengan kelompok kesenian lokal atau dukung program pelestarian budaya
           Padukuhan Plosorejo. Hubungi perangkat desa untuk informasi lebih lanjut.
         </p>

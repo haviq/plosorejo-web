@@ -28,7 +28,7 @@ export default function StatCard({
       style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
     >
       <div className="flex items-start justify-between">
-        <span className="text-xs font-medium uppercase tracking-widest text-gray-500">
+        <span className="text-xs font-medium uppercase tracking-widest text-[var(--muted)]">
           {label}
         </span>
         {icon && (
@@ -49,7 +49,7 @@ export default function StatCard({
         {value}
       </p>
 
-      {sub && <p className="text-xs text-gray-500">{sub}</p>}
+      {sub && <p className="text-xs text-[var(--muted)]">{sub}</p>}
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import sektorData from '@/content/sektor.json'
 
@@ -92,15 +93,12 @@ const programBeasiswa = [
 export default function PendidikanPage() {
   return (
     <div className="page-shell space-y-10">
-
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          {sektor.icon} Pendidikan{' '}
-          <span className="gradient-text">Plosorejo</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">{sektor.deskripsi}</p>
-      </section>
+      <PageHeader
+        eyebrow="Fasilitas dan program pendidikan"
+        title="Pendidikan"
+        highlight="Plosorejo"
+        description={sektor.deskripsi}
+      />
 
       {/* Stats */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik pendidikan">
@@ -133,24 +131,24 @@ export default function PendidikanPage() {
               </span>
 
               {/* Nama */}
-              <h3 className="font-bold text-white text-sm leading-tight">{nama}</h3>
-              <p className="text-xs text-gray-500">{alamat}</p>
+              <h3 className="font-bold text-[var(--text)] text-sm leading-tight">{nama}</h3>
+              <p className="text-xs text-[var(--muted)]">{alamat}</p>
 
               {/* Statistik */}
               <div className="grid grid-cols-3 gap-2 pt-2 border-t text-center" style={{ borderColor: 'var(--border)' }}>
                 <div>
                   <p className="text-sm font-bold tabular-nums" style={{ color }}>{siswa}</p>
-                  <p className="text-xs text-gray-600">Siswa</p>
+                  <p className="text-xs text-[var(--muted2)]">Siswa</p>
                 </div>
                 <div>
                   <p className="text-sm font-bold tabular-nums" style={{ color }}>{guru}</p>
-                  <p className="text-xs text-gray-600">Guru</p>
+                  <p className="text-xs text-[var(--muted2)]">Guru</p>
                 </div>
                 <div>
                   <p className="text-sm font-bold" style={{ color: akreditasi === 'A' ? 'var(--green)' : 'var(--amber)' }}>
                     {akreditasi}
                   </p>
-                  <p className="text-xs text-gray-600">Akreditasi</p>
+                  <p className="text-xs text-[var(--muted2)]">Akreditasi</p>
                 </div>
               </div>
             </div>
@@ -169,12 +167,12 @@ export default function PendidikanPage() {
               style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
             >
               <div className="space-y-1">
-                <h3 className="font-bold text-white text-sm">{nama}</h3>
-                <p className="text-xs text-gray-500">{syarat}</p>
+                <h3 className="font-bold text-[var(--text)] text-sm">{nama}</h3>
+                <p className="text-xs text-[var(--muted)]">{syarat}</p>
               </div>
               <div className="text-right flex-shrink-0">
                 <p className="font-black text-lg tabular-nums" style={{ color: 'var(--amber)' }}>{nilai}</p>
-                <p className="text-xs text-gray-600">per tahun</p>
+                <p className="text-xs text-[var(--muted2)]">per tahun</p>
               </div>
             </div>
           ))}
@@ -187,8 +185,8 @@ export default function PendidikanPage() {
             borderColor: 'var(--border)',
           }}
         >
-          <p className="text-sm text-gray-300">Daftar beasiswa dibuka setiap <strong className="text-white">Januari & Juli</strong></p>
-          <p className="text-xs text-gray-500">Pendaftaran melalui Sekretariat Padukuhan atau WhatsApp perangkat desa</p>
+          <p className="text-sm text-[var(--text)]">Daftar beasiswa dibuka setiap <strong className="text-[var(--text)]">Januari & Juli</strong></p>
+          <p className="text-xs text-[var(--muted)]">Pendaftaran melalui Sekretariat Padukuhan atau WhatsApp perangkat desa</p>
         </div>
       </section>
 

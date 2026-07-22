@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import sektorData from '@/content/sektor.json'
 
@@ -66,15 +67,12 @@ const paketWisata = [
 export default function PariwisataPage() {
   return (
     <div className="page-shell space-y-10">
-
-      {/* Header */}
-      <section className="space-y-3">
-        <h1 className="text-4xl font-black">
-          {sektor.icon} Pariwisata{' '}
-          <span className="gradient-text">Plosorejo</span>
-        </h1>
-        <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">{sektor.deskripsi}</p>
-      </section>
+      <PageHeader
+        eyebrow="Destinasi wisata alam & agrowisata"
+        title="Pariwisata"
+        highlight="Plosorejo"
+        description={sektor.deskripsi}
+      />
 
       {/* Stats */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik pariwisata">
@@ -107,16 +105,16 @@ export default function PariwisataPage() {
                   {emoji}
                 </span>
                 <div className="flex-1">
-                  <h3 className="font-black text-white text-lg">{nama}</h3>
-                  <div className="flex flex-wrap gap-4 mt-1 text-xs text-gray-500">
+                  <h3 className="font-black text-[var(--text)] text-lg">{nama}</h3>
+                  <div className="flex flex-wrap gap-4 mt-1 text-xs text-[var(--muted)]">
                     <span>🎫 {tiket}</span>
                     <span>🕐 {jamBuka}</span>
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-gray-300 leading-relaxed">{deskripsi}</p>
+              <p className="text-sm text-[var(--text)] leading-relaxed">{deskripsi}</p>
               <div>
-                <p className="text-xs font-semibold text-gray-500 mb-2">Fasilitas:</p>
+                <p className="text-xs font-semibold text-[var(--muted)] mb-2">Fasilitas:</p>
                 <div className="flex flex-wrap gap-2">
                   {fasilitas.map((f) => (
                     <span
@@ -144,12 +142,12 @@ export default function PariwisataPage() {
               className="rounded-xl border p-5 flex flex-col gap-3"
               style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
             >
-              <h3 className="font-bold text-white">{nama}</h3>
+              <h3 className="font-bold text-[var(--text)]">{nama}</h3>
               <p className="text-lg font-black" style={{ color: 'var(--amber)' }}>{harga}</p>
-              <p className="text-xs text-gray-500">Min. {min}</p>
+              <p className="text-xs text-[var(--muted)]">Min. {min}</p>
               <ul className="space-y-1.5 pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
                 {include.map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-xs text-gray-300">
+                  <li key={item} className="flex items-center gap-2 text-xs text-[var(--text)]">
                     <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--green)' }} aria-hidden="true" />
                     {item}
                   </li>
