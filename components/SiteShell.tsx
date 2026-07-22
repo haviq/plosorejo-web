@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import SiteBackground from '@/components/SiteBackground'
 
 export default function SiteShell({
   children,
@@ -18,9 +19,12 @@ export default function SiteShell({
 
   return (
     <>
-      <Nav />
-      <main className="flex-1">{children}</main>
-      <Footer />
+      <SiteBackground />
+      <div className="site-content">
+        <Nav />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
     </>
   )
 }

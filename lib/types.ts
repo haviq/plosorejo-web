@@ -5,12 +5,14 @@ export interface UMKMItem {
   jenis: string
   produk: string
   harga: string
-  emoji: string
+  icon: string
   jamBuka: string
   whatsapp: string
   aktif: boolean
   gmaps?: string
   alamat?: string
+  /** @deprecated use icon */
+  emoji?: string
 }
 
 export interface BeritaItem {
@@ -39,9 +41,11 @@ export interface GaleriAlbum {
   id: number
   judul: string
   tanggal: string
-  emoji: string
+  icon: string
   count: number
   deskripsi: string
   warna: string
   foto?: string[]
+  /** @deprecated use icon */
+  emoji?: string
 }

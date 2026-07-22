@@ -14,12 +14,12 @@ const poiGroups = [
   },
   {
     label: 'UMKM',
-    color: 'var(--green)',
+    color: 'var(--gold)',
     items: ['Warung Bu Siti', 'Bengkel Las Mandiri', 'Batik Tulis Nusantara', 'Angkringan Wek-ji'],
   },
   {
     label: 'Fasilitas Desa',
-    color: '#818cf8',
+    color: 'var(--gold)',
     items: [
       'Masjid Asy Syams',
       'Masjid Al Fath',
@@ -34,9 +34,9 @@ const poiGroups = [
 
 const rtLegend = [
   { name: 'RT 01 / RW 01', color: '#eab308' },
-  { name: 'RT 02 / RW 01', color: '#ef4444' },
-  { name: 'RT 03 / RW 01', color: '#22c55e' },
-  { name: 'RT 04 / RW 01', color: '#3b82f6' },
+  { name: 'RT 02 / RW 01', color: 'var(--gold)' },
+  { name: 'RT 03 / RW 01', color: 'var(--gold)' },
+  { name: 'RT 04 / RW 01', color: 'var(--gold)' },
 ]
 
 export default function PetaPage() {
@@ -46,7 +46,7 @@ export default function PetaPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-black mb-1" style={{ color: 'var(--text)' }}>
-          🗺️ <span className="gold-text">Peta</span> Padukuhan Plosorejo
+          <span className="gold-text">Peta</span> Padukuhan Plosorejo
         </h1>
         <p className="text-[var(--muted)] text-sm">
           Batas wilayah RT & RW · Jl. Balong, Umbulharjo, Cangkringan, Sleman
@@ -144,9 +144,9 @@ export default function PetaPage() {
       >
         {[
           { label: 'Luas Wilayah', value: '±45 ha' },
-          { label: 'Jumlah RT',    value: '4' },
-          { label: 'Jumlah RW',    value: '1' },
-          { label: 'Koordinat',    value: '7°37′S 110°26′E' },
+          { label: 'Jumlah RT', value: '4' },
+          { label: 'Jumlah RW', value: '1' },
+          { label: 'Koordinat', value: '7°37′S 110°26′E' },
         ].map(({ label, value }) => (
           <div key={label}>
             <p className="text-lg font-bold gold-text tabular-nums">{value}</p>

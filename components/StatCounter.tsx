@@ -16,7 +16,6 @@ export default function StatCounter({ value, label }: StatCounterProps) {
   const [displayed, setDisplayed] = useState('0')
   const [hasAnimated, setHasAnimated] = useState(false)
 
-  // Parse numeric part and suffix from value string (e.g. "847" → 847 / "")
   const numericMatch = value.match(/^([\d.,]+)(.*)$/)
   const numericRaw = numericMatch ? numericMatch[1].replace(/\./g, '').replace(',', '.') : '0'
   const suffix = numericMatch ? numericMatch[2] : value
@@ -37,15 +36,12 @@ export default function StatCounter({ value, label }: StatCounterProps) {
           const tick = (now: number) => {
             const elapsed = now - start
             const progress = Math.min(elapsed / duration, 1)
-            // Ease-out cubic
             const eased = 1 - Math.pow(1 - progress, 3)
             const current = eased * target
 
             if (isFloat) {
-              // Format with comma as decimal separator (Indonesian style)
               setDisplayed(current.toFixed(1).replace('.', ','))
             } else {
-              // Format with dot as thousands separator (Indonesian style)
               const rounded = Math.round(current)
               setDisplayed(rounded.toLocaleString('id-ID'))
             }
@@ -56,7 +52,7 @@ export default function StatCounter({ value, label }: StatCounterProps) {
           requestAnimationFrame(tick)
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     )
 
     observer.observe(el)
@@ -64,10 +60,13 @@ export default function StatCounter({ value, label }: StatCounterProps) {
   }, [target, isFloat, hasAnimated])
 
   return (
-    <div ref={ref} className="flex flex-col items-center gap-1 text-center">
+    <div ref={ref} className="flex flex-col items-center gap-1.5 text-center">
       <span
         className="text-3xl md:text-4xl font-black tabular-nums leading-none"
-        style={{ color: 'var(--gold)' }}
+        style={{
+          color: 'var(--gold)',
+          textShadow: '0 0 28px rgba(212,175,55,0.18)',
+        }}
         aria-label={`${value} ${label}`}
       >
         {displayed}

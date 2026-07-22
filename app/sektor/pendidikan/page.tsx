@@ -18,7 +18,7 @@ const lembagaPendidikan = [
     guru: 4,
     akreditasi: 'B',
     alamat: 'RT 03, Padukuhan Plosorejo',
-    color: '#f97316',
+    color: 'var(--gold)',
   },
   {
     nama: 'TK Aisyiyah Plosorejo',
@@ -27,7 +27,7 @@ const lembagaPendidikan = [
     guru: 6,
     akreditasi: 'A',
     alamat: 'RT 02, Padukuhan Plosorejo',
-    color: '#f59e0b',
+    color: 'var(--gold)',
   },
   {
     nama: 'SDN Plosorejo 1',
@@ -54,7 +54,7 @@ const lembagaPendidikan = [
     guru: 22,
     akreditasi: 'A',
     alamat: 'Kec. Cangkringan (2 km)',
-    color: 'var(--green)',
+    color: 'var(--gold)',
   },
   {
     nama: 'SMA Negeri 1 Cangkringan',
@@ -63,13 +63,13 @@ const lembagaPendidikan = [
     guru: 28,
     akreditasi: 'A',
     alamat: 'Kec. Cangkringan (3 km)',
-    color: '#60a5fa',
+    color: 'var(--gold)',
   },
 ]
 
 const jenjangColor: Record<string, string> = {
-  PAUD: '#f97316', TK: 'var(--gold)', SD: 'var(--gold)',
-  SMP: 'var(--green)', SMA: '#60a5fa', SMK: '#60a5fa',
+  PAUD: 'var(--gold)', TK: 'var(--gold)', SD: 'var(--gold)',
+  SMP: 'var(--gold)', SMA: 'var(--gold)', SMK: 'var(--gold)',
 }
 
 const programBeasiswa = [
@@ -107,7 +107,7 @@ export default function PendidikanPage() {
             key={label}
             label={label}
             value={value}
-            accent={i % 2 === 0 ? 'amber' : 'green'}
+            accent="amber"
           />
         ))}
       </section>
@@ -145,7 +145,7 @@ export default function PendidikanPage() {
                   <p className="text-xs text-[var(--muted2)]">Guru</p>
                 </div>
                 <div>
-                  <p className="text-sm font-bold" style={{ color: akreditasi === 'A' ? 'var(--green)' : 'var(--gold)' }}>
+                  <p className="text-sm font-bold" style={{ color: akreditasi === 'A' ? 'var(--gold)' : 'var(--gold)' }}>
                     {akreditasi}
                   </p>
                   <p className="text-xs text-[var(--muted2)]">Akreditasi</p>

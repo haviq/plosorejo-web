@@ -57,9 +57,9 @@ export default function UMKMCatalog({ items }: UMKMCatalogProps) {
             onClick={() => setOnlyOpen((v) => !v)}
             className="px-4 py-3 rounded-xl text-sm font-semibold border transition-colors"
             style={{
-              borderColor: onlyOpen ? 'var(--green)' : 'var(--border)',
-              color: onlyOpen ? 'var(--green)' : 'var(--muted)',
-              backgroundColor: onlyOpen ? 'rgba(34,197,94,0.1)' : 'transparent',
+              borderColor: onlyOpen ? 'var(--gold)' : 'var(--border)',
+              color: onlyOpen ? 'var(--gold)' : 'var(--muted)',
+              backgroundColor: onlyOpen ? 'rgba(212,175,55,0.1)' : 'transparent',
             }}
           >
             {onlyOpen ? '● Hanya Aktif' : '○ Semua Status'}

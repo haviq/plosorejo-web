@@ -1,30 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0d0d0d"/>
-      <stop offset="55%" stop-color="#1a1408"/>
+      <stop offset="0%" stop-color="#0a0a0c"/>
+      <stop offset="35%" stop-color="#14110c"/>
+      <stop offset="70%" stop-color="#1a1408"/>
       <stop offset="100%" stop-color="#080808"/>
     </linearGradient>
-    <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3a2f12"/>
+    <linearGradient id="mtn-back" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a2414"/>
+      <stop offset="100%" stop-color="#100e09"/>
+    </linearGradient>
+    <linearGradient id="mtn-front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3d3218"/>
       <stop offset="100%" stop-color="#141008"/>
     </linearGradient>
-    <radialGradient id="glow" cx="50%" cy="38%" r="55%">
-      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.28"/>
+    <radialGradient id="glow" cx="50%" cy="36%" r="48%">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.34"/>
+      <stop offset="45%" stop-color="#d4af37" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="peak-glow" cx="50%" cy="35%" r="12%">
+      <stop offset="0%" stop-color="#f0c040" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0c0c0c" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#080808"/>
+    </linearGradient>
   </defs>
+
   <rect width="1920" height="1080" fill="url(#sky)"/>
   <rect width="1920" height="1080" fill="url(#glow)"/>
-  <path d="M0 1080 L0 760 L300 700 L520 760 L760 640 L960 380 L1160 640 L1400 760 L1620 700 L1920 780 L1920 1080 Z" fill="url(#mtn)"/>
-  <path d="M880 460 L960 380 L1040 460 L1010 470 L990 445 L960 465 L930 445 L910 470 Z" fill="#d4af37" opacity="0.85"/>
-  <path d="M0 1080 L0 900 Q480 820 960 880 T1920 860 L1920 1080 Z" fill="#0a0a0a"/>
-  <g fill="#d4af37" opacity="0.55">
-    <circle cx="240" cy="180" r="2"/>
-    <circle cx="520" cy="120" r="1.6"/>
-    <circle cx="840" cy="90" r="2"/>
-    <circle cx="1240" cy="150" r="1.6"/>
-    <circle cx="1560" cy="100" r="2"/>
-    <circle cx="1760" cy="200" r="1.6"/>
+
+  <!-- distant ridge -->
+  <path d="M0 820 L180 760 L360 790 L560 720 L760 780 L980 700 L1200 760 L1420 710 L1640 770 L1920 730 L1920 1080 L0 1080 Z" fill="url(#mtn-back)" opacity="0.75"/>
+
+  <!-- main merapi silhouette -->
+  <path d="M0 1080 L0 780 L220 740 L420 780 L640 680 L820 560 L960 340 L1100 560 L1280 700 L1500 760 L1720 720 L1920 790 L1920 1080 Z" fill="url(#mtn-front)"/>
+
+  <!-- peak highlight -->
+  <ellipse cx="960" cy="360" rx="120" ry="70" fill="url(#peak-glow)"/>
+  <path d="M900 430 L960 340 L1020 430 L995 438 L980 405 L960 430 L940 405 L925 438 Z" fill="#f0c040" opacity="0.9"/>
+  <path d="M930 450 L960 390 L990 450 L975 455 L960 430 L945 455 Z" fill="#d4af37" opacity="0.55"/>
+
+  <!-- foreground hills -->
+  <path d="M0 1080 L0 900 Q360 820 720 880 T1440 860 T1920 900 L1920 1080 Z" fill="#0a0a0a"/>
+  <path d="M0 1080 L0 960 Q480 900 960 940 T1920 920 L1920 1080 Z" fill="url(#ground)"/>
+
+  <!-- stars -->
+  <g fill="#d4af37">
+    <circle cx="180" cy="140" r="1.8" opacity="0.55"/>
+    <circle cx="320" cy="90" r="1.4" opacity="0.4"/>
+    <circle cx="520" cy="160" r="1.6" opacity="0.5"/>
+    <circle cx="740" cy="70" r="2" opacity="0.6"/>
+    <circle cx="980" cy="110" r="1.3" opacity="0.35"/>
+    <circle cx="1180" cy="80" r="1.8" opacity="0.5"/>
+    <circle cx="1380" cy="150" r="1.5" opacity="0.45"/>
+    <circle cx="1580" cy="95" r="2" opacity="0.55"/>
+    <circle cx="1760" cy="170" r="1.4" opacity="0.4"/>
+    <circle cx="860" cy="180" r="1.2" opacity="0.3"/>
   </g>
+
+  <!-- soft gold haze near horizon -->
+  <ellipse cx="960" cy="760" rx="700" ry="90" fill="#d4af37" opacity="0.05"/>
 </svg>

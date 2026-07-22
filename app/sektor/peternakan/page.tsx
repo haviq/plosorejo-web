@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
+import Icon from '@/components/Icon'
 import sektorData from '@/content/sektor.json'
 
 export const metadata: Metadata = {
@@ -11,17 +12,17 @@ export const metadata: Metadata = {
 const sektor = sektorData.peternakan
 
 const kelompokPeternak = [
-  { nama: 'Kelompok A – Pak Harto',   ekor: 68, produksi: '320 L/hari', grade: 'A',  aktif: true },
-  { nama: 'Kelompok B – Bu Rahayu',   ekor: 55, produksi: '285 L/hari', grade: 'A',  aktif: true },
-  { nama: 'Kelompok C – Pak Suryono', ekor: 42, produksi: '198 L/hari', grade: 'B',  aktif: true },
-  { nama: 'Kelompok D – Bu Sari',     ekor: 48, produksi: '241 L/hari', grade: 'B+', aktif: true },
-  { nama: 'Kelompok E – Pak Darmawan',ekor: 38, produksi: '187 L/hari', grade: 'A',  aktif: true },
-  { nama: 'Kelompok F – Bu Mulyani',  ekor: 61, produksi: '309 L/hari', grade: 'A',  aktif: true },
+  { nama: 'Kelompok A – Pak Harto', ekor: 68, produksi: '320 L/hari', grade: 'A', aktif: true },
+  { nama: 'Kelompok B – Bu Rahayu', ekor: 55, produksi: '285 L/hari', grade: 'A', aktif: true },
+  { nama: 'Kelompok C – Pak Suryono', ekor: 42, produksi: '198 L/hari', grade: 'B', aktif: true },
+  { nama: 'Kelompok D – Bu Sari', ekor: 48, produksi: '241 L/hari', grade: 'B+', aktif: true },
+  { nama: 'Kelompok E – Pak Darmawan', ekor: 38, produksi: '187 L/hari', grade: 'A', aktif: true },
+  { nama: 'Kelompok F – Bu Mulyani', ekor: 61, produksi: '309 L/hari', grade: 'A', aktif: true },
 ]
 
 const gradeColor: Record<string, string> = {
-  'A': 'var(--green)', 'A+': 'var(--green)',
-  'B+': 'var(--gold)', 'B': '#f97316',
+  'A': 'var(--gold)', 'A+': 'var(--gold)',
+  'B+': 'var(--gold)', 'B': 'var(--gold)',
 }
 
 export default function PeternakanPage() {
@@ -41,7 +42,7 @@ export default function PeternakanPage() {
             key={label}
             label={label}
             value={value}
-            accent={i % 2 === 0 ? 'amber' : 'green'}
+            accent="amber"
           />
         ))}
       </section>
@@ -60,9 +61,7 @@ export default function PeternakanPage() {
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
                 style={{ backgroundColor: 'rgba(245,158,11,0.12)' }}
                 aria-hidden="true"
-              >
-                🐄
-              </span>
+              ><Icon name="peternakan" size={18} /></span>
               <p className="text-sm text-[var(--text)]">{item}</p>
             </div>
           ))}
@@ -109,7 +108,7 @@ export default function PeternakanPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--green)' }}>
+                      <span className="flex items-center gap-1 text-xs" style={{ color: 'var(--gold)' }}>
                         <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
                         Aktif
                       </span>

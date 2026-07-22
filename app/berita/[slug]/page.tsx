@@ -26,11 +26,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const kategoriColor: Record<string, string> = {
-  Pertanian: 'var(--green)',
-  Kesehatan: '#34d399',
-  KKN: '#818cf8',
+  Pertanian: 'var(--gold)',
+  Kesehatan: 'var(--gold)',
+  KKN: 'var(--gold)',
   Budaya: 'var(--gold)',
-  Pendidikan: '#60a5fa',
+  Pendidikan: 'var(--gold)',
   Peternakan: 'var(--gold)',
 }
 

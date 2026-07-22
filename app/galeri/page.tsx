@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import GaleriGrid from '@/components/GaleriGrid'
+import Icon from '@/components/Icon'
 import { getGaleriList } from '@/lib/data'
 
 export const metadata: Metadata = {
@@ -50,13 +51,17 @@ export default async function GaleriPage() {
         className="card-surface p-6 text-center space-y-3"
         style={{
           background:
-            'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(34,197,94,0.05))',
+            'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.05))',
         }}
         aria-label="Informasi KKN"
       >
-        <p className="text-2xl" aria-hidden="true">
-          🎓
-        </p>
+        <div
+          className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center"
+          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+          aria-hidden="true"
+        >
+          <Icon name="pendidikan" size={24} />
+        </div>
         <h2 className="font-black text-lg">KKN UNRIYO Angkatan 2026</h2>
         <p className="text-sm max-w-md mx-auto" style={{ color: 'var(--muted)' }}>
           12 mahasiswa Universitas Respati Yogyakarta dari berbagai fakultas menjalankan pengabdian

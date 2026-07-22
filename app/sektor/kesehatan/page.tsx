@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
+import Icon from '@/components/Icon'
 import sektorData from '@/content/sektor.json'
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ const posyandu = [
     kader: 5,
     sasaran: 38,
     lokasi: 'Balai RT 02',
-    color: '#34d399',
+    color: 'var(--gold)',
   },
   {
     nama: 'Posyandu Mawar (RT 03–04)',
@@ -27,7 +28,7 @@ const posyandu = [
     kader: 5,
     sasaran: 42,
     lokasi: 'Rumah Kader Ibu Mulyani',
-    color: '#34d399',
+    color: 'var(--gold)',
   },
   {
     nama: 'Posyandu Lansia Sehat',
@@ -36,7 +37,7 @@ const posyandu = [
     kader: 4,
     sasaran: 89,
     lokasi: 'Balai Padukuhan',
-    color: '#818cf8',
+    color: 'var(--gold)',
   },
 ]
 
@@ -46,32 +47,32 @@ const layananKesehatan = [
     deskripsi: 'Pelayanan kesehatan ibu dan anak, persalinan normal, KB, dan imunisasi dasar.',
     jam: '08.00 – 14.00 (Senin–Sabtu)',
     lokasi: 'Jl. Raya Plosorejo No. 12',
-    color: 'var(--green)',
-    emoji: '👩‍⚕️',
+    color: 'var(--gold)',
+    icon: 'kesehatan',
   },
   {
     nama: 'Puskesmas Cangkringan',
     deskripsi: 'Pelayanan kesehatan umum, rawat jalan, laboratorium, UGD, dan rujukan.',
     jam: '07.30 – 16.00 (Senin–Jumat), 07.30 – 12.00 (Sabtu)',
     lokasi: 'Jl. Raya Cangkringan (±2 km)',
-    color: '#60a5fa',
-    emoji: '🏥',
+    color: 'var(--gold)',
+    icon: 'kesehatan',
   },
   {
     nama: 'RSUD Sleman',
     deskripsi: 'Rumah Sakit Umum Daerah Kabupaten Sleman untuk rujukan lanjutan.',
     jam: '24 jam (IGD)',
     lokasi: 'Kalasan, Sleman (±12 km)',
-    color: '#f97316',
-    emoji: '🏨',
+    color: 'var(--gold)',
+    icon: 'kesehatan',
   },
 ]
 
 const programKesehatan = [
   { nama: 'Imunisasi Dasar Lengkap', target: '100%', capaian: '98,2%', status: 'Baik' },
-  { nama: 'ASI Eksklusif 6 Bulan',   target: '80%',  capaian: '76,4%', status: 'Hampir' },
-  { nama: 'Balita Gizi Baik',        target: '100%', capaian: '98,0%', status: 'Baik' },
-  { nama: 'Ibu Hamil Risti Terpantau',target: '100%', capaian: '100%', status: 'Baik' },
+  { nama: 'ASI Eksklusif 6 Bulan', target: '80%', capaian: '76,4%', status: 'Hampir' },
+  { nama: 'Balita Gizi Baik', target: '100%', capaian: '98,0%', status: 'Baik' },
+  { nama: 'Ibu Hamil Risti Terpantau', target: '100%', capaian: '100%', status: 'Baik' },
 ]
 
 export default function KesehatanPage() {
@@ -91,7 +92,7 @@ export default function KesehatanPage() {
             key={label}
             label={label}
             value={value}
-            accent={i % 2 === 0 ? 'green' : 'amber'}
+            accent="amber"
           />
         ))}
       </section>
@@ -117,8 +118,14 @@ export default function KesehatanPage() {
               </div>
 
               <div className="space-y-1.5 text-xs text-[var(--muted)]">
-                <p>📅 {jadwal}</p>
-                <p>📍 {lokasi}</p>
+                <p className="inline-flex items-center gap-1.5">
+                  <Icon name="clock" size={14} />
+                  {jadwal}
+                </p>
+                <p className="inline-flex items-center gap-1.5">
+                  <Icon name="location" size={14} />
+                  {lokasi}
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-2 border-t text-center" style={{ borderColor: 'var(--border)' }}>
@@ -140,7 +147,7 @@ export default function KesehatanPage() {
       <section aria-label="Fasilitas kesehatan">
         <h2 className="text-2xl font-black mb-5">Fasilitas Kesehatan</h2>
         <div className="space-y-4">
-          {layananKesehatan.map(({ nama, deskripsi, jam, lokasi, color, emoji }) => (
+          {layananKesehatan.map(({ nama, deskripsi, jam, lokasi, color, icon }) => (
             <div
               key={nama}
               className="rounded-xl border p-5 flex gap-4"
@@ -150,15 +157,19 @@ export default function KesehatanPage() {
                 className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
                 style={{ backgroundColor: `${color}12` }}
                 aria-hidden="true"
-              >
-                {emoji}
-              </span>
+              ><Icon name={icon} size={20} /></span>
               <div className="space-y-1">
                 <h3 className="font-bold text-[var(--text)]">{nama}</h3>
                 <p className="text-sm text-[var(--muted)]">{deskripsi}</p>
                 <div className="flex flex-wrap gap-4 text-xs text-[var(--muted)] pt-1">
-                  <span>🕐 {jam}</span>
-                  <span>📍 {lokasi}</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Icon name="clock" size={14} />
+                    {jam}
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Icon name="location" size={14} />
+                    {lokasi}
+                  </span>
                 </div>
               </div>
             </div>
@@ -172,7 +183,7 @@ export default function KesehatanPage() {
         <div className="space-y-3">
           {programKesehatan.map(({ nama, target, capaian, status }) => {
             const isGood = status === 'Baik'
-            const statusColor = isGood ? 'var(--green)' : 'var(--gold)'
+            const statusColor = isGood ? 'var(--gold)' : 'var(--gold)'
             const pct = parseInt(capaian)
             return (
               <div

@@ -19,7 +19,7 @@ const galeriFallback: GaleriAlbum[] = [
     id: 1,
     judul: 'Penyambutan Tim KKN',
     tanggal: '1 Juli 2026',
-    emoji: '🎉',
+    icon: 'people',
     count: 12,
     deskripsi:
       'Upacara penyambutan 12 mahasiswa KKN UNRIYO angkatan 2026 oleh perangkat padukuhan dan warga.',
@@ -29,27 +29,27 @@ const galeriFallback: GaleriAlbum[] = [
     id: 2,
     judul: 'Kegiatan Posyandu',
     tanggal: '5 Juli 2026',
-    emoji: '🏥',
+    icon: 'kesehatan',
     count: 18,
     deskripsi:
       'Mahasiswa KKN membantu pelaksanaan Posyandu Balita — penimbangan, imunisasi, dan penyuluhan gizi.',
-    warna: '#34d399',
+    warna: 'var(--gold)',
   },
   {
     id: 3,
     judul: 'Pelatihan Pupuk Organik',
     tanggal: '8 Juli 2026',
-    emoji: '🌱',
+    icon: 'pertanian',
     count: 15,
     deskripsi:
       'Workshop pembuatan pupuk organik dari kotoran sapi bersama kelompok tani Maju Bersama.',
-    warna: 'var(--green)',
+    warna: 'var(--gold)',
   },
   {
     id: 4,
     judul: 'Panen Raya Padi',
     tanggal: '10 Juli 2026',
-    emoji: '🌾',
+    icon: 'pertanian',
     count: 24,
     deskripsi:
       'Dokumentasi kegiatan panen raya padi serentak yang diikuti ratusan petani Padukuhan Plosorejo.',
@@ -59,17 +59,17 @@ const galeriFallback: GaleriAlbum[] = [
     id: 5,
     judul: 'Pelatihan UMKM Digital',
     tanggal: '12 Juli 2026',
-    emoji: '💻',
+    icon: 'digital',
     count: 9,
     deskripsi:
       'Pelatihan pemasaran digital dan penggunaan media sosial untuk pelaku UMKM padukuhan.',
-    warna: '#818cf8',
+    warna: 'var(--gold)',
   },
   {
     id: 6,
     judul: 'Kunjungan Peternakan',
     tanggal: '14 Juli 2026',
-    emoji: '🐄',
+    icon: 'peternakan',
     count: 20,
     deskripsi:
       'Tim KKN mengunjungi peternakan sapi perah unggulan dan mempelajari proses produksi susu.',
@@ -79,21 +79,21 @@ const galeriFallback: GaleriAlbum[] = [
     id: 7,
     judul: 'Lomba Mewarnai Anak',
     tanggal: '16 Juli 2026',
-    emoji: '🎨',
+    icon: 'budaya',
     count: 30,
     deskripsi:
       'Lomba mewarnai tingkat PAUD dan TK sebagai bagian dari program pengembangan karakter anak.',
-    warna: '#f97316',
+    warna: 'var(--gold)',
   },
   {
     id: 8,
     judul: 'Pengerjaan Web Desa',
     tanggal: '18 Juli 2026',
-    emoji: '🌐',
+    icon: 'globe',
     count: 8,
     deskripsi:
       'Tim divisi teknologi KKN mengerjakan portal informasi digital Padukuhan Plosorejo.',
-    warna: '#60a5fa',
+    warna: 'var(--gold)',
   },
 ]
 
@@ -162,6 +162,13 @@ function mapBerita(items: SanityBerita[]): BeritaItem[] {
 }
 
 function mapUMKM(items: SanityUMKM[]): UMKMItem[] {
+  const jenisIcon: Record<string, string> = {
+    Koperasi: 'koperasi',
+    Kuliner: 'kuliner',
+    Kerajinan: 'kerajinan',
+    Pertanian: 'pertanian',
+    Jasa: 'jasa',
+  }
   return items.map((u, i) => ({
     id: Number.isFinite(Number(u.id)) ? Number(u.id) : i + 1,
     nama: u.nama,
@@ -169,7 +176,7 @@ function mapUMKM(items: SanityUMKM[]): UMKMItem[] {
     jenis: u.jenis,
     produk: u.produk,
     harga: u.harga || '-',
-    emoji: u.emoji || '🏪',
+    icon: jenisIcon[u.jenis] || u.emoji || 'umkm',
     jamBuka: u.jamBuka,
     whatsapp: u.whatsapp,
     aktif: u.aktif !== false,
@@ -183,7 +190,7 @@ function mapGaleri(items: SanityGaleri[]): GaleriAlbum[] {
     id: i + 1,
     judul: g.judul,
     tanggal: g.tanggal || '',
-    emoji: g.emoji || '📸',
+    icon: g.emoji || 'galeri',
     count: g.fotoCount || g.count || 0,
     deskripsi: g.deskripsi || '',
     warna: g.warna || 'var(--gold)',

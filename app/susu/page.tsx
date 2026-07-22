@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
+import Icon from '@/components/Icon'
 
 export const metadata: Metadata = {
   title: 'Produksi Susu',
@@ -60,7 +61,7 @@ function BarChart() {
         const x = i * (barW + gap)
         const y = chartH - barH
         const isMax = value === maxVal
-        const color = isMax ? 'var(--green)' : 'var(--gold)'
+        const color = isMax ? 'var(--gold)' : 'var(--gold)'
 
         return (
           <g key={month}>
@@ -99,7 +100,7 @@ function BarChart() {
 }
 
 const qualityColor: Record<string, string> = {
-  A: 'var(--green)',
+  A: 'var(--gold)',
   'B+': 'var(--gold)',
   B: '#fb923c',
 }
@@ -117,10 +118,10 @@ export default function SusuPage() {
       {/* Stat cards */}
       <section aria-label="Statistik produksi">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="Produksi Hari Ini" value="1.631 L" sub="↑ 4.2% dari kemarin" accent="amber" icon={<span aria-hidden>🥛</span>} />
-          <StatCard label="Produksi Bulan Ini" value="48.9 t" sub="Target: 50 ton" accent="green" icon={<span aria-hidden>📦</span>} />
-          <StatCard label="Peternak Aktif" value="47" sub="Dari 52 terdaftar" accent="amber" icon={<span aria-hidden>👨‍🌾</span>} />
-          <StatCard label="Rata-rata / Sapi" value="18.4 L" sub="Per hari per ekor" accent="green" icon={<span aria-hidden>🐄</span>} />
+          <StatCard label="Produksi Hari Ini" value="1.631 L" sub="↑ 4.2% dari kemarin" accent="amber" icon={<Icon name="susu" size={16} />} />
+          <StatCard label="Produksi Bulan Ini" value="48.9 t" sub="Target: 50 ton" accent="amber" icon={<Icon name="chart" size={16} />} />
+          <StatCard label="Peternak Aktif" value="47" sub="Dari 52 terdaftar" accent="amber" icon={<Icon name="people" size={16} />} />
+          <StatCard label="Rata-rata / Sapi" value="18.4 L" sub="Per hari per ekor" accent="amber" icon={<Icon name="peternakan" size={16} />} />
         </div>
       </section>
 
@@ -137,7 +138,7 @@ export default function SusuPage() {
               Normal
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'var(--green)' }} />
+              <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'var(--gold)' }} />
               Tertinggi
             </span>
           </div>
@@ -187,7 +188,7 @@ export default function SusuPage() {
                     <td className="px-4 py-3">
                       <span
                         className="inline-flex items-center gap-1 text-xs"
-                        style={{ color: row.status === 'Diterima' ? 'var(--green)' : 'var(--gold)' }}
+                        style={{ color: row.status === 'Diterima' ? 'var(--gold)' : 'var(--gold)' }}
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
                         {row.status}
@@ -204,10 +205,16 @@ export default function SusuPage() {
       {/* Info koperasi */}
       <section
         className="card-surface p-6 text-center space-y-3"
-        style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(34,197,94,0.05))' }}
+        style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.05))' }}
         aria-label="Informasi koperasi susu"
       >
-        <p className="text-2xl" aria-hidden="true">🐄</p>
+        <div
+          className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center"
+          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+          aria-hidden="true"
+        >
+          <Icon name="peternakan" size={22} />
+        </div>
         <h2 className="font-black text-lg">Koperasi Susu Plosorejo</h2>
         <p className="text-sm max-w-md mx-auto" style={{ color: 'var(--muted)' }}>
           Setoran susu setiap hari pukul 05.30 – 07.30 dan 15.30 – 17.30 WIB di TPS Plosorejo.

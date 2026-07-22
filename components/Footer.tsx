@@ -23,9 +23,18 @@ const sektorLinks = [
 export default function Footer() {
   return (
     <footer
-      className="border-t mt-auto"
+      className="border-t mt-auto relative overflow-hidden"
       style={{ borderColor: 'var(--border)', backgroundColor: 'var(--s1)' }}
     >
+      <div
+        className="absolute inset-x-0 top-0 h-px"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent, rgba(212,175,55,0.55), transparent)',
+        }}
+        aria-hidden="true"
+      />
+
       <div className="max-w-7xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
           <div>
@@ -49,6 +58,11 @@ export default function Footer() {
           <p className="text-xs" style={{ color: 'var(--muted2)' }}>
             Jl. Balong, Umbulharjo, Cangkringan, Sleman, DIY 55583
           </p>
+          <div className="flex flex-wrap gap-2 pt-1">
+            <span className="badge" style={{ color: 'var(--muted)', background: 'rgba(255,255,255,0.04)' }}>
+              KKN UNRIYO 2026
+            </span>
+          </div>
         </div>
 
         <div>
@@ -58,7 +72,7 @@ export default function Footer() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm transition-colors hover:opacity-100"
+                  className="text-sm transition-colors hover:text-[var(--text)]"
                   style={{ color: 'var(--muted)' }}
                 >
                   {item.label}
@@ -75,7 +89,7 @@ export default function Footer() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm transition-colors"
+                  className="text-sm transition-colors hover:text-[var(--text)]"
                   style={{ color: 'var(--muted)' }}
                 >
                   {item.label}

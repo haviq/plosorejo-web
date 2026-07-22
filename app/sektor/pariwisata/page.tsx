@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
+import Icon from '@/components/Icon'
 import sektorData from '@/content/sektor.json'
 
 export const metadata: Metadata = {
@@ -13,17 +14,17 @@ const sektor = sektorData.pariwisata
 const destinasi = [
   {
     nama: 'Agrowisata Kebun Salak',
-    emoji: '🍈',
+    icon: 'pertanian',
     deskripsi:
       'Kunjungi kebun salak pondoh seluas 18 hektar milik warga. Wisatawan dapat memetik salak langsung dari pohon, belajar teknik budidaya, dan membeli produk olahan salak khas Plosorejo.',
     tiket: 'Rp 25.000/orang',
     jamBuka: '08.00 – 16.00',
     fasilitas: ['Pemandu lokal', 'Area parkir', 'Warung oleh-oleh', 'Toilet'],
-    color: 'var(--green)',
+    color: 'var(--gold)',
   },
   {
     nama: 'Wisata Edukasi Peternakan',
-    emoji: '🐄',
+    icon: 'peternakan',
     deskripsi:
       'Saksikan langsung proses pemerahan susu sapi Friesian Holstein, pengolahan susu segar, hingga pembuatan yogurt dan keju lokal. Cocok untuk wisata edukasi keluarga dan rombongan pelajar.',
     tiket: 'Rp 30.000/orang',
@@ -33,13 +34,13 @@ const destinasi = [
   },
   {
     nama: 'Trekking Perbukitan Plosorejo',
-    emoji: '🏔️',
+    icon: 'pariwisata',
     deskripsi:
       'Jalur trekking ringan hingga sedang melalui perbukitan hijau dengan pemandangan Gunung Merapi dan hamparan sawah. Rute tersedia untuk pemula (2 km) dan menengah (5 km), dengan pemandu lokal berpengalaman.',
     tiket: 'Rp 50.000/orang',
     jamBuka: '05.30 – 12.00',
     fasilitas: ['Pemandu trekking', 'Titik panorama', 'Warung transit', 'P3K'],
-    color: '#818cf8',
+    color: 'var(--gold)',
   },
 ]
 
@@ -81,7 +82,7 @@ export default function PariwisataPage() {
             key={label}
             label={label}
             value={value}
-            accent={i % 2 === 0 ? 'amber' : 'green'}
+            accent="amber"
           />
         ))}
       </section>
@@ -90,7 +91,7 @@ export default function PariwisataPage() {
       <section aria-label="Destinasi wisata">
         <h2 className="text-2xl font-black mb-5">Destinasi Wisata</h2>
         <div className="space-y-5">
-          {destinasi.map(({ nama, emoji, deskripsi, tiket, jamBuka, fasilitas, color }) => (
+          {destinasi.map(({ nama, icon, deskripsi, tiket, jamBuka, fasilitas, color }) => (
             <div
               key={nama}
               className="rounded-xl border p-6 space-y-4"
@@ -101,14 +102,12 @@ export default function PariwisataPage() {
                   className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
                   style={{ backgroundColor: `${color}12` }}
                   aria-hidden="true"
-                >
-                  {emoji}
-                </span>
+                ><Icon name={icon} size={20} /></span>
                 <div className="flex-1">
                   <h3 className="font-black text-[var(--text)] text-lg">{nama}</h3>
                   <div className="flex flex-wrap gap-4 mt-1 text-xs text-[var(--muted)]">
                     <span>🎫 {tiket}</span>
-                    <span>🕐 {jamBuka}</span>
+                    <span> {jamBuka}</span>
                   </div>
                 </div>
               </div>
@@ -148,7 +147,7 @@ export default function PariwisataPage() {
               <ul className="space-y-1.5 pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
                 {include.map((item) => (
                   <li key={item} className="flex items-center gap-2 text-xs text-[var(--text)]">
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--green)' }} aria-hidden="true" />
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--gold)' }} aria-hidden="true" />
                     {item}
                   </li>
                 ))}

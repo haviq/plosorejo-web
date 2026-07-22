@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
+import Icon from '@/components/Icon'
 import sektorData from '@/content/sektor.json'
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ const komoditas = [
     luas: '52 ha',
     panen: '6,2 t/ha',
     musim: '2× / tahun',
-    emoji: '🌾',
+    icon: 'pertanian',
     color: 'var(--gold)',
   },
   {
@@ -26,8 +27,8 @@ const komoditas = [
     luas: '18 ha',
     panen: '15 t/ha',
     musim: 'Sepanjang tahun',
-    emoji: '🍈',
-    color: 'var(--green)',
+    icon: 'pertanian',
+    color: 'var(--gold)',
   },
   {
     nama: 'Cabai Merah',
@@ -35,8 +36,8 @@ const komoditas = [
     luas: '9 ha',
     panen: '8 t/ha',
     musim: '3× / tahun',
-    emoji: '🌶️',
-    color: '#ef4444',
+    icon: 'pertanian',
+    color: 'var(--gold)',
   },
   {
     nama: 'Jagung Hibrida',
@@ -44,7 +45,7 @@ const komoditas = [
     luas: '5 ha',
     panen: '8,5 t/ha',
     musim: '2× / tahun',
-    emoji: '🌽',
+    icon: 'pertanian',
     color: 'var(--gold)',
   },
   {
@@ -53,8 +54,8 @@ const komoditas = [
     luas: '2 ha',
     panen: '4 t/ha',
     musim: '2× / tahun',
-    emoji: '🫘',
-    color: 'var(--green)',
+    icon: 'pertanian',
+    color: 'var(--gold)',
   },
   {
     nama: 'Sayuran Organik',
@@ -62,15 +63,15 @@ const komoditas = [
     luas: '1 ha',
     panen: '10 t/ha',
     musim: 'Sepanjang tahun',
-    emoji: '🥬',
-    color: 'var(--green)',
+    icon: 'pertanian',
+    color: 'var(--gold)',
   },
 ]
 
 const jadwalMusimTanam = [
-  { musim: 'MT I (Nov – Feb)',  komoditas: 'Padi IR64',       status: 'Selesai',    color: 'var(--green)' },
-  { musim: 'MT II (Mar – Jun)', komoditas: 'Padi Ciherang',   status: 'Selesai',    color: 'var(--green)' },
-  { musim: 'MT III (Jul – Okt)',komoditas: 'Cabai & Jagung',  status: 'Berjalan',   color: 'var(--gold)' },
+  { musim: 'MT I (Nov – Feb)', komoditas: 'Padi IR64', status: 'Selesai', color: 'var(--gold)' },
+  { musim: 'MT II (Mar – Jun)', komoditas: 'Padi Ciherang', status: 'Selesai', color: 'var(--gold)' },
+  { musim: 'MT III (Jul – Okt)', komoditas: 'Cabai & Jagung', status: 'Berjalan', color: 'var(--gold)' },
 ]
 
 export default function PertanianPage() {
@@ -90,7 +91,7 @@ export default function PertanianPage() {
             key={label}
             label={label}
             value={value}
-            accent={i % 2 === 0 ? 'green' : 'amber'}
+            accent="amber"
           />
         ))}
       </section>
@@ -99,7 +100,7 @@ export default function PertanianPage() {
       <section aria-label="Komoditas unggulan">
         <h2 className="text-2xl font-black mb-5">Komoditas Unggulan</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {komoditas.map(({ nama, varietas, luas, panen, musim, emoji, color }) => (
+          {komoditas.map(({ nama, varietas, luas, panen, musim, icon, color }) => (
             <div
               key={nama}
               className="rounded-xl border p-5 space-y-3"
@@ -110,9 +111,7 @@ export default function PertanianPage() {
                   className="w-10 h-10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
                   style={{ backgroundColor: `${color}12` }}
                   aria-hidden="true"
-                >
-                  {emoji}
-                </span>
+                ><Icon name={icon} size={20} /></span>
                 <div>
                   <h3 className="font-bold text-[var(--text)]">{nama}</h3>
                   <p className="text-xs text-[var(--muted)]">{varietas}</p>
@@ -181,7 +180,7 @@ export default function PertanianPage() {
             { label: 'Pompa Air', val: '4 unit' },
           ].map(({ label, val }) => (
             <div key={label}>
-              <p className="text-sm font-bold" style={{ color: 'var(--green)' }}>{val}</p>
+              <p className="text-sm font-bold" style={{ color: 'var(--gold)' }}>{val}</p>
               <p className="text-xs text-[var(--muted)]">{label}</p>
             </div>
           ))}

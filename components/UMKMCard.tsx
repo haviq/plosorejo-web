@@ -1,37 +1,38 @@
 'use client'
 
+import { motion } from 'framer-motion'
 import { isOpenNow, waLink } from '@/lib/utils'
 import type { UMKMItem } from '@/lib/types'
+import Icon from '@/components/Icon'
+import { fadeUp } from '@/components/motion'
 
 interface UMKMCardProps {
   item: UMKMItem
 }
 
-const jenisColor: Record<string, string> = {
-  Koperasi: 'var(--gold)',
-  Kuliner: '#f97316',
-  Kerajinan: '#a78bfa',
-  Pertanian: 'var(--green)',
-  Jasa: '#60a5fa',
-}
-
 export default function UMKMCard({ item }: UMKMCardProps) {
-  const color = jenisColor[item.jenis] ?? '#9ca3af'
+  const color = 'var(--gold)'
   const open = item.aktif && isOpenNow(item.jamBuka)
   const waUrl = waLink(
     item.whatsapp,
     `Halo, saya tertarik dengan produk ${item.nama}. Boleh saya tahu info lebih lanjut?`,
   )
+  const iconName = item.icon || item.jenis || 'umkm'
 
   return (
-    <article className="card-surface p-5 flex flex-col gap-3 h-full">
+    <motion.article
+      variants={fadeUp}
+      className="card-surface p-5 flex flex-col gap-3 h-full"
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.2 }}
+    >
       <div className="flex items-start gap-3">
         <span
-          className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-          style={{ backgroundColor: `${color}18` }}
+          className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: `${color}18`, color }}
           aria-hidden="true"
         >
-          {item.emoji}
+          <Icon name={iconName} size={20} />
         </span>
         <div className="min-w-0">
           <h3 className="font-bold leading-tight line-clamp-1" style={{ color: 'var(--text)' }}>
@@ -50,12 +51,12 @@ export default function UMKMCard({ item }: UMKMCardProps) {
         <span
           className="badge border"
           style={{
-            color: open ? 'var(--green)' : 'var(--muted)',
-            borderColor: open ? 'rgba(34,197,94,0.35)' : 'var(--border)',
-            backgroundColor: open ? 'rgba(34,197,94,0.12)' : 'transparent',
+            color: open ? 'var(--gold)' : 'var(--muted)',
+            borderColor: open ? 'rgba(212,175,55,0.35)' : 'var(--border)',
+            backgroundColor: open ? 'rgba(212,175,55,0.12)' : 'transparent',
           }}
         >
-          {open ? '● Buka' : '○ Tutup'}
+          {open ? 'Buka' : 'Tutup'}
         </span>
       </div>
 
@@ -64,13 +65,20 @@ export default function UMKMCard({ item }: UMKMCardProps) {
       </p>
 
       <div className="flex flex-wrap gap-3 text-xs" style={{ color: 'var(--muted)' }}>
-        <span>💰 {item.harga}</span>
-        <span>🕐 {item.jamBuka}</span>
+        <span className="inline-flex items-center gap-1">
+          <Icon name="money" size={14} />
+          {item.harga}
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <Icon name="clock" size={14} />
+          {item.jamBuka}
+        </span>
       </div>
 
       {item.alamat && (
-        <p className="text-xs line-clamp-1" style={{ color: 'var(--muted2)' }}>
-          📍 {item.alamat}
+        <p className="text-xs line-clamp-1 inline-flex items-center gap-1" style={{ color: 'var(--muted2)' }}>
+          <Icon name="location" size={14} />
+          {item.alamat}
         </p>
       )}
 
@@ -80,7 +88,7 @@ export default function UMKMCard({ item }: UMKMCardProps) {
       >
         <span
           className="flex items-center gap-1 text-xs"
-          style={{ color: item.aktif ? 'var(--green)' : 'var(--muted)' }}
+          style={{ color: item.aktif ? 'var(--gold)' : 'var(--muted)' }}
         >
           <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
           {item.aktif ? 'Aktif' : 'Tidak Aktif'}
@@ -111,6 +119,6 @@ export default function UMKMCard({ item }: UMKMCardProps) {
           </a>
         </div>
       </div>
-    </article>
+    </motion.article>
   )
 }

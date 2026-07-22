@@ -16,7 +16,7 @@ export default async function UMKMPage() {
   const sektor = sektorMap.umkm || {
     nama: 'UMKM',
     deskripsi: 'Direktori UMKM Padukuhan Plosorejo.',
-    icon: '🏪',
+    icon: 'umkm',
     stats: [],
     items: [],
   }
@@ -67,7 +67,7 @@ export default async function UMKMPage() {
         className="card-surface p-8 text-center space-y-4"
         style={{
           background:
-            'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(34,197,94,0.05))',
+            'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.05))',
         }}
         aria-label="Daftarkan UMKM"
       >

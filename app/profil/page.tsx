@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
+import Icon from '@/components/Icon'
 
 export const metadata: Metadata = {
   title: 'Profil Padukuhan',
@@ -8,30 +9,30 @@ export const metadata: Metadata = {
 }
 
 const strukturOrg = [
-  { jabatan: 'Dukuh / Kepala Padukuhan', nama: 'Bapak Slamet Widodo', icon: '👑' },
-  { jabatan: 'Sekretaris Padukuhan', nama: 'Ibu Sri Lestari', icon: '📋' },
-  { jabatan: 'Bendahara Padukuhan', nama: 'Bapak Agus Prayitno', icon: '💰' },
+  { jabatan: 'Dukuh / Kepala Padukuhan', nama: 'Bapak Slamet Widodo', icon: 'people' },
+  { jabatan: 'Sekretaris Padukuhan', nama: 'Ibu Sri Lestari', icon: 'chart' },
+  { jabatan: 'Bendahara Padukuhan', nama: 'Bapak Agus Prayitno', icon: 'money' },
 ]
 
 const rtList = [
   { rt: 'RT 01', rw: 'RW 01', ketua: 'Pak Rudi Hartono', kk: 48, warga: 168, color: 'var(--gold)' },
-  { rt: 'RT 02', rw: 'RW 01', ketua: 'Bu Eni Sulistyowati', kk: 42, warga: 151, color: '#34d399' },
-  { rt: 'RT 03', rw: 'RW 01', ketua: 'Pak Joko Santoso', kk: 51, warga: 179, color: '#60a5fa' },
-  { rt: 'RT 04', rw: 'RW 01', ketua: 'Bu Mulyani', kk: 45, warga: 160, color: '#818cf8' },
+  { rt: 'RT 02', rw: 'RW 01', ketua: 'Bu Eni Sulistyowati', kk: 42, warga: 151, color: 'var(--gold)' },
+  { rt: 'RT 03', rw: 'RW 01', ketua: 'Pak Joko Santoso', kk: 51, warga: 179, color: 'var(--gold)' },
+  { rt: 'RT 04', rw: 'RW 01', ketua: 'Bu Mulyani', kk: 45, warga: 160, color: 'var(--gold)' },
 ]
 
 const totalKK = rtList.reduce((s, r) => s + r.kk, 0)
 const totalWarga = rtList.reduce((s, r) => s + r.warga, 0)
 
 const infoWilayah = [
-  { label: 'Luas Wilayah', value: '±45 ha', icon: '🗺️' },
-  { label: 'Jumlah RT / RW', value: '4 / 1', icon: '🏘️' },
-  { label: 'Jumlah Penduduk', value: `${totalWarga.toLocaleString('id-ID')} jiwa`, icon: '👥' },
-  { label: 'Jumlah KK', value: `${totalKK} KK`, icon: '🏠' },
-  { label: 'Ketinggian', value: '±600 mdpl', icon: '⛰️' },
-  { label: 'Kecamatan', value: 'Cangkringan', icon: '📍' },
-  { label: 'Kabupaten', value: 'Sleman', icon: '🏛️' },
-  { label: 'Kode Pos', value: '55583', icon: '📮' },
+  { label: 'Luas Wilayah', value: '±45 ha', icon: 'peta' },
+  { label: 'Jumlah RT / RW', value: '4 / 1', icon: 'home' },
+  { label: 'Jumlah Penduduk', value: `${totalWarga.toLocaleString('id-ID')} jiwa`, icon: 'people' },
+  { label: 'Jumlah KK', value: `${totalKK} KK`, icon: 'home' },
+  { label: 'Ketinggian', value: '±600 mdpl', icon: 'pariwisata' },
+  { label: 'Kecamatan', value: 'Cangkringan', icon: 'location' },
+  { label: 'Kabupaten', value: 'Sleman', icon: 'globe' },
+  { label: 'Kode Pos', value: '55583', icon: 'location' },
 ]
 
 const misi = [
@@ -52,13 +53,18 @@ export default function ProfilPage() {
         description="Padukuhan Plosorejo, Jl. Balong, Kalurahan Umbulharjo, Cangkringan, Sleman — sentra sapi perah dan UMKM olahan susu di lereng Merapi."
       />
 
-      {/* Info Wilayah */}
       <section aria-label="Informasi wilayah" className="space-y-4">
         <h2 className="section-label">Informasi Wilayah</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           {infoWilayah.map(({ label, value, icon }) => (
             <div key={label} className="card-surface p-4 text-center">
-              <p className="text-2xl mb-1" aria-hidden="true">{icon}</p>
+              <div
+                className="w-10 h-10 mx-auto mb-2 rounded-xl flex items-center justify-center"
+                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                aria-hidden="true"
+              >
+                <Icon name={icon} size={18} />
+              </div>
               <p className="stat-value text-lg">{value}</p>
               <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>{label}</p>
             </div>
@@ -66,7 +72,6 @@ export default function ProfilPage() {
         </div>
       </section>
 
-      {/* Sejarah */}
       <section aria-label="Sejarah padukuhan" className="space-y-4">
         <h2 className="section-label">Sejarah Singkat</h2>
         <div className="card-surface p-6 space-y-4 text-sm leading-relaxed" style={{ color: 'var(--text)' }}>
@@ -90,116 +95,79 @@ export default function ProfilPage() {
         </div>
       </section>
 
-      {/* Visi Misi */}
-      <section className="grid md:grid-cols-2 gap-6" aria-label="Visi dan misi">
-        <div className="card-surface p-6 space-y-3">
-          <h2 className="text-lg font-black flex items-center gap-2">
-            <span className="w-7 h-7 rounded-lg flex items-center justify-center text-black text-sm font-black" style={{ background: 'var(--gradient)' }} aria-hidden="true">
-              V
-            </span>
-            Visi
-          </h2>
-          <p className="text-sm leading-relaxed italic" style={{ color: 'var(--muted)' }}>
-            &ldquo;Terwujudnya Padukuhan Plosorejo yang mandiri, sejahtera, berbudaya,
-            dan berdaya saing berbasis pertanian dan peternakan berkelanjutan.&rdquo;
-          </p>
-        </div>
-
-        <div className="card-surface p-6 space-y-4">
-          <h2 className="text-lg font-black flex items-center gap-2">
-            <span className="w-7 h-7 rounded-lg flex items-center justify-center text-black text-sm font-black" style={{ background: 'var(--gradient)' }} aria-hidden="true">
-              M
-            </span>
-            Misi
-          </h2>
-          <ul className="space-y-2 text-sm" style={{ color: 'var(--text)' }}>
-            {misi.map((m, i) => (
-              <li key={i} className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ backgroundColor: 'var(--gold)' }} aria-hidden="true" />
-                {m}
-              </li>
-            ))}
-          </ul>
+      <section aria-label="Visi dan misi" className="space-y-4">
+        <h2 className="section-label">Visi & Misi</h2>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="card-surface p-6 space-y-3">
+            <p className="text-xs uppercase tracking-widest" style={{ color: 'var(--gold)' }}>Visi</p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--text)' }}>
+              Mewujudkan Padukuhan Plosorejo yang mandiri, sejahtera, dan berdaya saing berbasis
+              potensi lokal serta kearifan budaya.
+            </p>
+          </div>
+          <div className="card-surface p-6 space-y-3">
+            <p className="text-xs uppercase tracking-widest" style={{ color: 'var(--gold)' }}>Misi</p>
+            <ul className="space-y-2">
+              {misi.map((item) => (
+                <li key={item} className="text-sm flex gap-2" style={{ color: 'var(--text)' }}>
+                  <span style={{ color: 'var(--gold)' }}>•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* Struktur Organisasi */}
       <section aria-label="Struktur organisasi" className="space-y-4">
         <h2 className="section-label">Struktur Organisasi</h2>
         <div className="grid sm:grid-cols-3 gap-4">
           {strukturOrg.map(({ jabatan, nama, icon }) => (
-            <div key={jabatan} className="card-surface p-5 text-center space-y-2">
-              <div className="w-12 h-12 rounded-full mx-auto flex items-center justify-center text-xl" style={{ backgroundColor: 'var(--gold-dim)' }} aria-hidden="true">
-                {icon}
+            <div key={jabatan} className="card-surface p-5 flex items-center gap-3">
+              <span
+                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                aria-hidden="true"
+              >
+                <Icon name={icon} size={20} />
+              </span>
+              <div>
+                <p className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{nama}</p>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>{jabatan}</p>
               </div>
-              <p className="font-bold text-sm" style={{ color: 'var(--text)' }}>{nama}</p>
-              <p className="text-xs" style={{ color: 'var(--muted)' }}>{jabatan}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Tabel RT/RW */}
-      <section aria-label="Daftar RT dan RW" className="space-y-4">
-        <div className="flex items-end justify-between gap-4 flex-wrap">
-          <h2 className="section-label">Daftar RT / RW Balong</h2>
-          <Link href="/peta" className="btn-ghost text-xs">
-            Lihat di Peta →
-          </Link>
-        </div>
-
-        <div className="flex flex-wrap gap-3">
-          {rtList.map(({ rt, color }) => (
-            <span key={rt} className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--muted)' }}>
-              <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: color }} aria-hidden="true" />
-              {rt}
-            </span>
+      <section aria-label="Data RT" className="space-y-4">
+        <h2 className="section-label">Data RT / RW</h2>
+        <div className="grid sm:grid-cols-2 gap-4">
+          {rtList.map((rt) => (
+            <div key={rt.rt} className="card-surface p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="font-bold" style={{ color: rt.color }}>{rt.rt} / {rt.rw}</p>
+                <span className="text-xs" style={{ color: 'var(--muted)' }}>{rt.ketua}</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="stat-value text-xl">{rt.kk}</p>
+                  <p className="text-xs" style={{ color: 'var(--muted)' }}>KK</p>
+                </div>
+                <div>
+                  <p className="stat-value text-xl">{rt.warga}</p>
+                  <p className="text-xs" style={{ color: 'var(--muted)' }}>Jiwa</p>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
-
-        <div className="card-surface overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr style={{ backgroundColor: 'var(--s2)' }}>
-                  {['RT', 'RW', 'Ketua RT', 'Jumlah KK', 'Jumlah Warga'].map((h) => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rtList.map((row, i) => (
-                  <tr key={row.rt} className="border-t" style={{ borderColor: 'var(--border)', backgroundColor: i % 2 === 0 ? 'var(--s1)' : 'transparent' }}>
-                    <td className="px-4 py-3 font-semibold">
-                      <span className="inline-flex items-center gap-2" style={{ color: row.color }}>
-                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: row.color }} aria-hidden="true" />
-                        {row.rt}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3" style={{ color: 'var(--muted)' }}>{row.rw}</td>
-                    <td className="px-4 py-3" style={{ color: 'var(--text)' }}>{row.ketua}</td>
-                    <td className="px-4 py-3 tabular-nums" style={{ color: 'var(--muted)' }}>{row.kk}</td>
-                    <td className="px-4 py-3 tabular-nums" style={{ color: 'var(--muted)' }}>{row.warga}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr className="border-t" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--s2)' }}>
-                  <td className="px-4 py-3 font-bold" style={{ color: 'var(--text)' }} colSpan={3}>Total</td>
-                  <td className="px-4 py-3 font-bold tabular-nums" style={{ color: 'var(--gold)' }}>{totalKK}</td>
-                  <td className="px-4 py-3 font-bold tabular-nums" style={{ color: 'var(--gold)' }}>{totalWarga}</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-        <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-          * Data penduduk placeholder — diganti hasil survei lapangan. Koordinat batas RT di peta
-          adalah estimasi dan perlu validasi GPS.
-        </p>
       </section>
+
+      <div className="flex flex-wrap gap-3">
+        <Link href="/peta" className="btn-primary">Lihat Peta</Link>
+        <Link href="/kontak" className="btn-ghost">Hubungi Kami</Link>
+      </div>
     </div>
   )
 }

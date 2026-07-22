@@ -137,8 +137,8 @@ const RT_ZONES: {
     // Timur Laut — Anjar Wiyanto, Masjid Al Ghofur
     name: 'RT 02',
     rw: 'RW 01',
-    color: '#ef4444',
-    fillColor: '#ef4444',
+    color: 'var(--gold)',
+    fillColor: 'var(--gold)',
     coords: [
       [-7.6188, 110.4372],
       [-7.6184, 110.4382],
@@ -156,8 +156,8 @@ const RT_ZONES: {
     // Barat Daya — SD Umbulharjo, Gedung Serbaguna
     name: 'RT 03',
     rw: 'RW 01',
-    color: '#22c55e',
-    fillColor: '#22c55e',
+    color: 'var(--gold)',
+    fillColor: 'var(--gold)',
     coords: [
       [-7.6234, 110.4348],
       [-7.6230, 110.4362],
@@ -173,8 +173,8 @@ const RT_ZONES: {
     // Tenggara — Masjid Asy Syams, Bakir, Basuki
     name: 'RT 04',
     rw: 'RW 01',
-    color: '#3b82f6',
-    fillColor: '#3b82f6',
+    color: 'var(--gold)',
+    fillColor: 'var(--gold)',
     coords: [
       [-7.6230, 110.4372],
       [-7.6236, 110.4386],
@@ -216,9 +216,9 @@ const markers: {
 const TYPE_COLOR: Record<string, string> = {
   balai:    '#d4af37',
   masjid:   '#14b8a6',
-  farm:     '#f59e0b',
-  umkm:     '#22c55e',
-  facility: '#818cf8',
+  farm:     'var(--gold)',
+  umkm:     'var(--gold)',
+  facility: 'var(--gold)',
 }
 
 const TYPE_LABEL: Record<string, string> = {

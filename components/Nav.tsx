@@ -2,40 +2,42 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import Icon from '@/components/Icon'
 
 const navLinks = [
-  { href: '/',       label: 'Beranda' },
+  { href: '/', label: 'Beranda' },
   { href: '/profil', label: 'Profil' },
   { href: '/berita', label: 'Berita' },
   { href: '/galeri', label: 'Galeri' },
-  { href: '/peta',   label: 'Peta' },
+  { href: '/peta', label: 'Peta' },
   { href: '/kontak', label: 'Kontak' },
 ]
 
 const sektorLinks = [
-  { href: '/sektor/peternakan', label: '🐄 Peternakan' },
-  { href: '/sektor/pertanian',  label: '🌾 Pertanian' },
-  { href: '/sektor/umkm',       label: '🏪 UMKM' },
-  { href: '/sektor/pariwisata', label: '🏔️ Pariwisata' },
-  { href: '/sektor/pendidikan', label: '🎓 Pendidikan' },
-  { href: '/sektor/kesehatan',  label: '🏥 Kesehatan' },
-  { href: '/sektor/budaya',     label: '🎭 Budaya' },
+  { href: '/sektor/peternakan', label: 'Peternakan', icon: 'peternakan' },
+  { href: '/sektor/pertanian', label: 'Pertanian', icon: 'pertanian' },
+  { href: '/sektor/umkm', label: 'UMKM', icon: 'umkm' },
+  { href: '/sektor/pariwisata', label: 'Pariwisata', icon: 'pariwisata' },
+  { href: '/sektor/pendidikan', label: 'Pendidikan', icon: 'pendidikan' },
+  { href: '/sektor/kesehatan', label: 'Kesehatan', icon: 'kesehatan' },
+  { href: '/sektor/budaya', label: 'Budaya', icon: 'budaya' },
 ]
 
 export default function Nav() {
+  const pathname = usePathname() || ''
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [sektorOpen, setSektorOpen] = useState(false)
   const sektorRef = useRef<HTMLLIElement>(null)
 
-  // Scroll detection
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50)
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Close sektor dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (sektorRef.current && !sektorRef.current.contains(e.target as Node)) {
@@ -46,27 +48,41 @@ export default function Nav() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  // Lock body scroll when mobile menu open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [mobileOpen])
+
+  const closeMenus = () => {
+    setMobileOpen(false)
+    setSektorOpen(false)
+  }
+
+  const isActive = (href: string) =>
+    href === '/' ? pathname === '/' : pathname.startsWith(href)
 
   return (
     <>
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          backgroundColor: scrolled ? 'rgba(5,5,5,0.92)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-          borderBottom: scrolled ? '1px solid var(--border)' : '1px solid transparent',
+          backgroundColor: scrolled || mobileOpen ? 'rgba(8,8,8,0.92)' : 'transparent',
+          backdropFilter: scrolled || mobileOpen ? 'blur(18px)' : 'none',
+          WebkitBackdropFilter: scrolled || mobileOpen ? 'blur(18px)' : 'none',
+          borderBottom:
+            scrolled || mobileOpen ? '1px solid var(--border)' : '1px solid transparent',
+          boxShadow: scrolled ? '0 10px 40px rgba(0,0,0,0.35)' : 'none',
         }}
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-
-          {/* Logo */}
-          <Link href="/" className="flex flex-col leading-none group" aria-label="Plosorejo — Halaman Utama">
+          <Link
+            href="/"
+            onClick={closeMenus}
+            className="flex flex-col leading-none group"
+            aria-label="Plosorejo — Halaman Utama"
+          >
             <span
               className="font-black text-xl tracking-[0.15em] uppercase transition-opacity group-hover:opacity-80"
               style={{
@@ -81,77 +97,118 @@ export default function Nav() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <nav aria-label="Navigasi utama" className="hidden md:block">
-            <ul className="flex items-center gap-1">
-              {navLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="px-3 py-2 text-sm rounded-md transition-colors"
-                    style={{ color: 'var(--muted)' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
+          <nav aria-label="Navigasi utama" className="hidden lg:block">
+            <ul className="flex items-center gap-0.5">
+              {navLinks.map(({ href, label }) => {
+                const active = isActive(href)
+                return (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      onClick={closeMenus}
+                      className="relative px-3 py-2 text-sm rounded-lg transition-colors"
+                      style={{ color: active ? 'var(--gold)' : 'var(--muted)' }}
+                      onMouseEnter={(e) => {
+                        if (!active) e.currentTarget.style.color = 'var(--text)'
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!active) e.currentTarget.style.color = 'var(--muted)'
+                      }}
+                    >
+                      {label}
+                      {active && (
+                        <span
+                          className="absolute left-3 right-3 -bottom-0.5 h-px"
+                          style={{ background: 'var(--gold)' }}
+                          aria-hidden="true"
+                        />
+                      )}
+                    </Link>
+                  </li>
+                )
+              })}
 
-              {/* Sektor dropdown */}
               <li ref={sektorRef} className="relative">
                 <button
-                  onClick={() => setSektorOpen(v => !v)}
-                  className="px-3 py-2 text-sm rounded-md transition-colors flex items-center gap-1"
-                  style={{ color: sektorOpen ? 'var(--gold)' : 'var(--muted)' }}
+                  onClick={() => setSektorOpen((v) => !v)}
+                  className="px-3 py-2 text-sm rounded-lg transition-colors flex items-center gap-1"
+                  style={{
+                    color:
+                      sektorOpen || pathname.startsWith('/sektor')
+                        ? 'var(--gold)'
+                        : 'var(--muted)',
+                  }}
                   aria-expanded={sektorOpen}
                   aria-haspopup="true"
                 >
                   Sektor
                   <svg
-                    width="12" height="12" viewBox="0 0 12 12" fill="currentColor"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="currentColor"
                     className="transition-transform duration-200"
                     style={{ transform: sektorOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
                     aria-hidden="true"
                   >
-                    <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M2 4l4 4 4-4"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </button>
 
-                {/* Glassmorphism dropdown panel */}
                 {sektorOpen && (
                   <div
-                    className="absolute right-0 top-full mt-2 w-64 rounded-2xl p-3 shadow-2xl z-50"
+                    className="absolute right-0 top-full mt-2 w-72 rounded-2xl p-3 shadow-2xl z-50"
                     style={{
-                      background: 'rgba(13,13,13,0.94)',
+                      background: 'rgba(13,13,13,0.96)',
                       backdropFilter: 'blur(24px)',
                       WebkitBackdropFilter: 'blur(24px)',
-                      border: '1px solid rgba(212,175,55,0.15)',
-                      boxShadow: '0 24px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(212,175,55,0.05)',
+                      border: '1px solid rgba(212,175,55,0.18)',
+                      boxShadow:
+                        '0 24px 64px rgba(0,0,0,0.8), 0 0 0 1px rgba(212,175,55,0.05)',
                     }}
                     role="menu"
                   >
-                    <p className="section-label px-2 pb-2 mb-1" style={{ borderBottom: '1px solid var(--border)' }}>
+                    <p
+                      className="section-label px-2 pb-2 mb-2"
+                      style={{ borderBottom: '1px solid var(--border)' }}
+                    >
                       Sektor Padukuhan
                     </p>
-                    <div className="grid grid-cols-2 gap-1">
-                      {sektorLinks.map(({ href, label }) => (
+                    <div className="grid grid-cols-1 gap-1">
+                      {sektorLinks.map(({ href, label, icon }) => (
                         <Link
                           key={href}
                           href={href}
                           role="menuitem"
-                          onClick={() => setSektorOpen(false)}
-                          className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-all"
-                          style={{ color: 'var(--muted)' }}
-                          onMouseEnter={e => {
-                            e.currentTarget.style.color = 'var(--text)'
-                            e.currentTarget.style.background = 'rgba(212,175,55,0.08)'
+                          onClick={closeMenus}
+                          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all"
+                          style={{
+                            color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
+                            background: pathname.startsWith(href)
+                              ? 'rgba(212,175,55,0.08)'
+                              : 'transparent',
                           }}
-                          onMouseLeave={e => {
-                            e.currentTarget.style.color = 'var(--muted)'
-                            e.currentTarget.style.background = 'transparent'
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(212,175,55,0.1)'
+                            e.currentTarget.style.color = 'var(--text)'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = pathname.startsWith(href)
+                              ? 'rgba(212,175,55,0.08)'
+                              : 'transparent'
+                            e.currentTarget.style.color = pathname.startsWith(href)
+                              ? 'var(--gold)'
+                              : 'var(--muted)'
                           }}
                         >
+                          <Icon name={icon} size={16} />
                           {label}
                         </Link>
                       ))}
@@ -162,13 +219,26 @@ export default function Nav() {
             </ul>
           </nav>
 
-          {/* Mobile hamburger */}
+          <div className="hidden lg:flex items-center gap-3">
+            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-ghost !py-2 !px-4 !text-xs">
+              UMKM
+            </Link>
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20Padukuhan%20Plosorejo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary !py-2 !px-4 !text-xs"
+            >
+              WhatsApp
+            </a>
+          </div>
+
           <button
-            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 rounded-lg transition-colors"
-            style={{ color: 'var(--text)' }}
-            onClick={() => setMobileOpen(v => !v)}
+            className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg"
+            onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
             aria-expanded={mobileOpen}
+            style={{ border: '1px solid var(--border)' }}
           >
             <span
               className="block w-5 h-0.5 transition-all duration-300 origin-center"
@@ -195,54 +265,66 @@ export default function Nav() {
         </div>
       </header>
 
-      {/* Mobile full-screen overlay */}
       <div
-        className="fixed inset-0 z-40 flex flex-col md:hidden transition-all duration-300"
+        className="fixed inset-0 z-40 flex flex-col lg:hidden transition-all duration-300"
         style={{
-          backgroundColor: 'rgba(5,5,5,0.98)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
+          background: 'rgba(8,8,8,0.98)',
           opacity: mobileOpen ? 1 : 0,
           pointerEvents: mobileOpen ? 'auto' : 'none',
+          transform: mobileOpen ? 'translateY(0)' : 'translateY(-8px)',
         }}
         aria-hidden={!mobileOpen}
       >
-        <div className="flex-1 flex flex-col justify-center items-center gap-2 px-8 pt-20">
-          {navLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setMobileOpen(false)}
-              className="text-3xl font-light py-3 transition-colors"
-              style={{
-                fontFamily: 'var(--font-playfair), Georgia, serif',
-                color: 'var(--text)',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--text)')}
-            >
-              {label}
-            </Link>
-          ))}
-
-          <div className="w-px h-8 my-2" style={{ backgroundColor: 'var(--border)' }} />
-
-          <p className="section-label mb-2">Sektor</p>
-          <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
-            {sektorLinks.map(({ href, label }) => (
+        <div className="pt-24 px-6 pb-8 flex-1 overflow-y-auto">
+          <p className="section-label mb-4">Menu</p>
+          <div className="space-y-2 mb-8">
+            {navLinks.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}
-                onClick={() => setMobileOpen(false)}
-                className="text-sm py-2 px-3 rounded-xl text-center transition-colors"
+                onClick={closeMenus}
+                className="block text-2xl font-semibold py-2"
                 style={{
-                  color: 'var(--muted)',
-                  border: '1px solid var(--border)',
+                  fontFamily: 'var(--font-playfair), Georgia, serif',
+                  color: isActive(href) ? 'var(--gold)' : 'var(--text)',
                 }}
               >
                 {label}
               </Link>
             ))}
+          </div>
+
+          <div className="h-px w-full mb-6" style={{ backgroundColor: 'var(--border)' }} />
+
+          <p className="section-label mb-3">Sektor</p>
+          <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+            {sektorLinks.map(({ href, label, icon }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={closeMenus}
+                className="text-sm py-2.5 px-3 rounded-xl text-center transition-colors flex items-center justify-center gap-2"
+                style={{
+                  color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
+                  border: '1px solid var(--border)',
+                  background: pathname.startsWith(href)
+                    ? 'rgba(212,175,55,0.08)'
+                    : 'transparent',
+                }}
+              >
+                <Icon name={icon} size={14} />
+                {label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
+              Direktori UMKM
+            </Link>
+            <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
+              Kontak
+            </Link>
           </div>
         </div>
 

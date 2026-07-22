@@ -4,7 +4,7 @@ interface StatCardProps {
   label: string
   value: string
   sub?: string
-  /** 'amber' | 'green' | 'neutral' — controls accent colour */
+  /** kept for compatibility — all accents now use gold */
   accent?: 'amber' | 'green' | 'neutral'
   icon?: React.ReactNode
 }
@@ -16,11 +16,7 @@ export default function StatCard({
   accent = 'neutral',
   icon,
 }: StatCardProps) {
-  const accentColor = {
-    amber:   'var(--gold)',
-    green:   'var(--green)',
-    neutral: '#6b7280',
-  }[accent]
+  const accentColor = accent === 'neutral' ? 'var(--muted)' : 'var(--gold)'
 
   return (
     <div
@@ -34,7 +30,7 @@ export default function StatCard({
         {icon && (
           <span
             className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: `${accentColor}18`, color: accentColor }}
+            style={{ backgroundColor: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
             aria-hidden="true"
           >
             {icon}
@@ -44,7 +40,7 @@ export default function StatCard({
 
       <p
         className={clsx('text-3xl font-bold tabular-nums leading-none')}
-        style={{ color: accentColor !== '#6b7280' ? accentColor : 'white' }}
+        style={{ color: accent === 'neutral' ? 'var(--text)' : accentColor }}
       >
         {value}
       </p>
