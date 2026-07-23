@@ -287,7 +287,7 @@ export default function LeafletMap() {
           key={line.name}
           positions={line.coords}
           pathOptions={{
-            color: '#f0ead6',
+            color: 'var(--on-dark-text)',
             weight: 2.5,
             opacity: 0.75,
             dashArray: '8 5',
@@ -315,7 +315,7 @@ export default function LeafletMap() {
           <Tooltip sticky>
             <div style={{ fontWeight: 700 }}>
               {rt.name} / {rt.rw}
-              <div style={{ fontWeight: 400, fontSize: 11, marginTop: 2, color: '#6b7280' }}>
+              <div style={{ fontWeight: 400, fontSize: 11, marginTop: 2, color: 'var(--muted)' }}>
                 Klik untuk detail batas wilayah
               </div>
             </div>
@@ -344,7 +344,7 @@ export default function LeafletMap() {
               <div style={{ fontWeight: 800, fontSize: 14, marginBottom: 4 }}>
                 {rt.name} / {rt.rw}
               </div>
-              <div style={{ fontSize: 12, color: '#6b7280' }}>
+              <div style={{ fontSize: 12, color: 'var(--muted)' }}>
                 Batas wilayah administratif Padukuhan Plosorejo (Balong)
               </div>
               <div style={{
@@ -374,7 +374,7 @@ export default function LeafletMap() {
           <Popup>
             <div style={{ minWidth: 150 }}>
               <div style={{ fontWeight: 700, marginBottom: 2 }}>{label}</div>
-              <div style={{ fontSize: 12, color: '#6b7280' }}>{TYPE_LABEL[type]}</div>
+              <div style={{ fontSize: 12, color: 'var(--muted)' }}>{TYPE_LABEL[type]}</div>
             </div>
           </Popup>
         </Marker>

@@ -30,7 +30,7 @@ export default function StatCard({
         {icon && (
           <span
             className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+            style={{ backgroundColor: 'var(--gold-glow)', color: 'var(--gold)' }}
             aria-hidden="true"
           >
             {icon}

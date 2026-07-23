@@ -179,7 +179,7 @@ export default function SusuPage() {
                         className="inline-block px-2 py-0.5 rounded text-xs font-bold"
                         style={{
                           color: qualityColor[row.kualitas] ?? 'var(--muted)',
-                          backgroundColor: `${qualityColor[row.kualitas] ?? '#9ca3af'}18`,
+                          backgroundColor: `${qualityColor[row.kualitas] ?? 'var(--muted)'}18`,
                         }}
                       >
                         {row.kualitas}
@@ -210,7 +210,7 @@ export default function SusuPage() {
       >
         <div
           className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center"
-          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+          style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
           aria-hidden="true"
         >
           <Icon name="peternakan" size={22} />

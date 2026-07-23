@@ -176,7 +176,7 @@ export default function BudayaPage() {
               <div className="flex items-center gap-3">
                 <span
                   className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                  style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                   aria-hidden="true"
                 >
                   <Icon name={icon} size={20} />

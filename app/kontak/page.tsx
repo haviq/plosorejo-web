@@ -60,7 +60,7 @@ export default function KontakPage() {
               <div key={label} className="flex items-start gap-4 p-4" style={{ borderColor: 'var(--border)' }}>
                 <span
                   className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-                  style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                  style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                   aria-hidden="true"
                 >
                   <Icon name={icon} size={18} />

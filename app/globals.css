@@ -1,15 +1,21 @@
 @import 'tailwindcss';
 
+/*
+ * Theme tokens live on :root / [data-theme].
+ * @theme maps Tailwind color utilities to those live vars so
+ * text-text / bg-s1 / etc. track light/dark instead of baking dark hex.
+ */
 @theme inline {
-  --color-bg: #080808;
-  --color-s1: #111111;
-  --color-s2: #1a1a1a;
-  --color-border: rgba(212, 175, 55, 0.18);
-  --color-gold: #d4af37;
-  --color-gold-dim: #a08828;
-  --color-green: #22c55e;
-  --color-text: #ede8d8;
-  --color-muted: #888888;
+  --color-bg: var(--bg);
+  --color-s1: var(--s1);
+  --color-s2: var(--s2);
+  --color-s3: var(--s3);
+  --color-border: var(--border);
+  --color-gold: var(--gold);
+  --color-gold-dim: var(--gold-dim);
+  --color-green: var(--green);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
   --font-sans: var(--font-inter);
   --font-display: var(--font-playfair);
 }
@@ -34,7 +40,7 @@
   --info: #60a5fa;
   --text: #ede8d8;
   --muted: #9a9a9a;
-  --muted2: #555555;
+  --muted2: #6b6b6b;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
@@ -55,6 +61,10 @@
   --nav-bg: rgba(8, 8, 8, 0.92);
   --overlay-scrim: rgba(8, 8, 8, 0.98);
   --btn-primary-fg: #080808;
+  /* Always-light text for dark photo overlays (hero / media cards) */
+  --on-dark-text: #f5f0e4;
+  --on-dark-muted: #d2c9b4;
+  --on-dark-gold: #f0c040;
   --site-bg-base:
     radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 175, 55, 0.08), transparent 55%),
     radial-gradient(ellipse 60% 40% at 100% 20%, rgba(212, 175, 55, 0.04), transparent 50%),
@@ -70,43 +80,46 @@
   --s1: #ffffff;
   --s2: #f1ebdc;
   --s3: #e8e0cc;
-  --border: rgba(110, 90, 20, 0.22);
-  --border-strong: rgba(110, 90, 20, 0.38);
-  --gold: #8a6d12;
-  --gold-bright: #9a7a18;
-  --gold-dim: #6f5810;
-  --gold-glow: rgba(138, 109, 18, 0.12);
-  --gold-glow-strong: rgba(138, 109, 18, 0.22);
-  --amber: #8a6d12;
-  --green: #15803d;
-  --warning: #d97706;
-  --danger: #dc2626;
-  --info: #2563eb;
-  --text: #1a1610;
-  --muted: #5c564a;
-  --muted2: #7a7366;
-  --gradient: linear-gradient(135deg, #8a6d12 0%, #b8921f 50%, #7a6112 100%);
-  --gradient-soft: linear-gradient(135deg, rgba(138, 109, 18, 0.16), rgba(184, 146, 31, 0.05));
-  --shadow-card: 0 12px 32px rgba(70, 55, 10, 0.08);
-  --shadow-gold: 0 0 24px rgba(138, 109, 18, 0.16);
-  --surface-soft: rgba(138, 109, 18, 0.08);
+  --border: rgba(90, 72, 16, 0.24);
+  --border-strong: rgba(90, 72, 16, 0.4);
+  --gold: #7a6110;
+  --gold-bright: #8a6d12;
+  --gold-dim: #5f4b0c;
+  --gold-glow: rgba(122, 97, 16, 0.12);
+  --gold-glow-strong: rgba(122, 97, 16, 0.22);
+  --amber: #7a6110;
+  --green: #166534;
+  --warning: #b45309;
+  --danger: #b91c1c;
+  --info: #1d4ed8;
+  --text: #14110c;
+  --muted: #4a4438;
+  --muted2: #6b6456;
+  --gradient: linear-gradient(135deg, #7a6110 0%, #a07d16 50%, #5f4b0c 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(122, 97, 16, 0.14), rgba(160, 125, 22, 0.05));
+  --shadow-card: 0 10px 28px rgba(55, 42, 8, 0.1);
+  --shadow-gold: 0 0 20px rgba(122, 97, 16, 0.14);
+  --surface-soft: rgba(122, 97, 16, 0.08);
   --card-surface: linear-gradient(180deg, #ffffff 0%, #fbf8f0 100%);
   --panel-surface:
-    radial-gradient(circle at top right, rgba(138, 109, 18, 0.12), transparent 42%),
+    radial-gradient(circle at top right, rgba(122, 97, 16, 0.1), transparent 42%),
     linear-gradient(180deg, #ffffff 0%, #f7f1e2 100%);
-  --glass-bg: rgba(255, 255, 255, 0.78);
-  --glass-border: rgba(110, 90, 20, 0.16);
-  --nav-bg: rgba(247, 243, 232, 0.94);
+  --glass-bg: rgba(255, 255, 255, 0.86);
+  --glass-border: rgba(90, 72, 16, 0.16);
+  --nav-bg: rgba(247, 243, 232, 0.96);
   --overlay-scrim: rgba(247, 243, 232, 0.98);
-  --btn-primary-fg: #1a1610;
+  --btn-primary-fg: #14110c;
+  --on-dark-text: #f5f0e4;
+  --on-dark-muted: #d2c9b4;
+  --on-dark-gold: #f0c040;
   --site-bg-base:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(138, 109, 18, 0.12), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(138, 109, 18, 0.06), transparent 50%),
-    radial-gradient(ellipse 50% 35% at 0% 80%, rgba(21, 128, 61, 0.04), transparent 50%),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(122, 97, 16, 0.1), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(122, 97, 16, 0.05), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 0% 80%, rgba(22, 101, 52, 0.04), transparent 50%),
     linear-gradient(180deg, #faf6ec 0%, #f7f3e8 40%, #f3ecda 100%);
-  --site-bg-glow-left: radial-gradient(circle, rgba(138, 109, 18, 0.18), transparent 70%);
-  --site-bg-glow-right: radial-gradient(circle, rgba(184, 146, 31, 0.12), transparent 70%);
-  --site-bg-vignette: radial-gradient(ellipse at center, transparent 50%, rgba(120, 95, 30, 0.08) 100%);
+  --site-bg-glow-left: radial-gradient(circle, rgba(122, 97, 16, 0.16), transparent 70%);
+  --site-bg-glow-right: radial-gradient(circle, rgba(160, 125, 22, 0.1), transparent 70%);
+  --site-bg-vignette: radial-gradient(ellipse at center, transparent 50%, rgba(100, 80, 20, 0.06) 100%);
 }
 
 html {
@@ -541,20 +554,57 @@ main [role='link'],
   }
 }
 
-/* Light mode readability: no clipped gold washout, solid cards */
+
+/* ===== Light mode global readability ===== */
+[data-theme='light'] {
+  color-scheme: light;
+}
+
+[data-theme='light'] body,
+[data-theme='light'] main,
+[data-theme='light'] footer,
+[data-theme='light'] header {
+  color: var(--text);
+}
+
+[data-theme='light'] h1,
+[data-theme='light'] h2,
+[data-theme='light'] h3,
+[data-theme='light'] h4,
+[data-theme='light'] h5,
+[data-theme='light'] h6 {
+  color: var(--text);
+}
+
+[data-theme='light'] p,
+[data-theme='light'] li,
+[data-theme='light'] td,
+[data-theme='light'] th,
+[data-theme='light'] label {
+  color: inherit;
+}
+
 [data-theme='light'] .gold-text,
 [data-theme='light'] .gradient-text {
-  background: none;
-  -webkit-background-clip: initial;
-  background-clip: initial;
-  -webkit-text-fill-color: currentColor;
-  color: var(--gold);
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  background-clip: initial !important;
+  -webkit-text-fill-color: currentColor !important;
+  color: var(--gold) !important;
 }
 
 [data-theme='light'] .card-surface,
-[data-theme='light'] .surface-panel,
-[data-theme='light'] .badge {
+[data-theme='light'] .surface-panel {
   color: var(--text);
+  background: var(--card-surface);
+}
+
+[data-theme='light'] .surface-panel {
+  background: var(--panel-surface);
+}
+
+[data-theme='light'] .badge {
+  color: inherit;
 }
 
 [data-theme='light'] .section-label {
@@ -562,5 +612,68 @@ main [role='link'],
 }
 
 [data-theme='light'] .btn-primary {
-  color: var(--btn-primary-fg);
+  color: var(--btn-primary-fg) !important;
+}
+
+[data-theme='light'] .btn-ghost {
+  color: var(--gold);
+  background: var(--surface-soft);
+}
+
+[data-theme='light'] input,
+[data-theme='light'] select,
+[data-theme='light'] textarea {
+  color: var(--text);
+  background-color: var(--s1);
+  border-color: var(--border);
+}
+
+[data-theme='light'] input::placeholder,
+[data-theme='light'] textarea::placeholder {
+  color: var(--muted2);
+  opacity: 1;
+}
+
+/* Media overlays always use light-on-dark tokens, but only for text layers */
+.on-dark {
+  color: var(--on-dark-text);
+}
+
+.on-dark .on-dark-muted,
+.on-dark .text-muted-on-dark {
+  color: var(--on-dark-muted) !important;
+}
+
+.on-dark .gold-text,
+.on-dark .on-dark-gold,
+.on-dark .section-label {
+  color: var(--on-dark-gold) !important;
+  background: none !important;
+  -webkit-text-fill-color: currentColor !important;
+}
+
+/* Buttons on dark overlays keep their own styles */
+.on-dark .btn-primary {
+  color: var(--btn-primary-fg) !important;
+}
+.on-dark .btn-ghost {
+  color: var(--on-dark-gold) !important;
+  border-color: rgba(240, 192, 64, 0.4) !important;
+  background: rgba(0, 0, 0, 0.28) !important;
+}
+
+/* Ensure main content never inherits transparent text fill accidentally */
+main {
+  color: var(--text);
+}
+
+/* Tables/cards inherit theme text by default */
+table {
+  color: var(--text);
+}
+th {
+  color: var(--muted);
+}
+td {
+  color: var(--text);
 }

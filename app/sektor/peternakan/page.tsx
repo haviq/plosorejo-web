@@ -102,7 +102,7 @@ export default function PeternakanPage() {
                     <td className="px-4 py-3">
                       <span
                         className="px-2 py-0.5 rounded-full text-xs font-bold"
-                        style={{ color: gradeColor[row.grade] ?? '#9ca3af', backgroundColor: `${gradeColor[row.grade] ?? '#9ca3af'}18` }}
+                        style={{ color: gradeColor[row.grade] ?? 'var(--muted)', backgroundColor: `${gradeColor[row.grade] ?? 'var(--muted)'}18` }}
                       >
                         {row.grade}
                       </span>

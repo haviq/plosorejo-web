@@ -100,14 +100,14 @@ export default function HomeContent({
                 />
                 <div className="noise-overlay pointer-events-none" style={{ zIndex: 2 }} />
 
-                <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
+                <div className="relative z-10 on-dark w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
                     <div className="text-center lg:text-left">
                         <div>
                             <div
                                 className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full"
                                 style={{
                                     border: '1px solid var(--border)',
-                                    background: 'rgba(212,175,55,0.08)',
+                                    background: 'var(--gold-glow)',
                                 }}
                             >
                                 <span className="w-1.5 h-1.5 rounded-full pulse-dot" style={{ background: 'var(--gold)' }} />
@@ -128,7 +128,7 @@ export default function HomeContent({
                                     fontFamily: 'var(--font-playfair), Georgia, serif',
                                     fontSize: 'clamp(2.6rem, 7vw, 5rem)',
                                     lineHeight: 1.05,
-                                    color: 'var(--text)',
+                                    color: 'var(--on-dark-text)',
                                 }}
                             >
                                 Desa yang Hidup,
@@ -140,7 +140,7 @@ export default function HomeContent({
                         <div>
                             <p
                                 className="text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-8"
-                                style={{ color: 'var(--muted)' }}
+                                style={{ color: 'var(--on-dark-muted)' }}
                             >
                                 Portal resmi Padukuhan Plosorejo — sentra sapi perah, UMKM lokal,
                                 dan pariwisata lereng Merapi. Informasi warga, wisatawan, dan
@@ -174,9 +174,9 @@ export default function HomeContent({
                                         href={item.href}
                                         className="px-3 py-2 rounded-full text-xs font-medium transition-all hover:scale-[1.03]"
                                         style={{
-                                            border: '1px solid var(--border)',
-                                            background: 'rgba(255,255,255,0.03)',
-                                            color: 'var(--text)',
+                                            border: '1px solid rgba(240,192,64,0.35)',
+                                            background: 'rgba(0,0,0,0.35)',
+                                            color: 'var(--on-dark-text)',
                                         }}
                                     >
                                         {item.label}
@@ -186,7 +186,7 @@ export default function HomeContent({
                         </div>
                     </div>
 
-                    <div className="w-full max-w-md mx-auto lg:max-w-none lg:ml-auto space-y-4">
+                    <div className="w-full max-w-md mx-auto lg:max-w-none lg:ml-auto space-y-4" style={{ color: 'var(--text)' }}>
                         <MerapiStatusServer />
 
                         <div className="surface-panel p-5 space-y-4">
@@ -205,7 +205,7 @@ export default function HomeContent({
                                 </div>
                                 <span
                                     className="w-10 h-10 rounded-xl flex items-center justify-center float-soft"
-                                    style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                                    style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                                     aria-hidden="true"
                                 >
                                     <Icon name="merapi" size={20} />
@@ -215,7 +215,7 @@ export default function HomeContent({
                             <div className="grid grid-cols-2 gap-3">
                                 <div
                                     className="rounded-xl p-3"
-                                    style={{ background: 'rgba(212,175,55,0.08)', border: '1px solid var(--border)' }}
+                                    style={{ background: 'var(--gold-glow)', border: '1px solid var(--border)' }}
                                 >
                                     <p className="text-lg font-bold" style={{ color: 'var(--gold)' }}>
                                         Grade A
@@ -252,7 +252,7 @@ export default function HomeContent({
                                     >
                                         <span
                                             className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                                            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                                            style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                                             aria-hidden="true"
                                         >
                                             <Icon name={item.icon} size={16} />
@@ -277,7 +277,7 @@ export default function HomeContent({
                     style={{ zIndex: 3 }}
                     aria-hidden="true"
                 >
-                    <span className="text-xs tracking-widest uppercase" style={{ color: 'var(--muted)' }}>
+                    <span className="text-xs tracking-widest uppercase" style={{ color: 'var(--on-dark-muted)' }}>
                         Scroll
                     </span>
                     <div className="w-px h-8" style={{ backgroundColor: 'var(--gold-dim)' }} />
@@ -326,27 +326,27 @@ export default function HomeContent({
                                                 'linear-gradient(to top, rgba(5,5,5,0.96) 0%, rgba(5,5,5,0.55) 48%, rgba(5,5,5,0.18) 100%)',
                                         }}
                                     />
-                                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-7">
+                                    <div className="absolute bottom-0 left-0 right-0 p-6 md:p-7 on-dark">
                                         <div className="flex items-center gap-2 mb-2">
                                             <span
                                                 className="w-7 h-7 rounded-md flex items-center justify-center"
-                                                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                                                style={{ background: 'rgba(0,0,0,0.35)', color: 'var(--on-dark-gold)' }}
                                                 aria-hidden="true"
                                             >
                                                 <Icon name={card.icon} size={14} />
                                             </span>
-                                            <span className="section-label">{card.kategori}</span>
+                                            <span className="section-label" style={{ color: 'var(--on-dark-gold)' }}>{card.kategori}</span>
                                         </div>
                                         <p
                                             className="font-black text-2xl md:text-3xl mb-1"
                                             style={{
                                                 fontFamily: 'var(--font-playfair), Georgia, serif',
-                                                color: 'var(--text)',
+                                                color: 'var(--on-dark-text)',
                                             }}
                                         >
                                             {card.headline}
                                         </p>
-                                        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+                                        <p className="text-sm" style={{ color: 'var(--on-dark-muted)' }}>
                                             {card.sub}
                                         </p>
                                     </div>
@@ -365,7 +365,7 @@ export default function HomeContent({
                             <Link href={item.href} className="card-surface p-5 flex items-start gap-4 group h-full">
                                 <span
                                     className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                                    style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                                    style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                                     aria-hidden="true"
                                 >
                                     <Icon name={item.icon} size={20} />
@@ -435,14 +435,14 @@ export default function HomeContent({
                                     <div className="flex items-center justify-between gap-2">
                                         <span
                                             className="w-11 h-11 rounded-xl flex items-center justify-center"
-                                            style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                                            style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                                             aria-hidden="true"
                                         >
                                             <Icon name={umkm.icon || umkm.jenis} size={20} />
                                         </span>
                                         <span
                                             className="badge"
-                                            style={{ color: 'var(--gold)', background: 'rgba(212,175,55,0.12)' }}
+                                            style={{ color: 'var(--gold)', background: 'var(--gold-glow)' }}
                                         >
                                             {umkm.jenis}
                                         </span>

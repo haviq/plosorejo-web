@@ -26,7 +26,7 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
           >
             <div
               className="h-36 flex items-center justify-center"
-              style={{ backgroundColor: 'rgba(212,175,55,0.1)', color: accent }}
+              style={{ backgroundColor: 'var(--gold-glow)', color: accent }}
               aria-hidden="true"
             >
               <Icon name={album.icon || album.emoji || 'galeri'} size={36} />
@@ -47,7 +47,7 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
                 </span>
                 <span
                   className="badge"
-                  style={{ color: accent, backgroundColor: 'rgba(212,175,55,0.12)' }}
+                  style={{ color: accent, backgroundColor: 'var(--gold-glow)' }}
                 >
                   {album.count} foto
                 </span>
@@ -73,7 +73,7 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
               <div className="flex items-center gap-3">
                 <span
                   className="w-12 h-12 rounded-xl flex items-center justify-center"
-                  style={{ backgroundColor: 'rgba(212,175,55,0.12)', color: accent }}
+                  style={{ backgroundColor: 'var(--gold-glow)', color: accent }}
                 >
                   <Icon name={active.icon || active.emoji || 'galeri'} size={24} />
                 </span>
@@ -106,7 +106,7 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
                   key={i}
                   className="aspect-square rounded-xl flex items-center justify-center"
                   style={{
-                    backgroundColor: 'rgba(212,175,55,0.1)',
+                    backgroundColor: 'var(--gold-glow)',
                     border: '1px solid var(--border)',
                     color: accent,
                   }}

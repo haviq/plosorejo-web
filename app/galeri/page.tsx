@@ -57,7 +57,7 @@ export default async function GaleriPage() {
       >
         <div
           className="w-12 h-12 mx-auto rounded-xl flex items-center justify-center"
-          style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+          style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
           aria-hidden="true"
         >
           <Icon name="pendidikan" size={24} />

@@ -39,7 +39,7 @@ export default async function BeritaDetailPage({ params }: Props) {
   const berita = await getBeritaBySlug(slug)
   if (!berita) notFound()
 
-  const color = kategoriColor[berita.kategori] ?? '#9ca3af'
+  const color = kategoriColor[berita.kategori] ?? 'var(--muted)'
   const paragraphs = berita.isi.split('\n\n').filter(Boolean)
   const all = await getBeritaList()
   const lainnya = all.filter((b) => b.slug !== slug).slice(0, 3)
@@ -109,7 +109,7 @@ export default async function BeritaDetailPage({ params }: Props) {
           <h2 className="section-label">Berita Lainnya</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {lainnya.map((b) => {
-              const c = kategoriColor[b.kategori] ?? '#9ca3af'
+              const c = kategoriColor[b.kategori] ?? 'var(--muted)'
               return (
                 <Link key={b.slug} href={`/berita/${b.slug}`} className="card-surface p-4 flex flex-col gap-2">
                   <span className="self-start badge" style={{ color: c, backgroundColor: `${c}18` }}>

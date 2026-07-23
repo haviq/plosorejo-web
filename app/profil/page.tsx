@@ -60,7 +60,7 @@ export default function ProfilPage() {
             <div key={label} className="card-surface p-4 text-center">
               <div
                 className="w-10 h-10 mx-auto mb-2 rounded-xl flex items-center justify-center"
-                style={{ background: 'rgba(212,175,55,0.1)', color: 'var(--gold)' }}
+                style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                 aria-hidden="true"
               >
                 <Icon name={icon} size={18} />
@@ -126,7 +126,7 @@ export default function ProfilPage() {
             <div key={jabatan} className="card-surface p-5 flex items-center gap-3">
               <span
                 className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: 'rgba(212,175,55,0.12)', color: 'var(--gold)' }}
+                style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
                 aria-hidden="true"
               >
                 <Icon name={icon} size={20} />
