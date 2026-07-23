@@ -8,10 +8,10 @@ export const metadata: Metadata = {
 }
 
 const rtLegend = [
-  { name: 'RT 01 / RW 01', color: '#eab308' },
-  { name: 'RT 02 / RW 01', color: 'var(--gold)' },
-  { name: 'RT 03 / RW 01', color: 'var(--gold)' },
-  { name: 'RT 04 / RW 01', color: 'var(--gold)' },
+  { name: 'RT 01 / RW 01', color: '#22c55e' },
+  { name: 'RT 02 / RW 01', color: '#16a34a' },
+  { name: 'RT 03 / RW 01', color: '#4ade80' },
+  { name: 'RT 04 / RW 01', color: '#86efac' },
 ]
 
 const typeMeta: Record<string, { label: string; color: string }> = {
@@ -65,14 +65,21 @@ export default async function PetaPage() {
 
         <div className="flex flex-wrap items-center gap-3">
           <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)] mr-1">
-            Batas RW
+            Batas padukuhan
           </span>
           <span
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
-            style={{ color: 'var(--gold)', borderColor: 'var(--border-strong)', backgroundColor: 'var(--gold-glow)' }}
+            style={{ color: '#15803d', borderColor: '#15803d55', backgroundColor: '#22c55e14' }}
           >
-            <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: 'var(--gold)' }} aria-hidden="true" />
-            RW 01 (seluruh padukuhan)
+            <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: '#15803d' }} aria-hidden="true" />
+            Plosorejo (Balong) · RW 01
+          </span>
+          <span
+            className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
+            style={{ color: '#dc2626', borderColor: '#dc262655', backgroundColor: '#dc262614' }}
+          >
+            <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: '#dc2626' }} aria-hidden="true" />
+            Jalan utama (OSM)
           </span>
         </div>
       </section>
@@ -132,8 +139,9 @@ export default async function PetaPage() {
       </section>
 
       <p className="text-xs text-[var(--muted2)] text-center">
-        * Batas RT/RW adalah estimasi organik berdasarkan cluster pemukiman & jalan OSM.
-        Validasi GPS lapangan diperlukan untuk akurasi resmi. Edit titik di <code>content/poi.json</code>.
+        * Batas padukuhan & RT: estimasi organik mengikuti jalan OSM (Jl. Raya Merapi Golf,
+        Jl. Menuju Lapangan Golf). Validasi GPS lapangan diperlukan untuk akurasi resmi.
+        Edit POI di <code>content/poi.json</code>.
       </p>
     </div>
   )
