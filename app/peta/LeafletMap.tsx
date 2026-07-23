@@ -407,6 +407,20 @@ export default function LeafletMap() {
     } catch {
       // ignore icon path fix failures — divIcon markers still work
     }
+
+    // Leaflet sometimes leaves body/document handlers that feel "stuck"
+    // after drag; ensure page scroll & nav remain usable when leaving map.
+    const unlockUi = () => {
+      document.body.style.removeProperty('overflow')
+      document.documentElement.style.removeProperty('overflow')
+    }
+    window.addEventListener('pointerup', unlockUi, { passive: true })
+    window.addEventListener('touchend', unlockUi, { passive: true })
+    return () => {
+      unlockUi()
+      window.removeEventListener('pointerup', unlockUi)
+      window.removeEventListener('touchend', unlockUi)
+    }
   }, [])
 
   // Avoid rendering until we have a real browser window (extra guard for edge WebViews)
@@ -422,30 +436,39 @@ export default function LeafletMap() {
   }
 
   return (
-    <MapContainer
-      center={CENTER}
-      zoom={16}
-      style={{
-        height: 560,
-        width: '100%',
-        maxWidth: '100%',
-        borderRadius: '0.75rem',
-        border: '1px solid var(--border)',
-        zIndex: 0,
-        background: '#1a1a1a',
-      }}
-      zoomControl={false}
-      attributionControl={false}
-      scrollWheelZoom
-    >
-      <MapResizeFix />
-      <TileLayer
-        // Carto Voyager — often more reliable than OSM tile CDN on mobile networks
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-        maxZoom={19}
-        subdomains="abcd"
-      />
-      <ZoomControl position="bottomright" />
+    <div className="peta-map-shell">
+      <MapContainer
+        center={CENTER}
+        zoom={16}
+        style={{
+          height: 560,
+          width: '100%',
+          maxWidth: '100%',
+          borderRadius: '0.75rem',
+          border: '1px solid var(--border)',
+          zIndex: 0,
+          background: '#1a1a1a',
+        }}
+        zoomControl={false}
+        attributionControl={false}
+        scrollWheelZoom={false}
+        dragging
+        doubleClickZoom
+        touchZoom
+        boxZoom={false}
+        keyboard={false}
+        // Don't trap browser page with inertia overscroll on mobile
+        inertia
+        worldCopyJump={false}
+      >
+        <MapResizeFix />
+        <TileLayer
+          // Carto Voyager — often more reliable than OSM tile CDN on mobile networks
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          maxZoom={19}
+          subdomains="abcd"
+        />
+        <ZoomControl position="bottomright" />
 
       {/* ===== RT zones (hijau berjenjang) ===== */}
       {RT_ZONES.map((rt) => (
@@ -584,6 +607,7 @@ export default function LeafletMap() {
           </Popup>
         </Marker>
       ))}
-    </MapContainer>
+      </MapContainer>
+    </div>
   )
 }

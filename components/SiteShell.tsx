@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import SiteBackground from '@/components/SiteBackground'
+import SitePreloader from '@/components/SitePreloader'
 
 export default function SiteShell({
   children,
@@ -21,9 +22,10 @@ export default function SiteShell({
 
   return (
     <>
+      <SitePreloader />
       <SiteBackground />
       {/* Nav MUST stay outside .site-content isolation so fixed header
-          is never trapped under main/hero stacking contexts on mobile. */}
+          is never trapped under main/hero/map stacking contexts on mobile. */}
       <Nav whatsapp={whatsapp} />
       <div className="site-content">
         <main className="flex-1">{children}</main>

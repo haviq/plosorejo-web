@@ -55,6 +55,15 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
   }, [])
 
   useEffect(() => {
+    // Always release scroll lock when route changes so map interaction
+    // never permanently blocks navigation / body scroll.
+    document.body.style.removeProperty('overflow')
+    document.documentElement.style.removeProperty('overflow')
+    setMobileOpen(false)
+    setSektorOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
     document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => {
       document.body.style.overflow = ''

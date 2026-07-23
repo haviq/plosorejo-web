@@ -940,3 +940,256 @@ th {
 td {
   color: var(--text);
 }
+
+/* ── Site preloader (gold + black curtains, typewriter) ──────── */
+.site-preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+.site-preloader__layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+.site-preloader__layer--black {
+  z-index: 1;
+  background: #080808;
+  animation: preloader-curtain-in 0.55s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+
+.site-preloader__layer--gold {
+  z-index: 2;
+  background:
+    linear-gradient(160deg, #f0c040 0%, #d4af37 38%, #8a6a18 72%, #3a2a08 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 58%, 0 72%);
+  animation: preloader-curtain-in 0.7s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.05s;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.site-preloader__layer--gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 40%),
+    repeating-linear-gradient(
+      -18deg,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 10px
+    );
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.site-preloader__content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  padding: 1.5rem;
+  max-width: 92vw;
+  animation: preloader-content-in 0.45s ease both;
+  animation-delay: 0.2s;
+}
+
+.site-preloader__eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 1rem;
+}
+
+.site-preloader__title {
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(1.35rem, 5.6vw, 2.75rem);
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  color: #f8f1d8;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+  min-height: 1.35em;
+}
+
+.site-preloader__char {
+  display: inline-block;
+  animation: preloader-char-pop 0.28s ease both;
+}
+
+.site-preloader__char--space {
+  width: 0.35em;
+}
+
+.site-preloader__caret {
+  display: inline-block;
+  width: 0.08em;
+  height: 0.95em;
+  margin-left: 0.12em;
+  vertical-align: -0.08em;
+  background: #f0c040;
+  box-shadow: 0 0 12px rgba(240, 192, 64, 0.8);
+  animation: preloader-caret 0.7s steps(1) infinite;
+}
+
+.site-preloader__line {
+  width: min(220px, 50vw);
+  height: 1px;
+  margin: 1.1rem auto 0.85rem;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+}
+
+.site-preloader__sub {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.75);
+}
+
+/* Exit: curtains slide top → bottom off-screen */
+.site-preloader--exit .site-preloader__layer--gold {
+  animation: preloader-curtain-out 0.75s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+
+.site-preloader--exit .site-preloader__layer--black {
+  animation: preloader-curtain-out 0.85s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.08s;
+}
+
+.site-preloader--exit .site-preloader__content {
+  animation: preloader-content-out 0.35s ease both;
+}
+
+@keyframes preloader-curtain-in {
+  from {
+    transform: translate3d(0, -105%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes preloader-curtain-out {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 105%, 0);
+  }
+}
+
+@keyframes preloader-content-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes preloader-content-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes preloader-char-pop {
+  from {
+    opacity: 0;
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes preloader-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-preloader__layer--black,
+  .site-preloader__layer--gold,
+  .site-preloader__content,
+  .site-preloader__char,
+  .site-preloader--exit .site-preloader__layer--black,
+  .site-preloader--exit .site-preloader__layer--gold,
+  .site-preloader--exit .site-preloader__content {
+    animation: none !important;
+  }
+}
+
+/* ── Leaflet map: never trap page navigation / header taps ───── */
+.leaflet-container {
+  z-index: 0 !important;
+  max-width: 100%;
+  touch-action: pan-x pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.leaflet-pane,
+.leaflet-map-pane,
+.leaflet-tile-pane,
+.leaflet-overlay-pane,
+.leaflet-shadow-pane,
+.leaflet-marker-pane,
+.leaflet-tooltip-pane,
+.leaflet-popup-pane {
+  z-index: auto;
+}
+
+/* Keep map inside its card; don't paint over fixed header */
+.peta-map-shell {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  touch-action: pan-y;
+}
+
+.peta-map-shell .leaflet-container {
+  position: relative !important;
+  z-index: 0 !important;
+}
+
+/* When map is focused/dragged, header must still win */
+.site-header,
+.site-header * {
+  pointer-events: auto !important;
+}
+
+/* Prevent Leaflet from stealing multi-page UI with ultra-high z-index */
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 5 !important;
+}
+
+.leaflet-control {
+  z-index: 5 !important;
+}
+
