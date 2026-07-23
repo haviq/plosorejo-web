@@ -1,0 +1,34 @@
+{
+  "updatedAt": "2026-07-15",
+  "unit": "ton/bulan",
+  "summary": {
+    "produksiHarian": "2.8 ton",
+    "sapiAktif": 312,
+    "kelompok": 6,
+    "gradeDominan": "A"
+  },
+  "monthly": [
+    { "month": "Jan", "value": 62 },
+    { "month": "Feb", "value": 58 },
+    { "month": "Mar", "value": 71 },
+    { "month": "Apr", "value": 75 },
+    { "month": "Mei", "value": 80 },
+    { "month": "Jun", "value": 78 },
+    { "month": "Jul", "value": 85 },
+    { "month": "Ags", "value": 83 },
+    { "month": "Sep", "value": 79 },
+    { "month": "Okt", "value": 88 },
+    { "month": "Nov", "value": 91 },
+    { "month": "Des", "value": 86 }
+  ],
+  "recent": [
+    { "date": "15 Jul 2026", "peternak": "Kelompok A – Pak Harto", "volume": "320 L", "kualitas": "A", "status": "Diterima" },
+    { "date": "15 Jul 2026", "peternak": "Kelompok B – Bu Rahayu", "volume": "285 L", "kualitas": "A", "status": "Diterima" },
+    { "date": "15 Jul 2026", "peternak": "Kelompok C – Pak Suryono", "volume": "198 L", "kualitas": "B", "status": "Diterima" },
+    { "date": "14 Jul 2026", "peternak": "Kelompok A – Pak Harto", "volume": "310 L", "kualitas": "A", "status": "Diterima" },
+    { "date": "14 Jul 2026", "peternak": "Kelompok D – Bu Sari", "volume": "241 L", "kualitas": "B+", "status": "Diterima" },
+    { "date": "14 Jul 2026", "peternak": "Kelompok B – Bu Rahayu", "volume": "277 L", "kualitas": "A", "status": "Diterima" },
+    { "date": "13 Jul 2026", "peternak": "Kelompok C – Pak Suryono", "volume": "203 L", "kualitas": "B", "status": "Pending" }
+  ],
+  "notes": "Untuk jangka panjang, data ini bisa diisi lewat CMS/Directus. Saat ini file JSON sebagai sumber tunggal + siap di-backup."
+}

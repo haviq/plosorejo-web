@@ -2,44 +2,22 @@ import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import Icon from '@/components/Icon'
+import { getSusuData, getSiteSettings } from '@/lib/data'
+import { waLink } from '@/lib/site'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Produksi Susu',
   description: 'Dashboard data produksi susu harian dan bulanan Padukuhan Plosorejo.',
 }
 
-const monthlyData = [
-  { month: 'Jan', value: 62 },
-  { month: 'Feb', value: 58 },
-  { month: 'Mar', value: 71 },
-  { month: 'Apr', value: 75 },
-  { month: 'Mei', value: 80 },
-  { month: 'Jun', value: 78 },
-  { month: 'Jul', value: 85 },
-  { month: 'Ags', value: 83 },
-  { month: 'Sep', value: 79 },
-  { month: 'Okt', value: 88 },
-  { month: 'Nov', value: 91 },
-  { month: 'Des', value: 86 },
-]
-
-const recentRows = [
-  { date: '15 Jul 2026', peternak: 'Kelompok A – Pak Harto', volume: '320 L', kualitas: 'A', status: 'Diterima' },
-  { date: '15 Jul 2026', peternak: 'Kelompok B – Bu Rahayu', volume: '285 L', kualitas: 'A', status: 'Diterima' },
-  { date: '15 Jul 2026', peternak: 'Kelompok C – Pak Suryono', volume: '198 L', kualitas: 'B', status: 'Diterima' },
-  { date: '14 Jul 2026', peternak: 'Kelompok A – Pak Harto', volume: '310 L', kualitas: 'A', status: 'Diterima' },
-  { date: '14 Jul 2026', peternak: 'Kelompok D – Bu Sari', volume: '241 L', kualitas: 'B+', status: 'Diterima' },
-  { date: '14 Jul 2026', peternak: 'Kelompok B – Bu Rahayu', volume: '277 L', kualitas: 'A', status: 'Diterima' },
-  { date: '13 Jul 2026', peternak: 'Kelompok C – Pak Suryono', volume: '203 L', kualitas: 'B', status: 'Pending' },
-]
-
-const maxVal = Math.max(...monthlyData.map((d) => d.value))
-
-function BarChart() {
+function BarChart({ monthly }: { monthly: { month: string; value: number }[] }) {
+  const maxVal = Math.max(...monthly.map((d) => d.value), 1)
   const chartH = 160
   const barW = 28
   const gap = 12
-  const totalW = monthlyData.length * (barW + gap) - gap
+  const totalW = monthly.length * (barW + gap) - gap
   const padB = 24
 
   return (
@@ -56,19 +34,19 @@ function BarChart() {
         )
       })}
 
-      {monthlyData.map(({ month, value }, i) => {
+      {monthly.map(({ month, value }, i) => {
         const barH = (value / maxVal) * chartH
         const x = i * (barW + gap)
         const y = chartH - barH
         const isMax = value === maxVal
-        const color = isMax ? 'var(--gold)' : 'var(--gold)'
+        const color = 'var(--gold)'
 
         return (
           <g key={month}>
             <defs>
               <linearGradient id={`bar-${i}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={color} />
-                <stop offset="100%" stopColor={isMax ? '#15803d' : '#92400e'} stopOpacity={0.6} />
+                <stop offset="0%" stopColor={isMax ? '#f0c040' : '#d4af37'} stopOpacity={0.95} />
+                <stop offset="100%" stopColor={isMax ? '#a08828' : '#7a6110'} stopOpacity={0.7} />
               </linearGradient>
             </defs>
             <rect x={x} y={y} width={barW} height={barH} fill={`url(#bar-${i})`} rx={4} />
@@ -101,70 +79,88 @@ function BarChart() {
 
 const qualityColor: Record<string, string> = {
   A: 'var(--gold)',
+  'A+': 'var(--gold)',
   'B+': 'var(--gold)',
-  B: '#fb923c',
+  B: 'var(--warning)',
 }
 
-export default function SusuPage() {
+export default async function SusuPage() {
+  const [data, site] = await Promise.all([getSusuData(), getSiteSettings()])
+
   return (
     <div className="page-shell space-y-10">
       <PageHeader
         eyebrow="Sektor Unggulan"
         title="Dashboard"
         highlight="Produksi Susu"
-        description="Data produksi susu sapi Padukuhan Plosorejo · Diperbarui 15 Juli 2026"
+        description={`Data produksi susu sapi Padukuhan Plosorejo · Diperbarui ${data.updatedAt}`}
       />
 
-      {/* Stat cards */}
       <section aria-label="Statistik produksi">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard label="Produksi Hari Ini" value="1.631 L" sub="↑ 4.2% dari kemarin" accent="amber" icon={<Icon name="susu" size={16} />} />
-          <StatCard label="Produksi Bulan Ini" value="48.9 t" sub="Target: 50 ton" accent="amber" icon={<Icon name="chart" size={16} />} />
-          <StatCard label="Peternak Aktif" value="47" sub="Dari 52 terdaftar" accent="amber" icon={<Icon name="people" size={16} />} />
-          <StatCard label="Rata-rata / Sapi" value="18.4 L" sub="Per hari per ekor" accent="amber" icon={<Icon name="peternakan" size={16} />} />
+          <StatCard
+            label="Produksi harian"
+            value={data.summary.produksiHarian}
+            sub="Estimasi volume harian"
+            accent="amber"
+            icon={<Icon name="susu" size={16} />}
+          />
+          <StatCard
+            label="Sapi aktif"
+            value={String(data.summary.sapiAktif)}
+            sub={`${data.summary.kelompok} kelompok`}
+            accent="amber"
+            icon={<Icon name="peternakan" size={16} />}
+          />
+          <StatCard
+            label="Grade dominan"
+            value={data.summary.gradeDominan}
+            sub="Kualitas setoran"
+            accent="amber"
+            icon={<Icon name="chart" size={16} />}
+          />
+          <StatCard
+            label="Data source"
+            value="JSON/CMS"
+            sub="Siap diisi admin"
+            accent="neutral"
+            icon={<Icon name="digital" size={16} />}
+          />
         </div>
       </section>
 
-      {/* Bar chart */}
       <section className="card-surface p-6" aria-label="Grafik produksi bulanan">
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
           <div>
-            <h2 className="font-bold" style={{ color: 'var(--text)' }}>Tren Produksi 2026</h2>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>Satuan: ton/bulan</p>
-          </div>
-          <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--muted)' }}>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'var(--gold)' }} />
-              Normal
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-sm inline-block" style={{ background: 'var(--gold)' }} />
-              Tertinggi
-            </span>
+            <h2 className="font-bold" style={{ color: 'var(--text)' }}>Tren Produksi</h2>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>Satuan: {data.unit}</p>
           </div>
         </div>
-        <BarChart />
+        <BarChart monthly={data.monthly} />
       </section>
 
-      {/* Recent table */}
       <section aria-label="Data setoran terakhir" className="space-y-4">
-        <h2 className="section-label">Setoran Terakhir</h2>
+        <h2 className="section-label">Setoran terakhir</h2>
         <div className="card-surface overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr style={{ backgroundColor: 'var(--s2)', borderBottom: '1px solid var(--border)' }}>
                   {['Tanggal', 'Peternak', 'Volume', 'Kualitas', 'Status'].map((col) => (
-                    <th key={col} className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--muted)' }}>
+                    <th
+                      key={col}
+                      className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider"
+                      style={{ color: 'var(--muted)' }}
+                    >
                       {col}
                     </th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {recentRows.map((row, i) => (
+                {data.recent.map((row, i) => (
                   <tr
-                    key={i}
+                    key={`${row.date}-${row.peternak}-${i}`}
                     className="transition-colors hover:bg-white/[0.02]"
                     style={{
                       backgroundColor: i % 2 === 0 ? 'var(--s1)' : 'transparent',
@@ -186,10 +182,7 @@ export default function SusuPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span
-                        className="inline-flex items-center gap-1 text-xs"
-                        style={{ color: row.status === 'Diterima' ? 'var(--gold)' : 'var(--gold)' }}
-                      >
+                      <span className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--gold)' }}>
                         <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
                         {row.status}
                       </span>
@@ -200,9 +193,11 @@ export default function SusuPage() {
             </table>
           </div>
         </div>
+        <p className="text-xs" style={{ color: 'var(--muted2)' }}>
+          Sumber: <code>content/susu.json</code> atau CMS Studio tipe <strong>Produksi Susu Harian</strong>.
+        </p>
       </section>
 
-      {/* Info koperasi */}
       <section
         className="card-surface p-6 text-center space-y-3"
         style={{ background: 'linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.05))' }}
@@ -221,7 +216,7 @@ export default function SusuPage() {
           Pembayaran setiap tanggal 10 per bulan.
         </p>
         <a
-          href="https://wa.me/6281234567890?text=Saya%20ingin%20info%20koperasi%20susu%20Plosorejo"
+          href={waLink(site.whatsapp, 'Saya ingin info koperasi susu Plosorejo')}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary"

@@ -1,0 +1,22 @@
+[
+  { "lat": -7.62428, "lng": 110.43829, "label": "Masjid Asy Syams", "type": "masjid", "desc": "Masjid utama padukuhan" },
+  { "lat": -7.622214, "lng": 110.435219, "label": "Masjid Al Fath", "type": "masjid", "desc": "Masjid RT 01" },
+  { "lat": -7.622196, "lng": 110.440536, "label": "Masjid Al Ghofur", "type": "masjid", "desc": "Masjid RT 02" },
+  { "lat": -7.6238, "lng": 110.4375, "label": "Balai Padukuhan Plosorejo", "type": "balai", "desc": "Kantor pelayanan warga" },
+  { "lat": -7.625309, "lng": 110.435846, "label": "Gedung Serbaguna Umbulharjo", "type": "balai", "desc": "Aula kegiatan warga" },
+  { "lat": -7.625043, "lng": 110.436251, "label": "SD Umbulharjo", "type": "facility", "desc": "Fasilitas pendidikan" },
+  { "lat": -7.624993, "lng": 110.435467, "label": "SMP Taman Dewasa", "type": "facility", "desc": "Fasilitas pendidikan" },
+  { "lat": -7.617692, "lng": 110.435375, "label": "TK ABA Balong", "type": "facility", "desc": "Pendidikan anak usia dini" },
+  { "lat": -7.6232, "lng": 110.4378, "label": "Posyandu Plosorejo", "type": "kesehatan", "desc": "Posyandu balita & lansia" },
+  { "lat": -7.6240, "lng": 110.4368, "label": "Pos Kamling RT 03", "type": "facility", "desc": "Keamanan lingkungan" },
+  { "lat": -7.6218, "lng": 110.4358, "label": "Kandang Sapi Koperasi", "type": "farm", "desc": "Sentra penampungan susu" },
+  { "lat": -7.6200, "lng": 110.4345, "label": "Peternakan Pak Harto", "type": "farm", "desc": "Kelompok sapi perah A" },
+  { "lat": -7.6252, "lng": 110.4395, "label": "Peternakan Bu Rahayu", "type": "farm", "desc": "Kelompok sapi perah B" },
+  { "lat": -7.6228, "lng": 110.4392, "label": "Kebun Organik Lestari", "type": "wisata", "desc": "Edukasi pertanian organik" },
+  { "lat": -7.6210, "lng": 110.4410, "label": "Viewpoint Lereng Merapi", "type": "wisata", "desc": "Spot foto & edukasi kebencanaan" },
+  { "lat": -7.625888, "lng": 110.434990, "label": "Angkringan Wek-ji", "type": "umkm", "desc": "Kuliner malam" },
+  { "lat": -7.6225, "lng": 110.4388, "label": "Warung Bu Siti", "type": "umkm", "desc": "Kuliner lokal" },
+  { "lat": -7.6260, "lng": 110.4375, "label": "Bengkel Las Mandiri", "type": "umkm", "desc": "Jasa las & kanopi" },
+  { "lat": -7.6215, "lng": 110.4405, "label": "Batik Tulis Nusantara", "type": "umkm", "desc": "Kerajinan batik motif Merapi" },
+  { "lat": -7.6235, "lng": 110.4360, "label": "Kerajinan Bambu Maju", "type": "umkm", "desc": "Anyaman bambu & souvenir" }
+]

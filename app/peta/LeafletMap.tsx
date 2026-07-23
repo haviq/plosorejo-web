@@ -13,6 +13,7 @@ import {
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import poiData from '@/content/poi.json'
 
 // Fix default marker icon paths broken by webpack bundling
 function fixLeafletIcons() {
@@ -194,39 +195,35 @@ const RT_ZONES: {
 const markers: {
   pos: [number, number]
   label: string
-  type: 'balai' | 'masjid' | 'farm' | 'umkm' | 'facility'
-}[] = [
-  { pos: [-7.624274, 110.438280], label: 'Masjid Asy Syams',            type: 'masjid' },
-  { pos: [-7.622214, 110.435219], label: 'Masjid Al Fath',              type: 'masjid' },
-  { pos: [-7.622196, 110.440536], label: 'Masjid Al Ghofur',            type: 'masjid' },
-  { pos: [-7.625043, 110.436251], label: 'SD Umbulharjo',               type: 'facility' },
-  { pos: [-7.624993, 110.435467], label: 'SMP Taman Dewasa',            type: 'facility' },
-  { pos: [-7.625309, 110.435846], label: 'Gedung Serbaguna Umbulharjo', type: 'balai' },
-  { pos: [-7.617692, 110.435375], label: 'TK ABA Balong',               type: 'facility' },
-  { pos: [-7.625888, 110.434990], label: 'Angkringan Wek-ji',           type: 'umkm' },
-  { pos: [-7.6238, 110.4375],     label: 'Balai Padukuhan Plosorejo',   type: 'balai' },
-  { pos: [-7.6218, 110.4358],     label: 'Kandang Sapi Koperasi',       type: 'farm' },
-  { pos: [-7.6200, 110.4345],     label: 'Peternakan Pak Harto',        type: 'farm' },
-  { pos: [-7.6252, 110.4395],     label: 'Peternakan Bu Rahayu',        type: 'farm' },
-  { pos: [-7.6225, 110.4388],     label: 'Warung Bu Siti',              type: 'umkm' },
-  { pos: [-7.6260, 110.4375],     label: 'Bengkel Las Mandiri',         type: 'umkm' },
-  { pos: [-7.6215, 110.4405],     label: 'Batik Tulis Nusantara',       type: 'umkm' },
-]
+  type: string
+  desc?: string
+}[] = (poiData as { lat: number; lng: number; label: string; type: string; desc?: string }[]).map(
+  (p) => ({
+    pos: [p.lat, p.lng] as [number, number],
+    label: p.label,
+    type: p.type,
+    desc: p.desc,
+  }),
+)
 
 const TYPE_COLOR: Record<string, string> = {
-  balai:    '#d4af37',
-  masjid:   '#14b8a6',
-  farm:     'var(--gold)',
-  umkm:     'var(--gold)',
-  facility: 'var(--gold)',
+  balai:     '#d4af37',
+  masjid:    '#14b8a6',
+  farm:      '#f59e0b',
+  umkm:      '#eab308',
+  facility:  '#60a5fa',
+  kesehatan: '#22c55e',
+  wisata:    '#a78bfa',
 }
 
 const TYPE_LABEL: Record<string, string> = {
-  balai:    'Balai',
-  masjid:   'Masjid',
-  farm:     'Peternakan',
-  umkm:     'UMKM',
-  facility: 'Fasilitas',
+  balai:     'Balai',
+  masjid:    'Masjid',
+  farm:      'Peternakan',
+  umkm:      'UMKM',
+  facility:  'Fasilitas',
+  kesehatan: 'Kesehatan',
+  wisata:    'Wisata',
 }
 
 export default function LeafletMap() {
@@ -365,16 +362,17 @@ export default function LeafletMap() {
         </Polygon>
       ))}
 
-      {markers.map(({ pos, label, type }) => (
+      {markers.map(({ pos, label, type, desc }) => (
         <Marker
           key={label}
           position={pos}
-          icon={makeIcon(TYPE_COLOR[type])}
+          icon={makeIcon(TYPE_COLOR[type] || '#d4af37')}
         >
           <Popup>
             <div style={{ minWidth: 150 }}>
               <div style={{ fontWeight: 700, marginBottom: 2 }}>{label}</div>
-              <div style={{ fontSize: 12, color: 'var(--muted)' }}>{TYPE_LABEL[type]}</div>
+              <div style={{ fontSize: 12, color: '#c4bca8' }}>{TYPE_LABEL[type] || type}</div>
+              {desc ? <div style={{ fontSize: 11, marginTop: 4, color: '#9a9a9a' }}>{desc}</div> : null}
             </div>
           </Popup>
         </Marker>

@@ -1,17 +1,19 @@
 import type { MetadataRoute } from 'next'
 import beritaData from '@/content/berita.json'
 
-const base = 'https://plosorejo.vercel.app'
+const base = 'https://plosorejo-web.vercel.app'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     '',
     '/profil',
     '/berita',
+    '/layanan',
     '/galeri',
     '/kontak',
     '/peta',
     '/susu',
+    '/kkn',
     '/sektor/umkm',
     '/sektor/peternakan',
     '/sektor/pertanian',

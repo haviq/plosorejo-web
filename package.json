@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "sanity": "sanity dev",
-    "sanity:deploy": "sanity deploy"
+    "sanity:deploy": "sanity deploy",
+    "cms:seed": "node scripts/seed-sanity.mjs",
+    "content:backup": "node scripts/backup-content.mjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",

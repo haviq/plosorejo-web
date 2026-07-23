@@ -1,0 +1,14 @@
+{
+  "createdAt": "2026-07-23T12:49:27.318Z",
+  "files": [
+    "berita.json",
+    "kkn.json",
+    "layanan.json",
+    "poi.json",
+    "sektor.json",
+    "site.json",
+    "susu.json",
+    "umkm.json"
+  ],
+  "note": "Local JSON backup. Export Sanity separately from manage.sanity.io if CMS is primary."
+}

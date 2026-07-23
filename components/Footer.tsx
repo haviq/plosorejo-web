@@ -1,12 +1,16 @@
 import Link from 'next/link'
+import { getSiteSettings } from '@/lib/data'
+import { formatWaDisplay, waLink } from '@/lib/site'
 
 const quickLinks = [
   { href: '/', label: 'Beranda' },
   { href: '/profil', label: 'Profil' },
   { href: '/berita', label: 'Berita' },
+  { href: '/layanan', label: 'Layanan' },
   { href: '/galeri', label: 'Galeri' },
   { href: '/peta', label: 'Peta' },
   { href: '/kontak', label: 'Kontak' },
+  { href: '/kkn', label: 'Arsip KKN' },
 ]
 
 const sektorLinks = [
@@ -20,7 +24,9 @@ const sektorLinks = [
   { href: '/susu', label: 'Produksi Susu' },
 ]
 
-export default function Footer() {
+export default async function Footer() {
+  const site = await getSiteSettings()
+
   return (
     <footer
       className="border-t mt-auto relative overflow-hidden"
@@ -52,16 +58,24 @@ export default function Footer() {
             </p>
           </div>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-            Portal informasi Padukuhan Plosorejo, Umbulharjo, Cangkringan, Sleman.
-            Sentra sapi perah, UMKM, dan pariwisata lereng Merapi.
+            {site.tagline}. Portal informasi Padukuhan Plosorejo, Umbulharjo, Cangkringan, Sleman.
           </p>
           <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-            Jl. Balong, Umbulharjo, Cangkringan, Sleman, DIY 55583
+            {site.alamat}
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
             <span className="badge" style={{ color: 'var(--muted)', background: 'var(--surface-soft)' }}>
               KKN UNRIYO 2026
             </span>
+            <a
+              href={waLink(site.whatsapp)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="badge"
+              style={{ color: 'var(--gold)', background: 'var(--gold-glow)' }}
+            >
+              WA {formatWaDisplay(site.whatsapp)}
+            </a>
           </div>
         </div>
 
@@ -84,7 +98,7 @@ export default function Footer() {
 
         <div>
           <p className="section-label mb-4">Sektor</p>
-          <ul className="grid grid-cols-2 gap-2">
+          <ul className="space-y-2">
             {sektorLinks.map((item) => (
               <li key={item.href}>
                 <Link
@@ -100,33 +114,28 @@ export default function Footer() {
         </div>
 
         <div className="space-y-4">
-          <p className="section-label mb-4">Hubungi</p>
-          <div className="space-y-2 text-sm" style={{ color: 'var(--muted)' }}>
-            <p>WhatsApp: +62 812-3456-7890</p>
-            <p>Email: info@plosorejo.desa.id</p>
-            <p>Jam layanan: 08.00 – 15.00 WIB</p>
-          </div>
-          <div className="flex flex-wrap gap-2 pt-2">
-            <a
-              href="https://wa.me/6281234567890?text=Halo%20Padukuhan%20Plosorejo"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-            >
-              Chat WhatsApp
-            </a>
-            <Link href="/kontak" className="btn-ghost">
-              Kontak
+          <p className="section-label mb-1">Kontak</p>
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>{site.jamLayanan}</p>
+          <p className="text-sm" style={{ color: 'var(--muted)' }}>{site.email}</p>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/layanan" className="btn-ghost text-xs px-3 py-2">
+              Layanan
+            </Link>
+            <Link href="/kontak" className="btn-primary text-xs px-3 py-2">
+              Hubungi
             </Link>
           </div>
+          <p className="text-xs" style={{ color: 'var(--muted2)' }}>
+            Admin konten: <Link href="/studio" className="underline" style={{ color: 'var(--gold)' }}>/studio</Link>
+          </p>
         </div>
       </div>
 
       <div
-        className="border-t px-6 py-5 text-center text-xs"
-        style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+        className="border-t px-6 py-4 text-center text-xs"
+        style={{ borderColor: 'var(--border)', color: 'var(--muted2)' }}
       >
-        © {new Date().getFullYear()} Padukuhan Plosorejo · KKN UNRIYO Unit 9 2026
+        © {new Date().getFullYear()} Padukuhan Plosorejo · Dibangun bersama KKN UNRIYO Unit 9
       </div>
     </footer>
   )

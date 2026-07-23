@@ -67,7 +67,46 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   title,
   tagline,
   alamat,
+  telepon,
   whatsapp,
   email,
-  jamLayanan
+  jamLayanan,
+  mapsUrl,
+  instagram,
+  facebook,
+  youtube,
+  perangkat[]{ nama, jabatan, whatsapp, icon }
+}`
+
+export const layananListQuery = `*[_type == "layanan" && aktif != false] | order(nama asc) {
+  "id": _id,
+  "slug": slug.current,
+  nama,
+  kategori,
+  deskripsi,
+  waktu,
+  biaya,
+  syarat,
+  alur,
+  pic,
+  icon,
+  aktif
+}`
+
+export const kknArsipQuery = `*[_type == "kknArsip"] | order(tanggal desc) {
+  "id": _id,
+  judul,
+  tanggal,
+  kategori,
+  ringkasan,
+  status,
+  link
+}`
+
+export const produksiSusuRecentQuery = `*[_type == "produksiSusu"] | order(tanggal desc)[0...30] {
+  tanggal,
+  peternak,
+  volumeLiter,
+  kualitas,
+  status
 }`

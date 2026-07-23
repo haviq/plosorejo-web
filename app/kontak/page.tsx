@@ -2,47 +2,27 @@ import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import KontakForm from '@/components/KontakForm'
 import Icon from '@/components/Icon'
+import { getSiteSettings } from '@/lib/data'
+import { formatWaDisplay, waLink } from '@/lib/site'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Kontak',
   description: 'Hubungi perangkat Padukuhan Plosorejo — alamat, telepon, dan lokasi di Google Maps.',
 }
 
-const kontakList = [
-  {
-    icon: 'home',
-    label: 'Alamat',
-    value: 'Jl. Balong, Padukuhan Plosorejo, Kalurahan Umbulharjo, Kapanewon Cangkringan, Kabupaten Sleman, DIY 55583',
-  },
-  {
-    icon: 'phone',
-    label: 'Telepon Dukuh',
-    value: '+62 812-3456-7890',
-  },
-  {
-    icon: 'phone',
-    label: 'WhatsApp',
-    value: '+62 812-3456-7890',
-  },
-  {
-    icon: 'email',
-    label: 'Email',
-    value: 'padukuhan.plosorejo@gmail.com',
-  },
-  {
-    icon: 'clock',
-    label: 'Jam Pelayanan',
-    value: 'Senin – Jumat: 08.00 – 14.00 WIB',
-  },
-]
+export default async function KontakPage() {
+  const site = await getSiteSettings()
 
-const perangkat = [
-  { nama: 'Slamet Widodo', jabatan: 'Dukuh / Kepala Padukuhan', wa: '6281234567890', icon: 'people' },
-  { nama: 'Sri Lestari', jabatan: 'Sekretaris Padukuhan', wa: '6281234567891', icon: 'chart' },
-  { nama: 'Agus Prayitno', jabatan: 'Bendahara Padukuhan', wa: '6281234567892', icon: 'money' },
-]
+  const kontakList = [
+    { icon: 'home', label: 'Alamat', value: site.alamat },
+    { icon: 'phone', label: 'Telepon Dukuh', value: site.telepon || formatWaDisplay(site.whatsapp) },
+    { icon: 'phone', label: 'WhatsApp', value: formatWaDisplay(site.whatsapp) },
+    { icon: 'email', label: 'Email', value: site.email },
+    { icon: 'clock', label: 'Jam Pelayanan', value: site.jamLayanan },
+  ]
 
-export default function KontakPage() {
   return (
     <div className="page-shell space-y-14">
       <PageHeader
@@ -72,32 +52,45 @@ export default function KontakPage() {
               </div>
             ))}
           </div>
+
+          {site.mapsUrl && (
+            <a
+              href={site.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-ghost w-full"
+            >
+              Buka di Google Maps →
+            </a>
+          )}
+
+          <p className="text-xs" style={{ color: 'var(--muted2)' }}>
+            Data kontak bisa diubah admin lewat <strong>/studio → Pengaturan Situs</strong>.
+          </p>
         </section>
 
         <section className="space-y-4" aria-label="Kontak perangkat desa">
           <h2 className="section-label">Perangkat Padukuhan</h2>
           <div className="space-y-3">
-            {perangkat.map(({ nama, jabatan, wa, icon }) => (
-              <div key={nama} className="card-surface p-4 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{ backgroundColor: 'rgba(212,175,55,0.15)', color: 'var(--gold)' }}
-                    aria-hidden="true"
-                  >
-                    <Icon name={icon} size={18} />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{nama}</p>
-                    <p className="text-xs" style={{ color: 'var(--muted)' }}>{jabatan}</p>
-                  </div>
+            {site.perangkat.map(({ nama, jabatan, whatsapp, icon }) => (
+              <div key={nama} className="card-surface p-4 flex items-center gap-4">
+                <span
+                  className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                  style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
+                  aria-hidden="true"
+                >
+                  <Icon name={icon || 'people'} size={20} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{nama}</p>
+                  <p className="text-xs" style={{ color: 'var(--muted)' }}>{jabatan}</p>
                 </div>
                 <a
-                  href={`https://wa.me/${wa}`}
+                  href={waLink(whatsapp, `Halo ${nama}, saya ingin bertanya terkait padukuhan.`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-primary text-xs py-1.5 px-3 flex-shrink-0"
-                  aria-label={`WhatsApp ${nama}`}
+                  className="badge border"
+                  style={{ borderColor: 'var(--border)', color: 'var(--gold)' }}
                 >
                   WA
                 </a>
@@ -105,12 +98,9 @@ export default function KontakPage() {
             ))}
           </div>
 
-          <div className="card-surface p-5 space-y-4 mt-4">
-            <h3 className="font-semibold" style={{ color: 'var(--text)' }}>Kirim Pesan</h3>
-            <p className="text-xs" style={{ color: 'var(--muted)' }}>
-              Isi form di bawah ini dan kami akan merespons dalam 1×24 jam.
-            </p>
-            <KontakForm />
+          <div className="card-surface p-5 space-y-3">
+            <h3 className="font-semibold" style={{ color: 'var(--text)' }}>Kirim pesan cepat</h3>
+            <KontakForm whatsapp={site.whatsapp} />
           </div>
         </section>
       </div>

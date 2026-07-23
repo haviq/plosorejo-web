@@ -1,6 +1,11 @@
 import beritaJson from '@/content/berita.json'
 import umkmJson from '@/content/umkm.json'
 import sektorJson from '@/content/sektor.json'
+import siteJson from '@/content/site.json'
+import layananJson from '@/content/layanan.json'
+import kknJson from '@/content/kkn.json'
+import susuJson from '@/content/susu.json'
+import poiJson from '@/content/poi.json'
 import { sanityFetch } from '@/sanity/lib/client'
 import {
   beritaListQuery,
@@ -10,8 +15,25 @@ import {
   galeriListQuery,
   sektorListQuery,
   merapiStatusQuery,
+  siteSettingsQuery,
+  layananListQuery,
+  kknArsipQuery,
+  produksiSusuRecentQuery,
 } from '@/sanity/lib/queries'
-import type { BeritaItem, UMKMItem, SektorData, GaleriAlbum } from '@/lib/types'
+import type {
+  BeritaItem,
+  UMKMItem,
+  SektorData,
+  GaleriAlbum,
+  SiteSettings,
+  LayananItem,
+  KknData,
+  KknArsipItem,
+  SusuData,
+  SusuRow,
+  PoiItem,
+  MerapiStatusData,
+} from '@/lib/types'
 
 // Fallback galeri (local) when Sanity empty/unconfigured
 const galeriFallback: GaleriAlbum[] = [
@@ -24,6 +46,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Upacara penyambutan 12 mahasiswa KKN UNRIYO angkatan 2026 oleh perangkat padukuhan dan warga.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
   {
     id: 2,
@@ -34,6 +57,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Mahasiswa KKN membantu pelaksanaan Posyandu Balita — penimbangan, imunisasi, dan penyuluhan gizi.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
   {
     id: 3,
@@ -44,6 +68,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Workshop pembuatan pupuk organik dari kotoran sapi bersama kelompok tani Maju Bersama.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
   {
     id: 4,
@@ -54,6 +79,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Dokumentasi kegiatan panen raya padi serentak yang diikuti ratusan petani Padukuhan Plosorejo.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
   {
     id: 5,
@@ -64,6 +90,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Pelatihan pemasaran digital dan penggunaan media sosial untuk pelaku UMKM padukuhan.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
   {
     id: 6,
@@ -74,6 +101,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Tim KKN mengunjungi peternakan sapi perah unggulan dan mempelajari proses produksi susu.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
   {
     id: 7,
@@ -84,6 +112,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Lomba mewarnai tingkat PAUD dan TK sebagai bagian dari program pengembangan karakter anak.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
   {
     id: 8,
@@ -94,6 +123,7 @@ const galeriFallback: GaleriAlbum[] = [
     deskripsi:
       'Tim divisi teknologi KKN mengerjakan portal informasi digital Padukuhan Plosorejo.',
     warna: 'var(--gold)',
+    foto: ['/images/placeholder-card.svg'],
   },
 ]
 
@@ -144,10 +174,41 @@ type SanitySektor = {
   items?: string[]
 }
 
-export type MerapiStatusData = {
-  level: 'Normal' | 'Waspada' | 'Siaga' | 'Awas'
+type SanitySite = Partial<SiteSettings> & {
+  perangkat?: SiteSettings['perangkat']
+}
+
+type SanityLayanan = {
+  id?: string
+  slug?: string
+  nama: string
+  kategori?: string
   deskripsi?: string
-  updatedAt?: string
+  waktu?: string
+  biaya?: string
+  syarat?: string[]
+  alur?: string[]
+  pic?: string
+  icon?: string
+  aktif?: boolean
+}
+
+type SanityKkn = {
+  id?: string
+  judul: string
+  tanggal?: string
+  kategori?: string
+  ringkasan?: string
+  status?: string
+  link?: string
+}
+
+type SanitySusu = {
+  tanggal?: string
+  peternak?: string
+  volumeLiter?: number
+  kualitas?: string
+  status?: string
 }
 
 function mapBerita(items: SanityBerita[]): BeritaItem[] {
@@ -158,6 +219,7 @@ function mapBerita(items: SanityBerita[]): BeritaItem[] {
     kategori: b.kategori,
     ringkasan: b.ringkasan,
     isi: b.isi,
+    fotoUrl: b.fotoUrl,
   }))
 }
 
@@ -187,29 +249,69 @@ function mapUMKM(items: SanityUMKM[]): UMKMItem[] {
 
 function mapGaleri(items: SanityGaleri[]): GaleriAlbum[] {
   return items.map((g, i) => ({
-    id: i + 1,
+    id: Number.isFinite(Number(g.id)) ? Number(g.id) : i + 1,
     judul: g.judul,
     tanggal: g.tanggal || '',
     icon: g.emoji || 'galeri',
-    count: g.fotoCount || g.count || 0,
+    count: g.fotoCount || g.count || g.fotoUrls?.length || 0,
     deskripsi: g.deskripsi || '',
     warna: g.warna || 'var(--gold)',
-    foto: g.fotoUrls?.filter(Boolean),
+    foto: g.fotoUrls?.filter(Boolean) || [],
   }))
 }
 
 function mapSektor(items: SanitySektor[]): Record<string, SektorData> {
   const out: Record<string, SektorData> = {}
   for (const s of items) {
+    if (!s.key) continue
     out[s.key] = {
       nama: s.nama,
-      icon: s.icon,
       deskripsi: s.deskripsi,
+      icon: s.icon,
       stats: s.stats || [],
       items: s.items || [],
     }
   }
   return out
+}
+
+function mapLayanan(items: SanityLayanan[]): LayananItem[] {
+  return items
+    .filter((l) => l.aktif !== false)
+    .map((l, i) => ({
+      id: l.slug || l.id || `layanan-${i + 1}`,
+      nama: l.nama,
+      kategori: l.kategori || 'Lainnya',
+      deskripsi: l.deskripsi || '',
+      waktu: l.waktu || '-',
+      biaya: l.biaya || 'Gratis',
+      syarat: l.syarat || [],
+      alur: l.alur || [],
+      pic: l.pic || 'Petugas padukuhan',
+      icon: l.icon || 'document',
+    }))
+}
+
+function mapKknArsip(items: SanityKkn[]): KknArsipItem[] {
+  return items.map((k, i) => ({
+    id: k.id || `kkn-${i + 1}`,
+    judul: k.judul,
+    tanggal: k.tanggal || '',
+    kategori: k.kategori || 'Lainnya',
+    ringkasan: k.ringkasan || '',
+    status: k.status || 'Berjalan',
+    link: k.link,
+  }))
+}
+
+function mapSusuRows(items: SanitySusu[]): SusuRow[] {
+  return items.map((r) => ({
+    date: r.tanggal || '',
+    peternak: r.peternak || '-',
+    volume: r.volumeLiter != null ? `${r.volumeLiter} L` : '-',
+    kualitas: r.kualitas || '-',
+    status: r.status || 'Diterima',
+  }))
 }
 
 export async function getBeritaList(): Promise<BeritaItem[]> {
@@ -227,7 +329,7 @@ export async function getBeritaBySlug(slug: string): Promise<BeritaItem | null> 
 
 export async function getBeritaSlugs(): Promise<string[]> {
   const data = await sanityFetch<{ slug: string }[]>(beritaSlugsQuery)
-  if (data && data.length > 0) return data.map((d) => d.slug).filter(Boolean)
+  if (data && data.length > 0) return data.map((d) => d.slug)
   return (beritaJson as BeritaItem[]).map((b) => b.slug)
 }
 
@@ -258,3 +360,58 @@ export async function getMerapiStatus(): Promise<MerapiStatusData> {
     updatedAt: new Date().toISOString(),
   }
 }
+
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const data = await sanityFetch<SanitySite | null>(siteSettingsQuery)
+  const fallback = siteJson as SiteSettings
+  if (!data) return fallback
+  return {
+    title: data.title || fallback.title,
+    tagline: data.tagline || fallback.tagline,
+    alamat: data.alamat || fallback.alamat,
+    telepon: data.telepon || fallback.telepon,
+    whatsapp: data.whatsapp || fallback.whatsapp,
+    email: data.email || fallback.email,
+    jamLayanan: data.jamLayanan || fallback.jamLayanan,
+    mapsUrl: data.mapsUrl || fallback.mapsUrl,
+    instagram: data.instagram || fallback.instagram,
+    facebook: data.facebook || fallback.facebook,
+    youtube: data.youtube || fallback.youtube,
+    perangkat:
+      data.perangkat && data.perangkat.length > 0 ? data.perangkat : fallback.perangkat,
+  }
+}
+
+export async function getLayananList(): Promise<LayananItem[]> {
+  const data = await sanityFetch<SanityLayanan[]>(layananListQuery)
+  if (data && data.length > 0) return mapLayanan(data)
+  return layananJson as LayananItem[]
+}
+
+export async function getKknData(): Promise<KknData> {
+  const fallback = kknJson as KknData
+  const data = await sanityFetch<SanityKkn[]>(kknArsipQuery)
+  if (data && data.length > 0) {
+    return { ...fallback, arsip: mapKknArsip(data) }
+  }
+  return fallback
+}
+
+export async function getSusuData(): Promise<SusuData> {
+  const fallback = susuJson as SusuData
+  const data = await sanityFetch<SanitySusu[]>(produksiSusuRecentQuery)
+  if (data && data.length > 0) {
+    return {
+      ...fallback,
+      recent: mapSusuRows(data),
+      updatedAt: data[0]?.tanggal || fallback.updatedAt,
+    }
+  }
+  return fallback
+}
+
+export async function getPoiList(): Promise<PoiItem[]> {
+  return poiJson as PoiItem[]
+}
+
+export type { MerapiStatusData }

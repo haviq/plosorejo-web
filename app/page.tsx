@@ -104,6 +104,12 @@ const potensiCards = [
 
 const quickAccess = [
   {
+    href: '/layanan',
+    icon: 'document',
+    title: 'Layanan Administrasi',
+    desc: 'Syarat surat, alur, dan jam pelayanan balai',
+  },
+  {
     href: '/susu',
     icon: 'susu',
     title: 'Produksi Susu',
@@ -116,16 +122,10 @@ const quickAccess = [
     desc: 'Lokasi UMKM, fasilitas, dan destinasi',
   },
   {
-    href: '/galeri',
-    icon: 'galeri',
-    title: 'Galeri Padukuhan',
-    desc: 'Dokumentasi kegiatan & potret warga',
-  },
-  {
-    href: '/kontak',
-    icon: 'kontak',
-    title: 'Hubungi Kami',
-    desc: 'WhatsApp, email, dan jam layanan',
+    href: '/kkn',
+    icon: 'digital',
+    title: 'Arsip KKN',
+    desc: 'Dokumentasi program KKN UNRIYO Unit 9',
   },
 ]
 

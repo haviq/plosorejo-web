@@ -1,10 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { waLink } from '@/lib/site'
 
-const WA_NUMBER = '6281234567890'
+interface KontakFormProps {
+  whatsapp?: string
+}
 
-export default function KontakForm() {
+export default function KontakForm({ whatsapp = '6281234567890' }: KontakFormProps) {
   const [nama, setNama] = useState('')
   const [pesan, setPesan] = useState('')
   const [kategori, setKategori] = useState('Informasi Umum')
@@ -25,7 +28,8 @@ export default function KontakForm() {
       pesan.trim(),
     ].join('\n')
 
-    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`
+    const url = waLink(whatsapp, text)
+    if (url === '#') return
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 

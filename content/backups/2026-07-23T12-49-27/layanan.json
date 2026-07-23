@@ -1,0 +1,132 @@
+[
+  {
+    "id": "skck-pengantar",
+    "nama": "Surat Pengantar SKCK",
+    "kategori": "Kependudukan",
+    "deskripsi": "Surat pengantar untuk pengurusan SKCK di kepolisian.",
+    "waktu": "1 hari kerja",
+    "biaya": "Gratis",
+    "syarat": [
+      "Fotokopi KTP",
+      "Fotokopi KK",
+      "Pas foto 4x6 (2 lembar)",
+      "Datang langsung ke balai padukuhan"
+    ],
+    "alur": [
+      "Datang ke balai pada jam layanan",
+      "Isi formulir pengantar",
+      "Verifikasi data oleh petugas",
+      "Surat diterbitkan dan ditandatangani"
+    ],
+    "pic": "Sekretaris Padukuhan",
+    "icon": "document"
+  },
+  {
+    "id": "domisili",
+    "nama": "Surat Keterangan Domisili",
+    "kategori": "Kependudukan",
+    "deskripsi": "Keterangan domisili warga untuk keperluan administrasi sekolah, kerja, atau bank.",
+    "waktu": "1 hari kerja",
+    "biaya": "Gratis",
+    "syarat": [
+      "Fotokopi KTP",
+      "Fotokopi KK",
+      "Keterangan RT/RW setempat (opsional)"
+    ],
+    "alur": [
+      "Ajukan di balai padukuhan",
+      "Isi data pemohon",
+      "Pemeriksaan data kependudukan",
+      "Surat siap diambil"
+    ],
+    "pic": "Sekretaris Padukuhan",
+    "icon": "home"
+  },
+  {
+    "id": "usaha",
+    "nama": "Surat Keterangan Usaha",
+    "kategori": "UMKM",
+    "deskripsi": "Keterangan usaha untuk UMKM lokal (pinjaman, perizinan, program bantuan).",
+    "waktu": "1–2 hari kerja",
+    "biaya": "Gratis",
+    "syarat": [
+      "Fotokopi KTP pemilik",
+      "Fotokopi KK",
+      "Foto lokasi/usaha (opsional)",
+      "Keterangan jenis usaha"
+    ],
+    "alur": [
+      "Ajukan permohonan",
+      "Verifikasi usaha oleh petugas",
+      "Penerbitan surat",
+      "Ambil surat di balai"
+    ],
+    "pic": "Dukuh / Sekretaris",
+    "icon": "umkm"
+  },
+  {
+    "id": "nikah-pengantar",
+    "nama": "Surat Pengantar Nikah",
+    "kategori": "Administrasi",
+    "deskripsi": "Pengantar untuk pengurusan administrasi pernikahan di KUA/kelurahan.",
+    "waktu": "1–2 hari kerja",
+    "biaya": "Gratis",
+    "syarat": [
+      "Fotokopi KTP kedua calon",
+      "Fotokopi KK",
+      "Fotokopi akta kelahiran",
+      "Surat pengantar RT"
+    ],
+    "alur": [
+      "Serahkan berkas ke balai",
+      "Pemeriksaan kelengkapan",
+      "Penerbitan pengantar",
+      "Lanjut ke kelurahan/KUA"
+    ],
+    "pic": "Sekretaris Padukuhan",
+    "icon": "people"
+  },
+  {
+    "id": "kematian",
+    "nama": "Surat Keterangan Kematian",
+    "kategori": "Kependudukan",
+    "deskripsi": "Keterangan kematian untuk pengurusan akta dan administrasi lanjutan.",
+    "waktu": "1 hari kerja",
+    "biaya": "Gratis",
+    "syarat": [
+      "KTP almarhum/ahli waris",
+      "KK",
+      "Surat keterangan dari RT",
+      "Surat dari fasilitas kesehatan (jika ada)"
+    ],
+    "alur": [
+      "Lapor ke RT lalu balai",
+      "Isi formulir",
+      "Verifikasi",
+      "Surat diterbitkan"
+    ],
+    "pic": "Sekretaris Padukuhan",
+    "icon": "document"
+  },
+  {
+    "id": "bantuan-sosial",
+    "nama": "Rekomendasi Bantuan Sosial",
+    "kategori": "Sosial",
+    "deskripsi": "Rekomendasi warga untuk program bantuan sosial / perlindungan sosial.",
+    "waktu": "2–3 hari kerja",
+    "biaya": "Gratis",
+    "syarat": [
+      "Fotokopi KTP & KK",
+      "Keterangan kondisi ekonomi dari RT",
+      "Dokumen pendukung (jika ada)"
+    ],
+    "alur": [
+      "Pengajuan di balai",
+      "Verifikasi lapangan/RT",
+      "Rapat singkat perangkat",
+      "Rekomendasi diterbitkan"
+    ],
+    "pic": "Dukuh",
+    "icon": "heart"
+  }
+]

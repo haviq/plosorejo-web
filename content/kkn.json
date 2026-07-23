@@ -1,0 +1,76 @@
+{
+  "tahun": 2026,
+  "universitas": "Universitas Respati Yogyakarta (UNRIYO)",
+  "unit": "Unit 9",
+  "periode": "1 Juli – 29 Agustus 2026",
+  "jumlahMahasiswa": 12,
+  "lokasi": "Padukuhan Plosorejo, Umbulharjo, Cangkringan, Sleman",
+  "fokus": [
+    "Portal digital padukuhan",
+    "Pendampingan UMKM & pemasaran",
+    "Pertanian organik & pupuk kompos",
+    "Kesehatan ibu & anak",
+    "Dokumentasi budaya & pariwisata"
+  ],
+  "kontak": {
+    "dpl": "Dosen Pembimbing Lapangan KKN UNRIYO",
+    "ketuaTim": "Arif Nugroho",
+    "email": "kkn.plosorejo@example.com"
+  },
+  "arsip": [
+    {
+      "id": "web-desa",
+      "judul": "Portal Digital Plosorejo",
+      "tanggal": "2026-07-18",
+      "kategori": "Teknologi",
+      "ringkasan": "Pembangunan website padukuhan: profil, berita, peta, UMKM, dan CMS admin.",
+      "status": "Selesai",
+      "link": "/"
+    },
+    {
+      "id": "pelatihan-umkm",
+      "judul": "Pelatihan UMKM Digital",
+      "tanggal": "2026-07-12",
+      "kategori": "Ekonomi",
+      "ringkasan": "Workshop katalog produk, foto produk, dan WhatsApp bisnis untuk pelaku UMKM.",
+      "status": "Selesai",
+      "link": "/sektor/umkm"
+    },
+    {
+      "id": "pupuk-organik",
+      "judul": "Pelatihan Pupuk Organik",
+      "tanggal": "2026-07-08",
+      "kategori": "Pertanian",
+      "ringkasan": "Praktik pembuatan pupuk dari kotoran sapi bersama kelompok tani.",
+      "status": "Selesai",
+      "link": "/sektor/pertanian"
+    },
+    {
+      "id": "posyandu",
+      "judul": "Pendampingan Posyandu",
+      "tanggal": "2026-07-05",
+      "kategori": "Kesehatan",
+      "ringkasan": "Bantu penimbangan, edukasi gizi, dan dokumentasi kegiatan posyandu.",
+      "status": "Selesai",
+      "link": "/sektor/kesehatan"
+    },
+    {
+      "id": "peta-poi",
+      "judul": "Pemetaan POI Padukuhan",
+      "tanggal": "2026-07-20",
+      "kategori": "Teknologi",
+      "ringkasan": "Inventaris titik balai, masjid, peternakan, UMKM, dan fasilitas di peta digital.",
+      "status": "Berjalan",
+      "link": "/peta"
+    },
+    {
+      "id": "arsip-budaya",
+      "judul": "Dokumentasi Budaya Lokal",
+      "tanggal": "2026-07-22",
+      "kategori": "Budaya",
+      "ringkasan": "Pengarsipan kegiatan seni, festival, dan cerita warga untuk galeri digital.",
+      "status": "Berjalan",
+      "link": "/sektor/budaya"
+    }
+  ]
+}

@@ -15,7 +15,7 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://plosorejo.vercel.app'),
+  metadataBase: new URL('https://plosorejo-web.vercel.app'),
   title: {
     default: 'Plosorejo — Padukuhan Digital',
     template: '%s | Plosorejo',
@@ -26,16 +26,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'id_ID',
+    url: 'https://plosorejo-web.vercel.app',
     siteName: 'Plosorejo Padukuhan Digital',
     title: 'Plosorejo — Padukuhan Digital',
     description:
       'Portal digital Padukuhan Plosorejo — sentra sapi perah, UMKM, dan pariwisata lereng Merapi.',
+    images: [{ url: '/images/og-cover.svg', width: 1200, height: 630, alt: 'Plosorejo' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Plosorejo — Padukuhan Digital',
     description:
       'Portal digital Padukuhan Plosorejo — sentra sapi perah, UMKM, dan pariwisata lereng Merapi.',
+    images: ['/images/og-cover.svg'],
   },
   robots: {
     index: true,

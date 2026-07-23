@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getBeritaBySlug, getBeritaList, getBeritaSlugs } from '@/lib/data'
 import { formatTanggal } from '@/lib/utils'
+import { SITE_URL } from '@/lib/site'
+import ShareButtons from '@/components/ShareButtons'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -19,9 +21,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
   const berita = await getBeritaBySlug(slug)
   if (!berita) return { title: 'Berita tidak ditemukan' }
+  const url = `${SITE_URL}/berita/${slug}`
   return {
     title: berita.judul,
     description: berita.ringkasan,
+    openGraph: {
+      title: berita.judul,
+      description: berita.ringkasan,
+      url,
+      type: 'article',
+      publishedTime: berita.tanggal,
+      images: [
+        {
+          url: berita.fotoUrl || `${SITE_URL}/images/og-cover.svg`,
+          alt: berita.judul,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: berita.judul,
+      description: berita.ringkasan,
+      images: [berita.fotoUrl || `${SITE_URL}/images/og-cover.svg`],
+    },
   }
 }
 
@@ -43,6 +65,7 @@ export default async function BeritaDetailPage({ params }: Props) {
   const paragraphs = berita.isi.split('\n\n').filter(Boolean)
   const all = await getBeritaList()
   const lainnya = all.filter((b) => b.slug !== slug).slice(0, 3)
+  const shareUrl = `${SITE_URL}/berita/${slug}`
 
   return (
     <div className="page-shell max-w-4xl space-y-10">
@@ -79,23 +102,30 @@ export default async function BeritaDetailPage({ params }: Props) {
           className="font-black leading-tight"
           style={{
             fontFamily: 'var(--font-playfair), Georgia, serif',
-            fontSize: 'clamp(1.75rem, 4vw, 2.75rem)',
+            fontSize: 'clamp(1.75rem, 4vw, 2.5rem)',
             color: 'var(--text)',
           }}
         >
           {berita.judul}
         </h1>
 
-        <p
-          className="text-base leading-relaxed border-l-2 pl-4 italic"
-          style={{ borderColor: color, color: 'var(--muted)' }}
-        >
+        <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
           {berita.ringkasan}
         </p>
 
-        <hr style={{ borderColor: 'var(--border)' }} />
+        <ShareButtons url={shareUrl} title={berita.judul} />
 
-        <div className="space-y-4">
+        {berita.fotoUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={berita.fotoUrl}
+            alt={berita.judul}
+            className="w-full rounded-2xl border object-cover max-h-[420px]"
+            style={{ borderColor: 'var(--border)' }}
+          />
+        )}
+
+        <div className="space-y-4 pt-2">
           {paragraphs.map((p, i) => (
             <p key={i} className="leading-relaxed text-sm md:text-base" style={{ color: 'var(--text)' }}>
               {p}
@@ -105,8 +135,8 @@ export default async function BeritaDetailPage({ params }: Props) {
       </article>
 
       {lainnya.length > 0 && (
-        <section aria-label="Berita lainnya" className="space-y-4">
-          <h2 className="section-label">Berita Lainnya</h2>
+        <section className="space-y-4" aria-label="Berita lainnya">
+          <h2 className="section-label">Berita lainnya</h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {lainnya.map((b) => {
               const c = kategoriColor[b.kategori] ?? 'var(--muted)'

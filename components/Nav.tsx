@@ -10,6 +10,7 @@ const navLinks = [
   { href: '/', label: 'Beranda' },
   { href: '/profil', label: 'Profil' },
   { href: '/berita', label: 'Berita' },
+  { href: '/layanan', label: 'Layanan' },
   { href: '/galeri', label: 'Galeri' },
   { href: '/peta', label: 'Peta' },
   { href: '/kontak', label: 'Kontak' },
