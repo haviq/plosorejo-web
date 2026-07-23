@@ -16,8 +16,7 @@ export default function StatsBar() {
     <div
       className="w-full py-12 px-6 relative overflow-hidden"
       style={{
-        background:
-          'linear-gradient(180deg, rgba(17,17,17,1) 0%, rgba(12,12,12,1) 100%)',
+        background: 'var(--s2)',
         borderTop: '1px solid var(--border)',
         borderBottom: '1px solid var(--border)',
       }}

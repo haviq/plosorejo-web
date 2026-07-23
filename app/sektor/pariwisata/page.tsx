@@ -119,7 +119,7 @@ export default function PariwisataPage() {
                     <span
                       key={f}
                       className="px-2 py-0.5 rounded-full text-xs border"
-                      style={{ borderColor: 'var(--border)', color: '#9ca3af' }}
+                      style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
                     >
                       {f}
                     </span>
@@ -156,8 +156,8 @@ export default function PariwisataPage() {
                 href="https://wa.me/6281234567890?text=Halo%2C%20saya%20ingin%20memesan%20paket%20wisata%20Plosorejo"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-auto inline-block text-center px-4 py-2 rounded-lg text-xs font-semibold text-black transition-opacity hover:opacity-85"
-                style={{ background: 'var(--gradient)' }}
+                className="mt-auto inline-block text-center px-4 py-2 rounded-lg text-xs font-semibold transition-opacity hover:opacity-85"
+                style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
               >
                 Pesan Sekarang
               </a>

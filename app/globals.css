@@ -46,6 +46,12 @@
   --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.35);
   --shadow-gold: 0 0 32px rgba(212, 175, 55, 0.22);
   --surface-soft: rgba(255, 255, 255, 0.03);
+  --card-surface: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(17, 17, 17, 0.98) 100%);
+  --panel-surface:
+    radial-gradient(circle at top right, rgba(212, 175, 55, 0.08), transparent 40%),
+    linear-gradient(180deg, rgba(26, 26, 26, 0.9), rgba(17, 17, 17, 0.98));
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.06);
   --nav-bg: rgba(8, 8, 8, 0.92);
   --overlay-scrim: rgba(8, 8, 8, 0.98);
   --btn-primary-fg: #080808;
@@ -64,36 +70,42 @@
   --s1: #ffffff;
   --s2: #f1ebdc;
   --s3: #e8e0cc;
-  --border: rgba(140, 110, 20, 0.18);
-  --border-strong: rgba(140, 110, 20, 0.32);
-  --gold: #b8921f;
-  --gold-bright: #d4af37;
-  --gold-dim: #8a6d16;
-  --gold-glow: rgba(184, 146, 31, 0.12);
-  --gold-glow-strong: rgba(184, 146, 31, 0.22);
-  --amber: #b8921f;
+  --border: rgba(110, 90, 20, 0.22);
+  --border-strong: rgba(110, 90, 20, 0.38);
+  --gold: #8a6d12;
+  --gold-bright: #9a7a18;
+  --gold-dim: #6f5810;
+  --gold-glow: rgba(138, 109, 18, 0.12);
+  --gold-glow-strong: rgba(138, 109, 18, 0.22);
+  --amber: #8a6d12;
   --green: #15803d;
   --warning: #d97706;
   --danger: #dc2626;
   --info: #2563eb;
-  --text: #1c1914;
-  --muted: #6b6558;
-  --muted2: #938b7a;
-  --gradient: linear-gradient(135deg, #b8921f 0%, #d4af37 50%, #9a7a18 100%);
-  --gradient-soft: linear-gradient(135deg, rgba(184, 146, 31, 0.16), rgba(212, 175, 55, 0.05));
+  --text: #1a1610;
+  --muted: #5c564a;
+  --muted2: #7a7366;
+  --gradient: linear-gradient(135deg, #8a6d12 0%, #b8921f 50%, #7a6112 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(138, 109, 18, 0.16), rgba(184, 146, 31, 0.05));
   --shadow-card: 0 12px 32px rgba(70, 55, 10, 0.08);
-  --shadow-gold: 0 0 24px rgba(184, 146, 31, 0.16);
-  --surface-soft: rgba(184, 146, 31, 0.08);
-  --nav-bg: rgba(247, 243, 232, 0.92);
+  --shadow-gold: 0 0 24px rgba(138, 109, 18, 0.16);
+  --surface-soft: rgba(138, 109, 18, 0.08);
+  --card-surface: linear-gradient(180deg, #ffffff 0%, #fbf8f0 100%);
+  --panel-surface:
+    radial-gradient(circle at top right, rgba(138, 109, 18, 0.12), transparent 42%),
+    linear-gradient(180deg, #ffffff 0%, #f7f1e2 100%);
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(110, 90, 20, 0.16);
+  --nav-bg: rgba(247, 243, 232, 0.94);
   --overlay-scrim: rgba(247, 243, 232, 0.98);
-  --btn-primary-fg: #1c1914;
+  --btn-primary-fg: #1a1610;
   --site-bg-base:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(184, 146, 31, 0.12), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(184, 146, 31, 0.06), transparent 50%),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(138, 109, 18, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(138, 109, 18, 0.06), transparent 50%),
     radial-gradient(ellipse 50% 35% at 0% 80%, rgba(21, 128, 61, 0.04), transparent 50%),
     linear-gradient(180deg, #faf6ec 0%, #f7f3e8 40%, #f3ecda 100%);
-  --site-bg-glow-left: radial-gradient(circle, rgba(184, 146, 31, 0.18), transparent 70%);
-  --site-bg-glow-right: radial-gradient(circle, rgba(212, 175, 55, 0.12), transparent 70%);
+  --site-bg-glow-left: radial-gradient(circle, rgba(138, 109, 18, 0.18), transparent 70%);
+  --site-bg-glow-right: radial-gradient(circle, rgba(184, 146, 31, 0.12), transparent 70%);
   --site-bg-vignette: radial-gradient(ellipse at center, transparent 50%, rgba(120, 95, 30, 0.08) 100%);
 }
 
@@ -224,17 +236,18 @@ main [role='link'],
 }
 
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
 }
 
 .card-surface {
-  background: linear-gradient(180deg, rgba(26, 26, 26, 0.95) 0%, rgba(17, 17, 17, 0.98) 100%);
+  background: var(--card-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
+  color: var(--text);
   transition:
     border-color 0.25s ease,
     box-shadow 0.25s ease,
@@ -278,7 +291,7 @@ main [role='link'],
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: rgba(212, 175, 55, 0.04);
+  background: var(--surface-soft);
   color: var(--gold);
   font-weight: 600;
   font-size: 0.875rem;
@@ -337,11 +350,10 @@ main [role='link'],
 }
 
 .surface-panel {
-  background:
-    radial-gradient(circle at top right, rgba(212, 175, 55, 0.08), transparent 40%),
-    linear-gradient(180deg, rgba(26, 26, 26, 0.9), rgba(17, 17, 17, 0.98));
+  background: var(--panel-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
+  color: var(--text);
 }
 
 .divider-gold {
@@ -527,4 +539,28 @@ main [role='link'],
   .btn-ghost:hover {
     transform: none;
   }
+}
+
+/* Light mode readability: no clipped gold washout, solid cards */
+[data-theme='light'] .gold-text,
+[data-theme='light'] .gradient-text {
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: currentColor;
+  color: var(--gold);
+}
+
+[data-theme='light'] .card-surface,
+[data-theme='light'] .surface-panel,
+[data-theme='light'] .badge {
+  color: var(--text);
+}
+
+[data-theme='light'] .section-label {
+  color: var(--gold);
+}
+
+[data-theme='light'] .btn-primary {
+  color: var(--btn-primary-fg);
 }

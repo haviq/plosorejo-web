@@ -77,19 +77,20 @@ export default function PetaPage() {
           </span>
           <span
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
-            style={{ color: '#d4af37', borderColor: 'rgba(212,175,55,0.4)', backgroundColor: 'rgba(212,175,55,0.1)' }}
+            style={{ color: 'var(--gold)', borderColor: 'var(--border-strong)', backgroundColor: 'var(--gold-glow)' }}
           >
-            <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: '#d4af37' }} aria-hidden="true" />
+            <span className="w-2 h-2 rounded-sm" style={{ backgroundColor: 'var(--gold)' }} aria-hidden="true" />
             RW 01 (seluruh padukuhan)
           </span>
           <span
             className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border"
-            style={{ color: '#f0ead6', borderColor: 'rgba(240,234,214,0.35)', backgroundColor: 'rgba(240,234,214,0.06)' }}
+            style={{ color: 'var(--text)', borderColor: 'var(--border)', backgroundColor: 'var(--surface-soft)' }}
           >
             <span
               className="w-4 h-0.5"
               style={{
-                backgroundImage: 'repeating-linear-gradient(90deg,#f0ead6 0 4px,transparent 4px 7px)',
+                backgroundImage:
+                  'repeating-linear-gradient(90deg, var(--muted) 0 4px, transparent 4px 7px)',
               }}
               aria-hidden="true"
             />

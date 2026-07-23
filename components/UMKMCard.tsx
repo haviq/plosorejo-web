@@ -102,8 +102,8 @@ export default function UMKMCard({ item }: UMKMCardProps) {
             href={waUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-black transition-opacity hover:opacity-90"
-            style={{ background: 'var(--gradient)' }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-90"
+            style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
             aria-label={`Hubungi ${item.nama} via WhatsApp`}
           >
             WhatsApp

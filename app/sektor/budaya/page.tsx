@@ -216,8 +216,8 @@ export default function BudayaPage() {
         </p>
         <a
           href="/kontak"
-          className="inline-block px-6 py-2.5 rounded-lg font-semibold text-sm text-black transition-opacity hover:opacity-85"
-          style={{ background: 'var(--gradient)' }}
+          className="inline-block px-6 py-2.5 rounded-lg font-semibold text-sm transition-opacity hover:opacity-85"
+          style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
         >
           Hubungi Kami
         </a>

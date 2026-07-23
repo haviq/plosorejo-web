@@ -59,7 +59,7 @@ export default function Footer() {
             Jl. Balong, Umbulharjo, Cangkringan, Sleman, DIY 55583
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
-            <span className="badge" style={{ color: 'var(--muted)', background: 'rgba(255,255,255,0.04)' }}>
+            <span className="badge" style={{ color: 'var(--muted)', background: 'var(--surface-soft)' }}>
               KKN UNRIYO 2026
             </span>
           </div>

@@ -66,7 +66,7 @@ export default function MerapiStatus({
       <span
         className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
         style={{
-          background: 'rgba(0,0,0,0.25)',
+          background: 'var(--surface-soft)',
           border: '1px solid var(--border)',
           color: cfg.color,
         }}
