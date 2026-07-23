@@ -3,11 +3,16 @@ import PageHeader from '@/components/PageHeader'
 import StatCard from '@/components/StatCard'
 import Icon from '@/components/Icon'
 import sektorData from '@/content/sektor.json'
+import { getSiteSettings } from '@/lib/data'
+import { waLink } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Pariwisata',
-  description: 'Destinasi wisata alam dan agrowisata di Padukuhan Plosorejo — kebun salak, peternakan, dan trekking.',
+  description:
+    'Destinasi wisata alam dan agrowisata di Padukuhan Plosorejo — kebun salak, peternakan, dan trekking.',
 }
+
+export const revalidate = 60
 
 const sektor = sektorData.pariwisata
 
@@ -38,122 +43,112 @@ const destinasi = [
     deskripsi:
       'Jalur trekking ringan hingga sedang melalui perbukitan hijau dengan pemandangan Gunung Merapi dan hamparan sawah. Rute tersedia untuk pemula (2 km) dan menengah (5 km), dengan pemandu lokal berpengalaman.',
     tiket: 'Rp 50.000/orang',
-    jamBuka: '05.30 – 12.00',
-    fasilitas: ['Pemandu trekking', 'Titik panorama', 'Warung transit', 'P3K'],
+    jamBuka: '05.00 – 17.00',
+    fasilitas: ['Pemandu lokal', 'Titik istirahat', 'Spot foto Merapi', 'Air mineral'],
     color: 'var(--gold)',
   },
 ]
 
-const paketWisata = [
+const paket = [
   {
     nama: 'Paket Keluarga',
-    harga: 'Rp 150.000/orang',
-    min: '5 orang',
-    include: ['Agrowisata Salak', 'Edukasi Peternakan', 'Makan siang', 'Oleh-oleh'],
-  },
-  {
-    nama: 'Paket Pelajar',
-    harga: 'Rp 75.000/orang',
-    min: '20 siswa',
-    include: ['Edukasi Peternakan', 'Workshop pertanian', 'Makan siang', 'Sertifikat'],
-  },
-  {
-    nama: 'Paket Petualangan',
-    harga: 'Rp 120.000/orang',
+    harga: 'Rp 150.000',
     min: '4 orang',
-    include: ['Trekking 5 km', 'Sarapan lokal', 'Pemandu', 'Snack trail'],
+    include: ['Agrowisata salak', 'Edukasi peternakan', 'Snack lokal', 'Dokumentasi'],
+  },
+  {
+    nama: 'Paket Edukasi Sekolah',
+    harga: 'Rp 75.000',
+    min: '20 siswa',
+    include: ['Tur peternakan', 'Workshop singkat', 'Susu segar', 'Sertifikat kunjungan'],
+  },
+  {
+    nama: 'Paket Trekking Merapi View',
+    harga: 'Rp 200.000',
+    min: '2 orang',
+    include: ['Guide lokal', 'Trekking 5 km', 'Snack & air', 'Antar-jemput titik temu'],
   },
 ]
 
-export default function PariwisataPage() {
+export default async function PariwisataPage() {
+  const site = await getSiteSettings()
+  const pesanWa = waLink(site.whatsapp, 'Halo, saya ingin memesan paket wisata Plosorejo')
+
   return (
     <div className="page-shell space-y-10">
       <PageHeader
-        eyebrow="Destinasi wisata alam & agrowisata"
-        title="Pariwisata"
+        eyebrow="Sektor Pariwisata"
+        title="Destinasi"
         highlight="Plosorejo"
         description={sektor.deskripsi}
       />
 
-      {/* Stats */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik pariwisata">
-        {sektor.stats.map(({ label, value }, i) => (
-          <StatCard
-            key={label}
-            label={label}
-            value={value}
-            accent="amber"
-          />
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4" aria-label="Statistik pariwisata">
+        {sektor.stats.map(({ label, value }) => (
+          <StatCard key={label} label={label} value={value} accent="amber" />
         ))}
       </section>
 
-      {/* Destinasi wisata */}
-      <section aria-label="Destinasi wisata">
-        <h2 className="text-2xl font-black mb-5">Destinasi Wisata</h2>
-        <div className="space-y-5">
+      <section className="space-y-4" aria-label="Destinasi wisata">
+        <h2 className="section-label">Destinasi unggulan</h2>
+        <div className="grid md:grid-cols-3 gap-5">
           {destinasi.map(({ nama, icon, deskripsi, tiket, jamBuka, fasilitas, color }) => (
-            <div
-              key={nama}
-              className="rounded-xl border p-6 space-y-4"
-              style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-            >
-              <div className="flex items-start gap-4">
+            <article key={nama} className="card-surface p-5 flex flex-col gap-3 h-full">
+              <div className="flex items-center gap-3">
                 <span
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                  style={{ backgroundColor: `${color}12` }}
-                  aria-hidden="true"
-                ><Icon name={icon} size={20} /></span>
-                <div className="flex-1">
-                  <h3 className="font-black text-[var(--text)] text-lg">{nama}</h3>
-                  <div className="flex flex-wrap gap-4 mt-1 text-xs text-[var(--muted)]">
-                    <span>🎫 {tiket}</span>
-                    <span> {jamBuka}</span>
-                  </div>
+                  className="w-11 h-11 rounded-xl flex items-center justify-center"
+                  style={{ background: 'var(--gold-glow)', color }}
+                >
+                  <Icon name={icon} size={20} />
+                </span>
+                <h3 className="font-bold" style={{ color: 'var(--text)' }}>{nama}</h3>
+              </div>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>{deskripsi}</p>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="rounded-lg p-2.5" style={{ background: 'var(--surface-soft)' }}>
+                  <p style={{ color: 'var(--muted)' }}>Tiket</p>
+                  <p className="font-semibold" style={{ color: 'var(--text)' }}>{tiket}</p>
+                </div>
+                <div className="rounded-lg p-2.5" style={{ background: 'var(--surface-soft)' }}>
+                  <p style={{ color: 'var(--muted)' }}>Jam buka</p>
+                  <p className="font-semibold" style={{ color: 'var(--text)' }}>{jamBuka}</p>
                 </div>
               </div>
-              <p className="text-sm text-[var(--text)] leading-relaxed">{deskripsi}</p>
-              <div>
-                <p className="text-xs font-semibold text-[var(--muted)] mb-2">Fasilitas:</p>
-                <div className="flex flex-wrap gap-2">
-                  {fasilitas.map((f) => (
-                    <span
-                      key={f}
-                      className="px-2 py-0.5 rounded-full text-xs border"
-                      style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
-                    >
-                      {f}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+              <ul className="space-y-1.5">
+                {fasilitas.map((f) => (
+                  <li key={f} className="text-xs flex gap-2" style={{ color: 'var(--text)' }}>
+                    <span style={{ color: 'var(--gold)' }}>•</span>
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </article>
           ))}
         </div>
       </section>
 
-      {/* Paket wisata */}
-      <section aria-label="Paket wisata">
-        <h2 className="text-2xl font-black mb-5">Paket Wisata</h2>
-        <div className="grid sm:grid-cols-3 gap-5">
-          {paketWisata.map(({ nama, harga, min, include }) => (
-            <div
-              key={nama}
-              className="rounded-xl border p-5 flex flex-col gap-3"
-              style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-            >
-              <h3 className="font-bold text-[var(--text)]">{nama}</h3>
+      <section className="space-y-4" aria-label="Paket wisata">
+        <h2 className="section-label">Paket wisata</h2>
+        <div className="grid md:grid-cols-3 gap-5">
+          {paket.map(({ nama, harga, min, include }) => (
+            <div key={nama} className="card-surface p-5 flex flex-col gap-3 h-full">
+              <h3 className="font-bold" style={{ color: 'var(--text)' }}>{nama}</h3>
               <p className="text-lg font-black" style={{ color: 'var(--gold)' }}>{harga}</p>
               <p className="text-xs text-[var(--muted)]">Min. {min}</p>
               <ul className="space-y-1.5 pt-2 border-t" style={{ borderColor: 'var(--border)' }}>
                 {include.map((item) => (
                   <li key={item} className="flex items-center gap-2 text-xs text-[var(--text)]">
-                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: 'var(--gold)' }} aria-hidden="true" />
+                    <span
+                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: 'var(--gold)' }}
+                      aria-hidden="true"
+                    />
                     {item}
                   </li>
                 ))}
               </ul>
               <a
-                href="https://wa.me/6281234567890?text=Halo%2C%20saya%20ingin%20memesan%20paket%20wisata%20Plosorejo"
+                href={pesanWa}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-auto inline-block text-center px-4 py-2 rounded-lg text-xs font-semibold transition-opacity hover:opacity-85"
@@ -165,7 +160,6 @@ export default function PariwisataPage() {
           ))}
         </div>
       </section>
-
     </div>
   )
 }

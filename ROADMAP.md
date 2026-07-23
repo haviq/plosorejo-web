@@ -12,7 +12,7 @@ Status implementasi di codebase (Juli 2026).
 | Kontak/WA dari settings | ✅ | `getSiteSettings()` + form WA dinamis |
 | Seed script | ✅ | `npm run cms:seed` (butuh write token) |
 | SOP admin | ✅ | `docs/SOP-ADMIN.md` |
-| Foto asli | ⚠️ partial | Masih placeholder SVG — ganti lewat Studio/upload |
+| Foto asli | ⚠️ themed SVG | Ganti lewat Studio/upload foto real |
 
 **Aksi manusia yang masih perlu:**
 1. Register Studio di production  

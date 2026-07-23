@@ -7,8 +7,10 @@ import SiteBackground from '@/components/SiteBackground'
 
 export default function SiteShell({
   children,
+  whatsapp,
 }: {
   children: React.ReactNode
+  whatsapp?: string
 }) {
   const pathname = usePathname() || ''
   const isStudio = pathname.startsWith('/studio')
@@ -21,7 +23,7 @@ export default function SiteShell({
     <>
       <SiteBackground />
       <div className="site-content">
-        <Nav />
+        <Nav whatsapp={whatsapp} />
         <main className="flex-1">{children}</main>
         <Footer />
       </div>

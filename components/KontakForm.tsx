@@ -7,7 +7,7 @@ interface KontakFormProps {
   whatsapp?: string
 }
 
-export default function KontakForm({ whatsapp = '6281234567890' }: KontakFormProps) {
+export default function KontakForm({ whatsapp }: KontakFormProps) {
   const [nama, setNama] = useState('')
   const [pesan, setPesan] = useState('')
   const [kategori, setKategori] = useState('Informasi Umum')
@@ -28,7 +28,7 @@ export default function KontakForm({ whatsapp = '6281234567890' }: KontakFormPro
       pesan.trim(),
     ].join('\n')
 
-    const url = waLink(whatsapp, text)
+    const url = waLink(whatsapp || '', text)
     if (url === '#') return
     window.open(url, '_blank', 'noopener,noreferrer')
   }

@@ -6,6 +6,7 @@ import layananJson from '@/content/layanan.json'
 import kknJson from '@/content/kkn.json'
 import susuJson from '@/content/susu.json'
 import poiJson from '@/content/poi.json'
+import galeriJson from '@/content/galeri.json'
 import { sanityFetch } from '@/sanity/lib/client'
 import {
   beritaListQuery,
@@ -36,96 +37,7 @@ import type {
 } from '@/lib/types'
 
 // Fallback galeri (local) when Sanity empty/unconfigured
-const galeriFallback: GaleriAlbum[] = [
-  {
-    id: 1,
-    judul: 'Penyambutan Tim KKN',
-    tanggal: '1 Juli 2026',
-    icon: 'people',
-    count: 12,
-    deskripsi:
-      'Upacara penyambutan 12 mahasiswa KKN UNRIYO angkatan 2026 oleh perangkat padukuhan dan warga.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-  {
-    id: 2,
-    judul: 'Kegiatan Posyandu',
-    tanggal: '5 Juli 2026',
-    icon: 'kesehatan',
-    count: 18,
-    deskripsi:
-      'Mahasiswa KKN membantu pelaksanaan Posyandu Balita — penimbangan, imunisasi, dan penyuluhan gizi.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-  {
-    id: 3,
-    judul: 'Pelatihan Pupuk Organik',
-    tanggal: '8 Juli 2026',
-    icon: 'pertanian',
-    count: 15,
-    deskripsi:
-      'Workshop pembuatan pupuk organik dari kotoran sapi bersama kelompok tani Maju Bersama.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-  {
-    id: 4,
-    judul: 'Panen Raya Padi',
-    tanggal: '10 Juli 2026',
-    icon: 'pertanian',
-    count: 24,
-    deskripsi:
-      'Dokumentasi kegiatan panen raya padi serentak yang diikuti ratusan petani Padukuhan Plosorejo.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-  {
-    id: 5,
-    judul: 'Pelatihan UMKM Digital',
-    tanggal: '12 Juli 2026',
-    icon: 'digital',
-    count: 9,
-    deskripsi:
-      'Pelatihan pemasaran digital dan penggunaan media sosial untuk pelaku UMKM padukuhan.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-  {
-    id: 6,
-    judul: 'Kunjungan Peternakan',
-    tanggal: '14 Juli 2026',
-    icon: 'peternakan',
-    count: 20,
-    deskripsi:
-      'Tim KKN mengunjungi peternakan sapi perah unggulan dan mempelajari proses produksi susu.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-  {
-    id: 7,
-    judul: 'Lomba Mewarnai Anak',
-    tanggal: '16 Juli 2026',
-    icon: 'budaya',
-    count: 30,
-    deskripsi:
-      'Lomba mewarnai tingkat PAUD dan TK sebagai bagian dari program pengembangan karakter anak.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-  {
-    id: 8,
-    judul: 'Pengerjaan Web Desa',
-    tanggal: '18 Juli 2026',
-    icon: 'globe',
-    count: 8,
-    deskripsi:
-      'Tim divisi teknologi KKN mengerjakan portal informasi digital Padukuhan Plosorejo.',
-    warna: 'var(--gold)',
-    foto: ['/images/placeholder-card.svg'],
-  },
-]
+const galeriFallback = galeriJson as GaleriAlbum[]
 
 type SanityBerita = {
   slug: string

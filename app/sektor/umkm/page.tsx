@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
 import UMKMCatalog from '@/components/UMKMCatalog'
-import { getSektorMap, getUMKMList } from '@/lib/data'
+import { getSektorMap, getUMKMList, getSiteSettings } from '@/lib/data'
+import { waLink } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'UMKM Padukuhan',
@@ -12,7 +13,11 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 export default async function UMKMPage() {
-  const [items, sektorMap] = await Promise.all([getUMKMList(), getSektorMap()])
+  const [items, sektorMap, site] = await Promise.all([
+    getUMKMList(),
+    getSektorMap(),
+    getSiteSettings(),
+  ])
   const sektor = sektorMap.umkm || {
     nama: 'UMKM',
     deskripsi: 'Direktori UMKM Padukuhan Plosorejo.',
@@ -82,7 +87,7 @@ export default async function UMKMPage() {
           Tingkatkan visibilitas usaha Anda dan jangkau lebih banyak pelanggan melalui portal desa.
         </p>
         <a
-          href="https://wa.me/6281234567890?text=Saya%20ingin%20mendaftarkan%20UMKM%20saya%20di%20Padukuhan%20Plosorejo"
+          href={waLink(site.whatsapp, 'Saya ingin mendaftarkan UMKM saya di Padukuhan Plosorejo')}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary"

@@ -25,11 +25,16 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
             aria-label={`Buka album: ${album.judul}`}
           >
             <div
-              className="h-36 flex items-center justify-center"
+              className="h-36 flex items-center justify-center relative overflow-hidden"
               style={{ backgroundColor: 'var(--gold-glow)', color: accent }}
               aria-hidden="true"
             >
-              <Icon name={album.icon || album.emoji || 'galeri'} size={36} />
+              {album.foto?.[0] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={album.foto[0]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-90" />
+              ) : (
+                <Icon name={album.icon || album.emoji || 'galeri'} size={36} />
+              )}
             </div>
             <div className="p-4 flex flex-col gap-2 flex-1">
               <h3 className="font-bold text-sm leading-snug" style={{ color: 'var(--text)' }}>
@@ -101,17 +106,25 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
             </p>
 
             <div className="grid grid-cols-3 gap-2">
-              {Array.from({ length: Math.min(active.count, 6) }).map((_, i) => (
+              {(active.foto?.length
+                ? active.foto.slice(0, 6)
+                : Array.from({ length: Math.min(active.count || 1, 6) }, () => '')
+              ).map((src, i) => (
                 <div
                   key={i}
-                  className="aspect-square rounded-xl flex items-center justify-center"
+                  className="aspect-square rounded-xl flex items-center justify-center overflow-hidden relative"
                   style={{
                     backgroundColor: 'var(--gold-glow)',
                     border: '1px solid var(--border)',
                     color: accent,
                   }}
                 >
-                  <Icon name={active.icon || active.emoji || 'galeri'} size={22} />
+                  {src ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={src} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                  ) : (
+                    <Icon name={active.icon || active.emoji || 'galeri'} size={22} />
+                  )}
                 </div>
               ))}
             </div>

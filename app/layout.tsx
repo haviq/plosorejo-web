@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import SiteShell from '@/components/SiteShell'
+import { getSiteSettings } from '@/lib/data'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -58,9 +59,11 @@ const themeBootScript = `
   } catch (e) {}
 })();`
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const site = await getSiteSettings()
+
   return (
     <html lang="id" className={`${inter.variable} ${playfair.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
@@ -70,7 +73,7 @@ export default function RootLayout({
         className="min-h-full flex flex-col"
         style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}
       >
-        <SiteShell>{children}</SiteShell>
+        <SiteShell whatsapp={site.whatsapp}>{children}</SiteShell>
       </body>
     </html>
   )

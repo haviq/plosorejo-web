@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Icon from '@/components/Icon'
 import ThemeToggle from '@/components/ThemeToggle'
+import { waLink } from '@/lib/site'
+import siteFallback from '@/content/site.json'
 
 const navLinks = [
   { href: '/', label: 'Beranda' },
@@ -26,8 +28,10 @@ const sektorLinks = [
   { href: '/sektor/budaya', label: 'Budaya', icon: 'budaya' },
 ]
 
-export default function Nav() {
+export default function Nav({ whatsapp }: { whatsapp?: string }) {
   const pathname = usePathname() || ''
+  const wa = whatsapp || siteFallback.whatsapp
+  const waHref = waLink(wa, 'Halo Padukuhan Plosorejo')
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [sektorOpen, setSektorOpen] = useState(false)
@@ -227,7 +231,7 @@ export default function Nav() {
               UMKM
             </Link>
             <a
-              href="https://wa.me/6281234567890?text=Halo%20Padukuhan%20Plosorejo"
+              href={waHref}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary !py-2 !px-4 !text-xs"
@@ -331,6 +335,15 @@ export default function Nav() {
             <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
               Direktori UMKM
             </Link>
+            <a
+              href={waHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={closeMenus}
+              className="btn-ghost"
+            >
+              WhatsApp
+            </a>
             <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
               Kontak
             </Link>
