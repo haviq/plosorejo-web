@@ -43,27 +43,15 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
   return (
     <button
       type="button"
-      onClick={(e) => {
-        e.stopPropagation()
-        toggle()
-      }}
-      className={`w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl inline-flex items-center justify-center cursor-pointer transition-colors touch-manipulation relative z-[1100] ${className}`}
-      style={{
-        border: '1px solid var(--border)',
-        background: 'var(--surface-soft)',
-        color: 'var(--text)',
-      }}
+      onClick={toggle}
+      className={`site-header__icon-btn ${className}`}
       aria-label={theme === 'dark' ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}
       title={theme === 'dark' ? 'Mode terang' : 'Mode gelap'}
     >
-      {mounted ? (
-        theme === 'dark' ? (
-          <SunIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
-        ) : (
-          <MoonIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
-        )
+      {mounted && theme === 'light' ? (
+        <MoonIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
       ) : (
-        <SunIcon className="w-5 h-5 opacity-60 pointer-events-none" aria-hidden="true" />
+        <SunIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
       )}
     </button>
   )

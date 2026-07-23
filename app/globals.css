@@ -208,32 +208,219 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  /* Do NOT use isolation:isolate here — it traps fixed headers under main/hero
-     stacking contexts on some mobile browsers. */
 }
 
-/* Fixed site chrome always on top of page content */
+/* ── Site header (always visible + tappable on mobile) ───────── */
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
-  pointer-events: none; /* let empty header area pass through */
+  z-index: 10050;
+  pointer-events: auto !important;
 }
 
-.site-header > * {
-  pointer-events: auto; /* restore for real controls */
+.site-header__bar {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  pointer-events: auto !important;
+}
+
+.site-header__brand {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  flex-shrink: 0;
+  pointer-events: auto !important;
+  z-index: 2;
+}
+
+.site-header__brand-title {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 900;
+  font-size: 1.25rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.site-header__brand-sub {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 2px;
+  color: var(--muted);
+}
+
+.site-header__desktop-nav {
+  display: none;
+}
+
+.site-header__desktop-list {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-header__link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto !important;
+}
+
+.site-header__dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 0.5rem;
+  width: 18rem;
+  border-radius: 1rem;
+  padding: 0.75rem;
+  z-index: 60;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
+  display: grid;
+  gap: 0.25rem;
+}
+
+.site-header__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.site-header__desktop-actions {
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-header__mobile-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10060;
+  pointer-events: auto !important;
+}
+
+.site-header__icon-btn {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  color: var(--text);
+  cursor: pointer;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.35);
+}
+
+.site-header__burger-line {
+  display: block;
+  width: 1.15rem;
+  height: 2px;
+  background: var(--text);
+  border-radius: 1px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  pointer-events: none;
 }
 
 .site-header button,
 .site-header a {
-  position: relative;
-  z-index: 2;
   pointer-events: auto !important;
   touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
+}
+
+@media (min-width: 1024px) {
+  .site-header__bar {
+    padding: 0 1.5rem;
+  }
+
+  .site-header__desktop-nav {
+    display: block;
+  }
+
+  .site-header__desktop-actions {
+    display: flex;
+  }
+
+  .site-header__mobile-actions {
+    display: none !important;
+  }
+}
+
+/* Mobile full-screen menu — only mounted when open */
+.site-mobile-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 10040;
+  display: flex;
+  flex-direction: column;
+  background: var(--overlay-scrim);
+  pointer-events: auto !important;
+}
+
+.site-mobile-panel__inner {
+  padding: 5.5rem 1.5rem 2rem;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.site-mobile-panel__link {
+  display: block;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.75rem 0;
+  min-height: 48px;
+  touch-action: manipulation;
+}
+
+.site-mobile-panel__chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  font-size: 0.8rem;
+  text-align: center;
+  touch-action: manipulation;
 }
 
 /* Defensive: interactive content must always stay fully opaque & clickable */
@@ -262,7 +449,7 @@ main [role='link'],
   pointer-events: none !important;
 }
 
-/* Entire hero media stack is non-interactive; only content column receives taps */
+/* Hero media is non-interactive; content column receives taps */
 section[aria-label*='Hero'] {
   pointer-events: none;
 }
@@ -276,16 +463,10 @@ section[aria-label*='Hero'] .relative.z-20 {
   pointer-events: auto !important;
 }
 
-/* Comfortable mobile/tablet tap targets */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .btn-primary,
   .btn-ghost,
   .btn-soft {
-    min-height: 44px;
-  }
-
-  .site-header button {
-    min-width: 44px;
     min-height: 44px;
   }
 }
