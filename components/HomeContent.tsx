@@ -72,14 +72,16 @@ export default function HomeContent({
             <section
                 className="relative min-h-[100svh] flex flex-col justify-center overflow-hidden"
                 aria-label="Hero — Padukuhan Plosorejo"
+                style={{ zIndex: 0 }}
             >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     src="/images/hero-merapi.svg"
                     alt="Pemandangan lereng Gunung Merapi"
-                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                    className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
                     style={{ zIndex: 0 }}
                     fetchPriority="high"
+                    draggable={false}
                 />
 
                 <div
@@ -89,6 +91,7 @@ export default function HomeContent({
                         background:
                             'linear-gradient(to bottom, rgba(5,5,5,0.78) 0%, rgba(5,5,5,0.55) 40%, rgba(5,5,5,0.82) 72%, rgba(5,5,5,1) 100%)',
                     }}
+                    aria-hidden="true"
                 />
                 <div
                     className="absolute inset-0 pointer-events-none"
@@ -97,10 +100,11 @@ export default function HomeContent({
                         background:
                             'radial-gradient(ellipse at center, transparent 42%, rgba(5,5,5,0.72) 100%)',
                     }}
+                    aria-hidden="true"
                 />
-                <div className="noise-overlay pointer-events-none" style={{ zIndex: 2 }} />
+                <div className="noise-overlay pointer-events-none" style={{ zIndex: 2 }} aria-hidden="true" />
 
-                <div className="relative z-20 on-dark w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
+                <div className="relative z-20 on-dark w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center pointer-events-auto">
                     <div className="text-center lg:text-left">
                         <div>
                             <div

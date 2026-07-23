@@ -72,7 +72,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        className="site-header transition-all duration-300"
         style={{
           backgroundColor: scrolled || mobileOpen ? 'var(--nav-bg)' : 'transparent',
           backdropFilter: scrolled || mobileOpen ? 'blur(18px)' : 'none',
@@ -82,11 +82,11 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
           boxShadow: scrolled ? 'var(--shadow-card)' : 'none',
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between pointer-events-auto">
           <Link
             href="/"
             onClick={closeMenus}
-            className="flex flex-col leading-none group"
+            className="flex flex-col leading-none group relative z-[2]"
             aria-label="Plosorejo — Halaman Utama"
           >
             <span
@@ -240,16 +240,23 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
             </a>
           </div>
 
-          <div className="lg:hidden flex items-center gap-2 relative z-[60]">
+          <div className="lg:hidden flex items-center gap-2 relative z-[1100]">
             <ThemeToggle />
             <button
               type="button"
-              className="w-11 h-11 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-1.5 rounded-lg touch-manipulation"
-              onClick={() => setMobileOpen((v) => !v)}
+              className="w-12 h-12 min-w-[48px] min-h-[48px] flex flex-col items-center justify-center gap-1.5 rounded-xl touch-manipulation relative z-[1100]"
+              onClick={(e) => {
+                e.stopPropagation()
+                setMobileOpen((v) => !v)
+              }}
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-panel"
-              style={{ border: '1px solid var(--border)', background: 'var(--surface-soft)' }}
+              style={{
+                border: '1px solid var(--border)',
+                background: 'var(--surface-soft)',
+                color: 'var(--text)',
+              }}
             >
               <span
                 className="block w-5 h-0.5 transition-all duration-300 origin-center pointer-events-none"
@@ -282,7 +289,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
       {mobileOpen && (
       <div
         id="mobile-nav-panel"
-        className="fixed inset-0 z-40 flex flex-col lg:hidden"
+        className="fixed inset-0 z-[900] flex flex-col lg:hidden"
         style={{ background: 'var(--overlay-scrim)' }}
         role="dialog"
         aria-modal="true"

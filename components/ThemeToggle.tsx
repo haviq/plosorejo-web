@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 
 type Theme = 'dark' | 'light'
@@ -13,6 +13,7 @@ function applyTheme(theme: Theme) {
 export default function ThemeToggle({ className = '' }: { className?: string }) {
   const [theme, setTheme] = useState<Theme>('dark')
   const [mounted, setMounted] = useState(false)
+  const lastToggleAt = useRef(0)
 
   useEffect(() => {
     const stored = window.localStorage.getItem('plosorejo-theme') as Theme | null
@@ -28,17 +29,25 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
   }, [])
 
   const toggle = () => {
-    const next: Theme = theme === 'dark' ? 'light' : 'dark'
-    setTheme(next)
-    applyTheme(next)
-    window.localStorage.setItem('plosorejo-theme', next)
+    const now = Date.now()
+    if (now - lastToggleAt.current < 280) return
+    lastToggleAt.current = now
+    setTheme((prev) => {
+      const next: Theme = prev === 'dark' ? 'light' : 'dark'
+      applyTheme(next)
+      window.localStorage.setItem('plosorejo-theme', next)
+      return next
+    })
   }
 
   return (
     <button
       type="button"
-      onClick={toggle}
-      className={`w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl inline-flex items-center justify-center cursor-pointer transition-colors touch-manipulation ${className}`}
+      onClick={(e) => {
+        e.stopPropagation()
+        toggle()
+      }}
+      className={`w-12 h-12 min-w-[48px] min-h-[48px] rounded-xl inline-flex items-center justify-center cursor-pointer transition-colors touch-manipulation relative z-[1100] ${className}`}
       style={{
         border: '1px solid var(--border)',
         background: 'var(--surface-soft)',
@@ -49,12 +58,12 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
     >
       {mounted ? (
         theme === 'dark' ? (
-          <SunIcon className="w-4 h-4" aria-hidden="true" />
+          <SunIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
         ) : (
-          <MoonIcon className="w-4 h-4" aria-hidden="true" />
+          <MoonIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
         )
       ) : (
-        <SunIcon className="w-4 h-4 opacity-60" aria-hidden="true" />
+        <SunIcon className="w-5 h-5 opacity-60 pointer-events-none" aria-hidden="true" />
       )}
     </button>
   )

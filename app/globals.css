@@ -208,7 +208,32 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  isolation: isolate;
+  /* Do NOT use isolation:isolate here — it traps fixed headers under main/hero
+     stacking contexts on some mobile browsers. */
+}
+
+/* Fixed site chrome always on top of page content */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  pointer-events: none; /* let empty header area pass through */
+}
+
+.site-header > * {
+  pointer-events: auto; /* restore for real controls */
+}
+
+.site-header button,
+.site-header a {
+  position: relative;
+  z-index: 2;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 /* Defensive: interactive content must always stay fully opaque & clickable */
@@ -216,16 +241,14 @@ main a,
 main button,
 main [role='button'],
 main [role='link'],
-header a,
-header button,
+.site-header a,
+.site-header button,
 .card-surface,
 .btn-primary,
 .btn-ghost,
 .btn-soft {
   opacity: 1 !important;
-  pointer-events: auto;
-  position: relative;
-  z-index: 1;
+  pointer-events: auto !important;
   -webkit-tap-highlight-color: rgba(212, 175, 55, 0.25);
   touch-action: manipulation;
 }
@@ -239,11 +262,18 @@ header button,
   pointer-events: none !important;
 }
 
-/* Hero media layers: keep below content and non-interactive */
-section[aria-label*='Hero'] > img,
-section[aria-label*='Hero'] > .noise-overlay,
-section[aria-label*='Hero'] > div.pointer-events-none {
-  pointer-events: none !important;
+/* Entire hero media stack is non-interactive; only content column receives taps */
+section[aria-label*='Hero'] {
+  pointer-events: none;
+}
+
+section[aria-label*='Hero'] a,
+section[aria-label*='Hero'] button,
+section[aria-label*='Hero'] [role='button'],
+section[aria-label*='Hero'] [role='link'],
+section[aria-label*='Hero'] [role='status'],
+section[aria-label*='Hero'] .relative.z-20 {
+  pointer-events: auto !important;
 }
 
 /* Comfortable mobile/tablet tap targets */
@@ -254,9 +284,9 @@ section[aria-label*='Hero'] > div.pointer-events-none {
     min-height: 44px;
   }
 
-  header button,
-  header a {
-    min-height: 40px;
+  .site-header button {
+    min-width: 44px;
+    min-height: 44px;
   }
 }
 

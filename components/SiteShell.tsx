@@ -22,8 +22,10 @@ export default function SiteShell({
   return (
     <>
       <SiteBackground />
+      {/* Nav MUST stay outside .site-content isolation so fixed header
+          is never trapped under main/hero stacking contexts on mobile. */}
+      <Nav whatsapp={whatsapp} />
       <div className="site-content">
-        <Nav whatsapp={whatsapp} />
         <main className="flex-1">{children}</main>
         <Footer />
       </div>
