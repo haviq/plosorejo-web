@@ -240,55 +240,55 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
             </a>
           </div>
 
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-2 relative z-[60]">
             <ThemeToggle />
             <button
-            className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
-            aria-expanded={mobileOpen}
-            style={{ border: '1px solid var(--border)', background: 'var(--surface-soft)' }}
-          >
-            <span
-              className="block w-5 h-0.5 transition-all duration-300 origin-center"
-              style={{
-                backgroundColor: 'var(--text)',
-                transform: mobileOpen ? 'rotate(45deg) translate(0, 8px)' : 'none',
-              }}
-            />
-            <span
-              className="block w-5 h-0.5 transition-all duration-300"
-              style={{
-                backgroundColor: 'var(--text)',
-                opacity: mobileOpen ? 0 : 1,
-              }}
-            />
-            <span
-              className="block w-5 h-0.5 transition-all duration-300 origin-center"
-              style={{
-                backgroundColor: 'var(--text)',
-                transform: mobileOpen ? 'rotate(-45deg) translate(0, -8px)' : 'none',
-              }}
-            />
-          </button>
+              type="button"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-1.5 rounded-lg touch-manipulation"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav-panel"
+              style={{ border: '1px solid var(--border)', background: 'var(--surface-soft)' }}
+            >
+              <span
+                className="block w-5 h-0.5 transition-all duration-300 origin-center pointer-events-none"
+                style={{
+                  backgroundColor: 'var(--text)',
+                  transform: mobileOpen ? 'rotate(45deg) translate(0, 8px)' : 'none',
+                }}
+              />
+              <span
+                className="block w-5 h-0.5 transition-all duration-300 pointer-events-none"
+                style={{
+                  backgroundColor: 'var(--text)',
+                  opacity: mobileOpen ? 0 : 1,
+                }}
+              />
+              <span
+                className="block w-5 h-0.5 transition-all duration-300 origin-center pointer-events-none"
+                style={{
+                  backgroundColor: 'var(--text)',
+                  transform: mobileOpen ? 'rotate(-45deg) translate(0, -8px)' : 'none',
+                }}
+              />
+            </button>
           </div>
         </div>
       </header>
 
+      {/* IMPORTANT: only mount fullscreen overlay when open.
+          Hidden opacity overlays still steal taps on some Android WebViews. */}
+      {mobileOpen && (
       <div
-        className="fixed inset-0 z-40 flex flex-col lg:hidden transition-all duration-300"
-        style={{
-          background: 'var(--overlay-scrim)',
-          opacity: mobileOpen ? 1 : 0,
-          // When closed: fully remove from hit-testing (opacity alone still blocked clicks on some Android WebViews)
-          pointerEvents: mobileOpen ? 'auto' : 'none',
-          visibility: mobileOpen ? 'visible' : 'hidden',
-          transform: mobileOpen ? 'translateY(0)' : 'translateY(-8px)',
-        }}
-        aria-hidden={!mobileOpen}
-        inert={!mobileOpen ? true : undefined}
+        id="mobile-nav-panel"
+        className="fixed inset-0 z-40 flex flex-col lg:hidden"
+        style={{ background: 'var(--overlay-scrim)' }}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu navigasi"
       >
-        <div className="pt-24 px-6 pb-8 flex-1 overflow-y-auto">
+        <div className="pt-24 px-6 pb-8 flex-1 overflow-y-auto overscroll-contain">
           <p className="section-label mb-4">Menu</p>
           <div className="space-y-2 mb-8">
             {navLinks.map(({ href, label }) => (
@@ -296,7 +296,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                 key={href}
                 href={href}
                 onClick={closeMenus}
-                className="block text-2xl font-semibold py-2"
+                className="block text-2xl font-semibold py-3 min-h-[48px] touch-manipulation"
                 style={{
                   fontFamily: 'var(--font-playfair), Georgia, serif',
                   color: isActive(href) ? 'var(--gold)' : 'var(--text)',
@@ -316,7 +316,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                 key={href}
                 href={href}
                 onClick={closeMenus}
-                className="text-sm py-2.5 px-3 rounded-xl text-center transition-colors flex items-center justify-center gap-2"
+                className="text-sm py-3 px-3 min-h-[44px] rounded-xl text-center transition-colors flex items-center justify-center gap-2 touch-manipulation"
                 style={{
                   color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
                   border: '1px solid var(--border)',
@@ -332,7 +332,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
+            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary touch-manipulation">
               Direktori UMKM
             </Link>
             <a
@@ -340,11 +340,11 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={closeMenus}
-              className="btn-ghost"
+              className="btn-ghost touch-manipulation"
             >
               WhatsApp
             </a>
-            <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
+            <Link href="/kontak" onClick={closeMenus} className="btn-ghost touch-manipulation">
               Kontak
             </Link>
           </div>
@@ -356,6 +356,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
           </p>
         </div>
       </div>
+      )}
     </>
   )
 }

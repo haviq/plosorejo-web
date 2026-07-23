@@ -21,7 +21,7 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
             key={album.id}
             type="button"
             onClick={() => setActive(album)}
-            className="card-surface overflow-hidden flex flex-col text-left"
+            className="card-surface overflow-hidden flex flex-col text-left touch-manipulation"
             aria-label={`Buka album: ${album.judul}`}
           >
             <div

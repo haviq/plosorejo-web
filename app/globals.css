@@ -216,18 +216,48 @@ main a,
 main button,
 main [role='button'],
 main [role='link'],
+header a,
+header button,
 .card-surface,
 .btn-primary,
 .btn-ghost,
 .btn-soft {
   opacity: 1 !important;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.25);
+  touch-action: manipulation;
 }
 
 /* Decorative layers never intercept taps */
 .site-bg,
+.site-bg *,
 .noise-overlay,
-.scroll-indicator {
+.scroll-indicator,
+[aria-hidden='true'].pointer-events-none {
   pointer-events: none !important;
+}
+
+/* Hero media layers: keep below content and non-interactive */
+section[aria-label*='Hero'] > img,
+section[aria-label*='Hero'] > .noise-overlay,
+section[aria-label*='Hero'] > div.pointer-events-none {
+  pointer-events: none !important;
+}
+
+/* Comfortable mobile/tablet tap targets */
+@media (max-width: 1024px) {
+  .btn-primary,
+  .btn-ghost,
+  .btn-soft {
+    min-height: 44px;
+  }
+
+  header button,
+  header a {
+    min-height: 40px;
+  }
 }
 
 *:focus-visible {

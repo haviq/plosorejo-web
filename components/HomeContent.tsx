@@ -100,7 +100,7 @@ export default function HomeContent({
                 />
                 <div className="noise-overlay pointer-events-none" style={{ zIndex: 2 }} />
 
-                <div className="relative z-10 on-dark w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
+                <div className="relative z-20 on-dark w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
                     <div className="text-center lg:text-left">
                         <div>
                             <div
@@ -149,14 +149,14 @@ export default function HomeContent({
                         </div>
 
                         <div>
-                            <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
-                                <Link href="/profil" className="btn-primary">
+                            <div className="relative z-20 flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
+                                <Link href="/profil" className="btn-primary touch-manipulation">
                                     Jelajahi Padukuhan
                                 </Link>
-                                <Link href="/peta" className="btn-ghost">
+                                <Link href="/peta" className="btn-ghost touch-manipulation">
                                     Lihat Peta
                                 </Link>
-                                <Link href="/sektor/umkm" className="btn-ghost">
+                                <Link href="/sektor/umkm" className="btn-ghost touch-manipulation">
                                     Direktori UMKM
                                 </Link>
                             </div>

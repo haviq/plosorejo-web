@@ -4,6 +4,9 @@ import beritaData from '@/content/berita.json'
 import sektorData from '@/content/sektor.json'
 import umkmData from '@/content/umkm.json'
 
+// Homepage includes Merapi live widget — refresh every 15 minutes
+export const revalidate = 900
+
 export const metadata: Metadata = {
   title: 'Beranda',
   description:

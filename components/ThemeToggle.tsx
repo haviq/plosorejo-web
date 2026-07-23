@@ -38,7 +38,7 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
     <button
       type="button"
       onClick={toggle}
-      className={`w-10 h-10 rounded-xl inline-flex items-center justify-center cursor-pointer transition-colors ${className}`}
+      className={`w-11 h-11 min-w-[44px] min-h-[44px] rounded-xl inline-flex items-center justify-center cursor-pointer transition-colors touch-manipulation ${className}`}
       style={{
         border: '1px solid var(--border)',
         background: 'var(--surface-soft)',
