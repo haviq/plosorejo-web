@@ -402,8 +402,24 @@ const markers = (poiData as { lat: number; lng: number; label: string; type: str
 
 export default function LeafletMap() {
   useEffect(() => {
-    fixLeafletIcons()
+    try {
+      fixLeafletIcons()
+    } catch {
+      // ignore icon path fix failures — divIcon markers still work
+    }
   }, [])
+
+  // Avoid rendering until we have a real browser window (extra guard for edge WebViews)
+  if (typeof window === 'undefined') {
+    return (
+      <div
+        className="w-full rounded-xl flex items-center justify-center text-sm"
+        style={{ height: 480, backgroundColor: 'var(--s2)', border: '1px solid var(--border)', color: 'var(--muted)' }}
+      >
+        Memuat peta…
+      </div>
+    )
+  }
 
   return (
     <MapContainer
@@ -416,18 +432,18 @@ export default function LeafletMap() {
         borderRadius: '0.75rem',
         border: '1px solid var(--border)',
         zIndex: 0,
+        background: '#1a1a1a',
       }}
       zoomControl={false}
       attributionControl={false}
-      preferCanvas={false}
       scrollWheelZoom
-      tapTolerance={15}
     >
       <MapResizeFix />
       <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        // Carto Voyager — often more reliable than OSM tile CDN on mobile networks
+        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         maxZoom={19}
-        detectRetina
+        subdomains="abcd"
       />
       <ZoomControl position="bottomright" />
 
