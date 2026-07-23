@@ -8,6 +8,12 @@ export default async function MerapiStatusServer() {
       level={status.level}
       deskripsi={status.deskripsi}
       updatedAt={status.updatedAt}
+      source={status.source}
+      sourceLabel={status.sourceLabel}
+      reportUrl={status.reportUrl}
+      officialUrl={status.officialUrl}
+      roman={status.roman}
+      note={status.note}
     />
   )
 }

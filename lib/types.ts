@@ -143,6 +143,15 @@ export interface PoiItem {
 
 export interface MerapiStatusData {
   level: 'Normal' | 'Waspada' | 'Siaga' | 'Awas'
+  roman?: 'I' | 'II' | 'III' | 'IV'
   deskripsi?: string
   updatedAt?: string
+  source?: 'magma' | 'sanity' | 'fallback'
+  sourceLabel?: string
+  reportUrl?: string
+  officialUrl?: string
+  mountain?: string
+  fetchedAt?: string
+  rawLevelLabel?: string
+  note?: string
 }

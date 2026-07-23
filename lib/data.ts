@@ -21,6 +21,10 @@ import {
   kknArsipQuery,
   produksiSusuRecentQuery,
 } from '@/sanity/lib/queries'
+import {
+  fallbackMerapiStatus,
+  fetchMerapiFromMagma,
+} from '@/lib/merapi'
 import type {
   BeritaItem,
   UMKMItem,
@@ -263,14 +267,60 @@ export async function getSektorMap(): Promise<Record<string, SektorData>> {
   return sektorJson as Record<string, SektorData>
 }
 
+type SanityMerapi = {
+  level?: MerapiStatusData['level']
+  deskripsi?: string
+  updatedAt?: string
+  manualOverride?: boolean
+}
+
+/**
+ * Hybrid Merapi status:
+ * - Sanity manualOverride=true → pakai level CMS
+ * - else → fetch MAGMA ESDM auto
+ * - deskripsi CMS (catatan lokal) selalu bisa menempel di data auto
+ */
 export async function getMerapiStatus(): Promise<MerapiStatusData> {
-  const data = await sanityFetch<MerapiStatusData | null>(merapiStatusQuery)
-  if (data?.level) return data
-  return {
-    level: 'Normal',
-    deskripsi: 'Aktivitas vulkanik dalam batas normal',
-    updatedAt: new Date().toISOString(),
+  const cms = await sanityFetch<SanityMerapi | null>(merapiStatusQuery)
+
+  // Manual override from Studio
+  if (cms?.manualOverride && cms.level) {
+    return {
+      level: cms.level,
+      deskripsi: cms.deskripsi || undefined,
+      updatedAt: cms.updatedAt || new Date().toISOString(),
+      source: 'sanity',
+      sourceLabel: 'Override admin (Sanity)',
+      officialUrl: 'https://magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas',
+      mountain: 'Gunung Merapi',
+      note: 'Mode manual aktif di CMS',
+    }
   }
+
+  const live = await fetchMerapiFromMagma()
+  if (live) {
+    return {
+      ...live,
+      // local note from CMS if any
+      deskripsi: cms?.deskripsi?.trim() ? cms.deskripsi : live.deskripsi,
+      note: cms?.deskripsi?.trim() ? 'Level dari MAGMA · catatan lokal dari admin' : undefined,
+    }
+  }
+
+  // fallback
+  const fb = fallbackMerapiStatus('MAGMA tidak terjangkau')
+  if (cms?.level) {
+    return {
+      level: cms.level,
+      deskripsi: cms.deskripsi || fb.deskripsi,
+      updatedAt: cms.updatedAt || fb.updatedAt,
+      source: 'sanity',
+      sourceLabel: 'Cadangan CMS (MAGMA gagal)',
+      officialUrl: fb.officialUrl,
+      mountain: 'Gunung Merapi',
+    }
+  }
+  return fb
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {

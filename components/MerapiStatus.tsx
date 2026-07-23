@@ -1,36 +1,18 @@
 'use client'
 
 import Icon from '@/components/Icon'
-
-type Level = 'Normal' | 'Waspada' | 'Siaga' | 'Awas'
-
-const levelConfig: Record<Level, { color: string; bg: string; desc: string }> = {
-  Normal: {
-    color: 'var(--gold)',
-    bg: 'rgba(212,175,55,0.08)',
-    desc: 'Aktivitas vulkanik dalam batas normal',
-  },
-  Waspada: {
-    color: 'var(--gold)',
-    bg: 'rgba(212,175,55,0.1)',
-    desc: 'Peningkatan aktivitas vulkanik, waspada',
-  },
-  Siaga: {
-    color: 'var(--gold)',
-    bg: 'rgba(212,175,55,0.12)',
-    desc: 'Aktivitas tinggi, siaga evakuasi',
-  },
-  Awas: {
-    color: 'var(--gold)',
-    bg: 'rgba(212,175,55,0.14)',
-    desc: 'Bahaya tinggi — evakuasi segera',
-  },
-}
+import { levelColor, type MerapiLevel } from '@/lib/merapi'
 
 interface MerapiStatusProps {
-  level?: Level
+  level?: MerapiLevel
   deskripsi?: string
   updatedAt?: string
+  source?: 'magma' | 'sanity' | 'fallback'
+  sourceLabel?: string
+  reportUrl?: string
+  officialUrl?: string
+  roman?: 'I' | 'II' | 'III' | 'IV'
+  note?: string
 }
 
 /** Static card — no framer opacity (mobile reliability). */
@@ -38,25 +20,39 @@ export default function MerapiStatus({
   level = 'Normal',
   deskripsi,
   updatedAt,
+  source = 'fallback',
+  sourceLabel,
+  reportUrl,
+  officialUrl = 'https://magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas',
+  roman,
+  note,
 }: MerapiStatusProps) {
-  const cfg = levelConfig[level] || levelConfig.Normal
-  const desc = deskripsi || cfg.desc
+  const cfg = levelColor(level)
   const lastUpdate = updatedAt
-    ? new Date(updatedAt).toLocaleDateString('id-ID', {
+    ? new Date(updatedAt).toLocaleString('id-ID', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+        timeZone: 'Asia/Jakarta',
       })
     : ''
+
+  const sourceText =
+    sourceLabel ||
+    (source === 'magma'
+      ? 'MAGMA ESDM (otomatis)'
+      : source === 'sanity'
+        ? 'Admin CMS'
+        : 'Data cadangan')
 
   return (
     <div
       className="rounded-2xl border p-4 flex items-center gap-4 shadow-lg"
       style={{
         backgroundColor: cfg.bg,
-        borderColor: 'var(--border)',
+        borderColor: cfg.border,
         backdropFilter: 'blur(16px)',
         boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
       }}
@@ -67,7 +63,7 @@ export default function MerapiStatus({
         className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
         style={{
           background: 'var(--surface-soft)',
-          border: '1px solid var(--border)',
+          border: `1px solid ${cfg.border}`,
           color: cfg.color,
         }}
         aria-hidden="true"
@@ -88,21 +84,53 @@ export default function MerapiStatus({
             style={{
               color: cfg.color,
               backgroundColor: cfg.bg,
-              border: `1px solid ${cfg.color}33`,
+              border: `1px solid ${cfg.border}`,
             }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-current pulse-dot" aria-hidden="true" />
             {level}
+            {roman ? ` · ${roman}` : ''}
           </span>
         </div>
-        <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
-          {desc}
+
+        <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--muted)' }}>
+          {deskripsi || 'Memuat status aktivitas…'}
         </p>
-        {lastUpdate && (
-          <p className="text-xs mt-1" style={{ color: 'var(--muted2)' }}>
-            Diperbarui: {lastUpdate}
+
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
+          <p className="text-[11px]" style={{ color: 'var(--muted2)' }}>
+            Sumber: {sourceText}
+            {lastUpdate ? ` · ${lastUpdate} WIB` : ''}
           </p>
-        )}
+          {note && (
+            <p className="text-[11px]" style={{ color: 'var(--muted2)' }}>
+              {note}
+            </p>
+          )}
+        </div>
+
+        <div className="flex flex-wrap gap-2 mt-2">
+          {reportUrl && (
+            <a
+              href={reportUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] font-semibold underline-offset-2 hover:underline"
+              style={{ color: cfg.color }}
+            >
+              Laporan MAGMA →
+            </a>
+          )}
+          <a
+            href={officialUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] font-semibold underline-offset-2 hover:underline"
+            style={{ color: 'var(--muted)' }}
+          >
+            Cek sumber resmi
+          </a>
+        </div>
       </div>
     </div>
   )

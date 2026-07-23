@@ -129,7 +129,8 @@ const quickAccess = [
   },
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
+  // Force dynamic-ish refresh for Merapi widget path via nested server component fetch
   const latestBerita = beritaData.slice(0, 3)
   const featuredUmkm = umkmData.filter((u) => u.aktif).slice(0, 4)
 

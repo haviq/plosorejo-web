@@ -6,8 +6,16 @@ export const merapiStatus = defineType({
   type: 'document',
   fields: [
     defineField({
+      name: 'manualOverride',
+      title: 'Pakai data manual (override MAGMA)',
+      type: 'boolean',
+      description:
+        'Kalau aktif, website menampilkan level manual di bawah — bukan auto MAGMA. Matikan untuk kembali otomatis.',
+      initialValue: false,
+    }),
+    defineField({
       name: 'level',
-      title: 'Level',
+      title: 'Level (manual)',
       type: 'string',
       options: {
         list: [
@@ -20,29 +28,34 @@ export const merapiStatus = defineType({
       },
       validation: (r) => r.required(),
       initialValue: 'Normal',
+      hidden: ({ document }) => !document?.manualOverride,
     }),
     defineField({
       name: 'deskripsi',
-      title: 'Deskripsi',
+      title: 'Catatan / deskripsi',
       type: 'text',
-      rows: 2,
+      rows: 3,
+      description:
+        'Catatan lokal untuk warga (jalur evakuasi, imbauan dukuh, dll). Ditampilkan meski sumber MAGMA otomatis.',
     }),
     defineField({
       name: 'updatedAt',
-      title: 'Diperbarui',
+      title: 'Diperbarui (manual)',
       type: 'datetime',
       initialValue: () => new Date().toISOString(),
+      hidden: ({ document }) => !document?.manualOverride,
     }),
   ],
   preview: {
     select: {
       title: 'level',
       subtitle: 'updatedAt',
+      manual: 'manualOverride',
     },
-    prepare({ title, subtitle }) {
+    prepare({ title, subtitle, manual }) {
       return {
-        title: `🌋 ${title || 'Normal'}`,
-        subtitle: subtitle ? new Date(subtitle).toLocaleString('id-ID') : '',
+        title: `🌋 ${title || 'Auto MAGMA'}${manual ? ' (manual)' : ' (auto)'}`,
+        subtitle: subtitle ? new Date(subtitle).toLocaleString('id-ID') : 'Sumber MAGMA ESDM',
       }
     },
   },

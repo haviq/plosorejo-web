@@ -60,7 +60,8 @@ export const sektorListQuery = `*[_type == "sektor"] {
 export const merapiStatusQuery = `*[_type == "merapiStatus"] | order(updatedAt desc)[0] {
   level,
   deskripsi,
-  updatedAt
+  updatedAt,
+  manualOverride
 }`
 
 export const siteSettingsQuery = `*[_type == "siteSettings"][0] {
