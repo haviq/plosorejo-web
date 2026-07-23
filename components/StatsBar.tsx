@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import StatCounter from '@/components/StatCounter'
 import { fadeUp, staggerContainer } from '@/components/motion'
 
@@ -13,6 +13,7 @@ const stats = [
 ]
 
 export default function StatsBar() {
+  const reduce = useReducedMotion()
   return (
     <div
       className="w-full py-12 px-6 relative overflow-hidden"
@@ -25,7 +26,7 @@ export default function StatsBar() {
       aria-label="Statistik padukuhan"
     >
       <div
-        className="absolute inset-0 opacity-40"
+        className="absolute inset-0 opacity-40 pointer-events-none"
         style={{
           background:
             'radial-gradient(ellipse at center, rgba(212,175,55,0.08), transparent 65%)',
@@ -36,9 +37,9 @@ export default function StatsBar() {
       <div className="max-w-5xl mx-auto relative">
         <motion.div
           className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-0"
-          initial="hidden"
+          initial={reduce ? false : 'hidden'}
           whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.05, margin: '80px 0px' }}
           variants={staggerContainer}
         >
           {stats.map((stat, i) => (

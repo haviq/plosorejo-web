@@ -275,10 +275,13 @@ export default function Nav() {
         style={{
           background: 'var(--overlay-scrim)',
           opacity: mobileOpen ? 1 : 0,
+          // When closed: fully remove from hit-testing (opacity alone still blocked clicks on some Android WebViews)
           pointerEvents: mobileOpen ? 'auto' : 'none',
+          visibility: mobileOpen ? 'visible' : 'hidden',
           transform: mobileOpen ? 'translateY(0)' : 'translateY(-8px)',
         }}
         aria-hidden={!mobileOpen}
+        inert={!mobileOpen ? true : undefined}
       >
         <div className="pt-24 px-6 pb-8 flex-1 overflow-y-auto">
           <p className="section-label mb-4">Menu</p>

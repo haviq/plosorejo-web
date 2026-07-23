@@ -9,7 +9,7 @@ interface StatCounterProps {
 
 /**
  * Animated numeric counter — counts up from 0 to `value` when it enters the viewport.
- * Non-numeric suffixes (e.g. " Jiwa", " RT") are preserved and appended after the number.
+ * Falls back to the final value if the observer never fires (common on some mobile WebViews).
  */
 export default function StatCounter({ value, label }: StatCounterProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -22,42 +22,74 @@ export default function StatCounter({ value, label }: StatCounterProps) {
   const target = parseFloat(numericRaw)
   const isFloat = numericRaw.includes('.')
 
+  const formatFinal = () => {
+    if (Number.isNaN(target)) return value
+    if (isFloat) return target.toFixed(1).replace('.', ',')
+    return Math.round(target).toLocaleString('id-ID')
+  }
+
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || hasAnimated) return
+
+    let raf = 0
+    let done = false
+
+    const run = () => {
+      if (done) return
+      done = true
+      setHasAnimated(true)
+      const duration = 1200
+      const start = performance.now()
+
+      const tick = (now: number) => {
+        const progress = Math.min((now - start) / duration, 1)
+        const eased = 1 - Math.pow(1 - progress, 3)
+        const current = eased * target
+
+        if (isFloat) {
+          setDisplayed(current.toFixed(1).replace('.', ','))
+        } else {
+          setDisplayed(Math.round(current).toLocaleString('id-ID'))
+        }
+
+        if (progress < 1) {
+          raf = requestAnimationFrame(tick)
+        } else {
+          setDisplayed(formatFinal())
+        }
+      }
+
+      raf = requestAnimationFrame(tick)
+    }
+
+    // Fallback: always show final value if observer never triggers
+    const fallback = window.setTimeout(() => {
+      if (!done) {
+        setHasAnimated(true)
+        setDisplayed(formatFinal())
+      }
+    }, 1800)
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true)
-          const duration = 1400
-          const start = performance.now()
-
-          const tick = (now: number) => {
-            const elapsed = now - start
-            const progress = Math.min(elapsed / duration, 1)
-            const eased = 1 - Math.pow(1 - progress, 3)
-            const current = eased * target
-
-            if (isFloat) {
-              setDisplayed(current.toFixed(1).replace('.', ','))
-            } else {
-              const rounded = Math.round(current)
-              setDisplayed(rounded.toLocaleString('id-ID'))
-            }
-
-            if (progress < 1) requestAnimationFrame(tick)
-          }
-
-          requestAnimationFrame(tick)
+        if (entry.isIntersecting) {
+          run()
+          observer.disconnect()
+          window.clearTimeout(fallback)
         }
       },
-      { threshold: 0.3 },
+      { threshold: 0.05, rootMargin: '60px 0px' },
     )
 
     observer.observe(el)
-    return () => observer.disconnect()
-  }, [target, isFloat, hasAnimated])
+    return () => {
+      observer.disconnect()
+      window.clearTimeout(fallback)
+      if (raf) cancelAnimationFrame(raf)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [target, isFloat, hasAnimated, value])
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-1.5 text-center">

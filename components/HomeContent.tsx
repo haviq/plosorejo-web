@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import SektorCard from '@/components/SektorCard'
 import BeritaCard from '@/components/BeritaCard'
 import MerapiStatusServer from '@/components/MerapiStatusServer'
@@ -70,6 +70,11 @@ export default function HomeContent({
     latestBerita,
     featuredUmkm,
 }: HomeContentProps) {
+    const reduceMotion = useReducedMotion()
+    const enter = reduceMotion ? false : 'hidden'
+    const show = 'visible'
+    const softViewport = { once: true, amount: 0.05 as const, margin: '80px 0px' as const }
+
     return (
         <div>
             {/* ─── HERO ──────────────────────────────────────────────────────── */}
@@ -107,8 +112,8 @@ export default function HomeContent({
                 <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
                     <motion.div
                         className="text-center lg:text-left"
-                        initial="hidden"
-                        animate="visible"
+                        initial={enter}
+                        animate={show}
                         variants={staggerContainer}
                     >
                         <motion.div variants={fadeUp}>
@@ -197,7 +202,7 @@ export default function HomeContent({
 
                     <motion.div
                         className="w-full max-w-md mx-auto lg:max-w-none lg:ml-auto space-y-4"
-                        initial={{ opacity: 0, x: 24 }}
+                        initial={reduceMotion ? false : { opacity: 0.25, x: 16 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.65, delay: 0.15, ease: easeOut }}
                     >
@@ -305,9 +310,9 @@ export default function HomeContent({
                 <div className="max-w-7xl mx-auto">
                     <motion.div
                         className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={fadeUp}
                     >
                         <div>
@@ -327,9 +332,9 @@ export default function HomeContent({
 
                     <motion.div
                         className="grid grid-cols-1 md:grid-cols-2 gap-5 auto-rows-[280px] md:auto-rows-[240px]"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.15 }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={staggerContainer}
                     >
                         {potensiCards.map((card) => (
@@ -387,9 +392,9 @@ export default function HomeContent({
             <section className="px-6 pb-8" aria-label="Akses cepat">
                 <motion.div
                     className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.2 }}
+                    initial={enter}
+                    whileInView={show}
+                    viewport={softViewport}
                     variants={staggerContainer}
                 >
                     {quickAccess.map((item) => (
@@ -428,9 +433,9 @@ export default function HomeContent({
                 <div className="max-w-7xl mx-auto">
                     <motion.div
                         className="mb-12"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={fadeUp}
                     >
                         <p className="section-label mb-3">Sektor Padukuhan</p>
@@ -445,9 +450,9 @@ export default function HomeContent({
 
                     <motion.div
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.1 }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={staggerContainer}
                     >
                         {sektorCards.map((card) => (
@@ -462,9 +467,9 @@ export default function HomeContent({
                 <div className="max-w-7xl mx-auto">
                     <motion.div
                         className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={fadeUp}
                     >
                         <div>
@@ -480,9 +485,9 @@ export default function HomeContent({
 
                     <motion.div
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.15 }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={staggerContainer}
                     >
                         {featuredUmkm.map((umkm) => (
@@ -539,9 +544,9 @@ export default function HomeContent({
                 <div className="max-w-7xl mx-auto">
                     <motion.div
                         className="flex items-end justify-between gap-6 mb-12"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={fadeUp}
                     >
                         <div>
@@ -561,9 +566,9 @@ export default function HomeContent({
 
                     <motion.div
                         className="grid grid-cols-1 md:grid-cols-3 gap-5"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.15 }}
+                        initial={enter}
+                        whileInView={show}
+                        viewport={softViewport}
                         variants={staggerContainer}
                     >
                         {latestBerita.map((item) => (
@@ -584,9 +589,9 @@ export default function HomeContent({
             <section className="py-24 px-6" aria-labelledby="cta-heading">
                 <motion.div
                     className="max-w-4xl mx-auto text-center surface-panel px-6 py-14 md:px-12 relative overflow-hidden"
-                    initial={{ opacity: 0, y: 24 }}
+                    initial={reduceMotion ? false : { opacity: 0.25, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.3 }}
+                    viewport={softViewport}
                     transition={{ duration: 0.55, ease: easeOut }}
                 >
                     <div

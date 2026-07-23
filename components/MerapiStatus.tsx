@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Icon from '@/components/Icon'
 
 type Level = 'Normal' | 'Waspada' | 'Siaga' | 'Awas'
@@ -39,23 +39,24 @@ export default function MerapiStatus({
   deskripsi,
   updatedAt,
 }: MerapiStatusProps) {
+  const reduce = useReducedMotion()
   const cfg = levelConfig[level] || levelConfig.Normal
   const desc = deskripsi || cfg.desc
   const lastUpdate = updatedAt
     ? new Date(updatedAt).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     : ''
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={reduce ? false : { opacity: 0.25, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
     >
       <div
         className="rounded-2xl border p-4 flex items-center gap-4 shadow-lg"

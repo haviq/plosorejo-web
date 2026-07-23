@@ -183,6 +183,14 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  isolation: isolate;
+}
+
+/* Defensive: never leave interactive content fully invisible if animation fails */
+main a,
+main button,
+main [role='button'] {
+  opacity: 1;
 }
 
 *:focus-visible {

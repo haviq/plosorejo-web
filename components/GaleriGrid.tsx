@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { GaleriAlbum } from '@/lib/types'
 import Icon from '@/components/Icon'
 import { fadeUp, staggerContainer } from '@/components/motion'
@@ -12,15 +12,16 @@ interface GaleriGridProps {
 
 export default function GaleriGrid({ albums }: GaleriGridProps) {
   const [active, setActive] = useState<GaleriAlbum | null>(null)
+  const reduce = useReducedMotion()
   const accent = 'var(--gold)'
 
   return (
     <>
       <motion.div
         className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
-        initial="hidden"
+        initial={reduce ? false : 'hidden'}
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        viewport={{ once: true, amount: 0.05, margin: '80px 0px' }}
         variants={staggerContainer}
       >
         {albums.map((album) => (
