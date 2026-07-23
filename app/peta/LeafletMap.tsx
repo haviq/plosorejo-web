@@ -10,10 +10,39 @@ import {
   Polygon,
   Polyline,
   Tooltip,
+  useMap,
 } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import poiData from '@/content/poi.json'
+
+/** Fix blank/gray map on mobile when container size settles after mount */
+function MapResizeFix() {
+  const map = useMap()
+  useEffect(() => {
+    const invalidate = () => {
+      try {
+        map.invalidateSize({ animate: false })
+      } catch {
+        // ignore
+      }
+    }
+    invalidate()
+    const t1 = window.setTimeout(invalidate, 100)
+    const t2 = window.setTimeout(invalidate, 400)
+    const t3 = window.setTimeout(invalidate, 1000)
+    window.addEventListener('orientationchange', invalidate)
+    window.addEventListener('resize', invalidate)
+    return () => {
+      window.clearTimeout(t1)
+      window.clearTimeout(t2)
+      window.clearTimeout(t3)
+      window.removeEventListener('orientationchange', invalidate)
+      window.removeEventListener('resize', invalidate)
+    }
+  }, [map])
+  return null
+}
 
 // Fix default marker icon paths broken by webpack bundling
 function fixLeafletIcons() {
@@ -380,11 +409,26 @@ export default function LeafletMap() {
     <MapContainer
       center={CENTER}
       zoom={16}
-      style={{ height: 560, width: '100%', borderRadius: '0.75rem', border: '1px solid var(--border)' }}
+      style={{
+        height: 560,
+        width: '100%',
+        maxWidth: '100%',
+        borderRadius: '0.75rem',
+        border: '1px solid var(--border)',
+        zIndex: 0,
+      }}
       zoomControl={false}
       attributionControl={false}
+      preferCanvas={false}
+      scrollWheelZoom
+      tapTolerance={15}
     >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <MapResizeFix />
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
+        detectRetina
+      />
       <ZoomControl position="bottomright" />
 
       {/* ===== RT zones (hijau berjenjang) ===== */}
