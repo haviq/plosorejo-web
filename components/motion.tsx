@@ -1,5 +1,13 @@
 'use client'
 
+/**
+ * Motion helpers — transform-only animations.
+ *
+ * IMPORTANT: Never animate opacity. On Android Chrome/WebView, framer-motion
+ * can stall on `initial` and leave content invisible + unclickable.
+ * We only slide (y/x). Content is always fully opaque.
+ */
+
 import {
   motion,
   useReducedMotion,
@@ -10,35 +18,28 @@ import type { ReactNode } from 'react'
 
 export const easeOut = [0.22, 1, 0.36, 1] as const
 
-/**
- * Safe fade-up variants.
- * Never fully hide content (opacity:0) — some mobile WebViews / hydration
- * glitches leave framer-motion stuck on `initial`, which made the site look
- * blank (only hero mountain) and blocked clicks on invisible layers.
- */
+/** Slide up — no opacity change */
 export const fadeUp: Variants = {
-  hidden: { opacity: 0.2, y: 18 },
+  hidden: { y: 14 },
   visible: {
-    opacity: 1,
     y: 0,
-    transition: { duration: 0.45, ease: easeOut },
+    transition: { duration: 0.4, ease: easeOut },
   },
 }
 
+/** Alias kept for imports */
 export const fadeIn: Variants = {
-  hidden: { opacity: 0.2 },
+  hidden: {},
   visible: {
-    opacity: 1,
-    transition: { duration: 0.35, ease: easeOut },
+    transition: { duration: 0.3, ease: easeOut },
   },
 }
 
 export const scaleIn: Variants = {
-  hidden: { opacity: 0.35, scale: 0.98 },
+  hidden: { scale: 0.98 },
   visible: {
-    opacity: 1,
     scale: 1,
-    transition: { duration: 0.4, ease: easeOut },
+    transition: { duration: 0.35, ease: easeOut },
   },
 }
 
@@ -46,8 +47,8 @@ export const staggerContainer: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.06,
-      delayChildren: 0.02,
+      staggerChildren: 0.05,
+      delayChildren: 0,
     },
   },
 }
@@ -56,16 +57,15 @@ export const staggerFast: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.04,
+      staggerChildren: 0.03,
       delayChildren: 0,
     },
   },
 }
 
-/** Instant-visible variants for reduced-motion users */
 const reducedFade: Variants = {
-  hidden: { opacity: 1, y: 0 },
-  visible: { opacity: 1, y: 0 },
+  hidden: { y: 0 },
+  visible: { y: 0 },
 }
 
 const reducedStagger: Variants = {
@@ -73,8 +73,11 @@ const reducedStagger: Variants = {
   visible: { transition: { staggerChildren: 0, delayChildren: 0 } },
 }
 
-/** Forgiving viewport — triggers earlier on mobile */
-const defaultViewport = { once: true, amount: 0.05 as const, margin: '80px 0px' as const }
+const defaultViewport = {
+  once: true,
+  amount: 0.01 as const,
+  margin: '120px 0px' as const,
+}
 
 type MotionDivProps = HTMLMotionProps<'div'> & {
   children: ReactNode
@@ -96,7 +99,7 @@ export function MotionDiv({
       whileInView="visible"
       viewport={defaultViewport}
       variants={reduce ? reducedFade : fadeUp}
-      transition={{ delay, duration: reduce ? 0 : 0.45, ease: easeOut }}
+      transition={{ delay, duration: reduce ? 0 : 0.4, ease: easeOut }}
       {...props}
     >
       {children}
@@ -118,7 +121,7 @@ export function MotionSection({
       whileInView="visible"
       viewport={defaultViewport}
       variants={reduce ? reducedFade : fadeUp}
-      transition={{ delay, duration: reduce ? 0 : 0.45, ease: easeOut }}
+      transition={{ delay, duration: reduce ? 0 : 0.4, ease: easeOut }}
       {...props}
     >
       {children}

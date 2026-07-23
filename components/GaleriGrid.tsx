@@ -1,39 +1,28 @@
 'use client'
 
 import { useState } from 'react'
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { GaleriAlbum } from '@/lib/types'
 import Icon from '@/components/Icon'
-import { fadeUp, staggerContainer } from '@/components/motion'
 
 interface GaleriGridProps {
   albums: GaleriAlbum[]
 }
 
+/** Static grid + simple dialog — no framer opacity animations. */
 export default function GaleriGrid({ albums }: GaleriGridProps) {
   const [active, setActive] = useState<GaleriAlbum | null>(null)
-  const reduce = useReducedMotion()
   const accent = 'var(--gold)'
 
   return (
     <>
-      <motion.div
-        className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
-        initial={reduce ? false : 'hidden'}
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.05, margin: '80px 0px' }}
-        variants={staggerContainer}
-      >
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {albums.map((album) => (
-          <motion.button
+          <button
             key={album.id}
             type="button"
             onClick={() => setActive(album)}
             className="card-surface overflow-hidden flex flex-col text-left"
             aria-label={`Buka album: ${album.judul}`}
-            variants={fadeUp}
-            whileHover={{ y: -4 }}
-            transition={{ duration: 0.2 }}
           >
             <div
               className="h-36 flex items-center justify-center"
@@ -64,85 +53,76 @@ export default function GaleriGrid({ albums }: GaleriGridProps) {
                 </span>
               </div>
             </div>
-          </motion.button>
+          </button>
         ))}
-      </motion.div>
+      </div>
 
-      <AnimatePresence>
-        {active && (
-          <motion.div
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80"
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Detail album ${active.judul}`}
-            onClick={() => setActive(null)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+      {active && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Detail album ${active.judul}`}
+          onClick={() => setActive(null)}
+        >
+          <div
+            className="card-surface max-w-lg w-full p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
           >
-            <motion.div
-              className="card-surface max-w-lg w-full p-6 space-y-4"
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.98 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span
-                    className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: 'rgba(212,175,55,0.12)', color: accent }}
-                  >
-                    <Icon name={active.icon || active.emoji || 'galeri'} size={24} />
-                  </span>
-                  <div>
-                    <h3 className="font-bold text-lg" style={{ color: 'var(--text)' }}>
-                      {active.judul}
-                    </h3>
-                    <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                      {active.tanggal}
-                    </p>
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setActive(null)}
-                  className="text-sm px-3 py-1.5 rounded-lg border"
-                  style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <span
+                  className="w-12 h-12 rounded-xl flex items-center justify-center"
+                  style={{ backgroundColor: 'rgba(212,175,55,0.12)', color: accent }}
                 >
-                  Tutup
-                </button>
+                  <Icon name={active.icon || active.emoji || 'galeri'} size={24} />
+                </span>
+                <div>
+                  <h3 className="font-bold text-lg" style={{ color: 'var(--text)' }}>
+                    {active.judul}
+                  </h3>
+                  <p className="text-xs" style={{ color: 'var(--muted)' }}>
+                    {active.tanggal}
+                  </p>
+                </div>
               </div>
+              <button
+                type="button"
+                onClick={() => setActive(null)}
+                className="text-sm px-3 py-1.5 rounded-lg border"
+                style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+              >
+                Tutup
+              </button>
+            </div>
 
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-                {active.deskripsi}
-              </p>
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+              {active.deskripsi}
+            </p>
 
-              <div className="grid grid-cols-3 gap-2">
-                {Array.from({ length: Math.min(active.count, 6) }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="aspect-square rounded-xl flex items-center justify-center"
-                    style={{
-                      backgroundColor: 'rgba(212,175,55,0.1)',
-                      border: '1px solid var(--border)',
-                      color: accent,
-                    }}
-                  >
-                    <Icon name={active.icon || active.emoji || 'galeri'} size={22} />
-                  </div>
-                ))}
-              </div>
+            <div className="grid grid-cols-3 gap-2">
+              {Array.from({ length: Math.min(active.count, 6) }).map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-square rounded-xl flex items-center justify-center"
+                  style={{
+                    backgroundColor: 'rgba(212,175,55,0.1)',
+                    border: '1px solid var(--border)',
+                    color: accent,
+                  }}
+                >
+                  <Icon name={active.icon || active.emoji || 'galeri'} size={22} />
+                </div>
+              ))}
+            </div>
 
-              <div className="flex items-center justify-between text-xs" style={{ color: 'var(--muted)' }}>
-                <span>{active.tanggal}</span>
-                <span style={{ color: accent }}>{active.count} foto dokumentasi</span>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <div className="flex items-center justify-between text-xs" style={{ color: 'var(--muted)' }}>
+              <span>{active.tanggal}</span>
+              <span style={{ color: accent }}>{active.count} foto dokumentasi</span>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

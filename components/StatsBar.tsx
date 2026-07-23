@@ -1,8 +1,6 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
 import StatCounter from '@/components/StatCounter'
-import { fadeUp, staggerContainer } from '@/components/motion'
 
 const stats = [
   { value: '658', label: 'Jiwa' },
@@ -12,8 +10,8 @@ const stats = [
   { value: '3', label: 'Destinasi Wisata' },
 ]
 
+/** No framer-motion here — pure static grid for max mobile reliability. */
 export default function StatsBar() {
-  const reduce = useReducedMotion()
   return (
     <div
       className="w-full py-12 px-6 relative overflow-hidden"
@@ -35,15 +33,9 @@ export default function StatsBar() {
       />
 
       <div className="max-w-5xl mx-auto relative">
-        <motion.div
-          className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-0"
-          initial={reduce ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.05, margin: '80px 0px' }}
-          variants={staggerContainer}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-0">
           {stats.map((stat, i) => (
-            <motion.div key={stat.label} className="flex items-center" variants={fadeUp}>
+            <div key={stat.label} className="flex items-center">
               <div className="flex-1">
                 <StatCounter value={stat.value} label={stat.label} />
               </div>
@@ -57,9 +49,9 @@ export default function StatsBar() {
                   aria-hidden="true"
                 />
               )}
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </div>
   )

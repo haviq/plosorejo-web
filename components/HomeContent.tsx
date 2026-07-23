@@ -1,13 +1,9 @@
-'use client'
-
 import Link from 'next/link'
-import { motion, useReducedMotion } from 'framer-motion'
 import SektorCard from '@/components/SektorCard'
 import BeritaCard from '@/components/BeritaCard'
 import MerapiStatusServer from '@/components/MerapiStatusServer'
 import StatsBar from '@/components/StatsBar'
 import Icon from '@/components/Icon'
-import { easeOut, fadeUp, staggerContainer } from '@/components/motion'
 
 type SektorCardData = {
     href: string
@@ -70,11 +66,6 @@ export default function HomeContent({
     latestBerita,
     featuredUmkm,
 }: HomeContentProps) {
-    const reduceMotion = useReducedMotion()
-    const enter = reduceMotion ? false : 'hidden'
-    const show = 'visible'
-    const softViewport = { once: true, amount: 0.05 as const, margin: '80px 0px' as const }
-
     return (
         <div>
             {/* ─── HERO ──────────────────────────────────────────────────────── */}
@@ -86,37 +77,32 @@ export default function HomeContent({
                 <img
                     src="/images/hero-merapi.svg"
                     alt="Pemandangan lereng Gunung Merapi"
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                     style={{ zIndex: 0 }}
                     fetchPriority="high"
                 />
 
                 <div
-                    className="absolute inset-0"
+                    className="absolute inset-0 pointer-events-none"
                     style={{
                         zIndex: 1,
                         background:
-                            'linear-gradient(to bottom, rgba(5,5,5,0.62) 0%, rgba(5,5,5,0.28) 38%, rgba(5,5,5,0.72) 72%, rgba(5,5,5,1) 100%)',
+                            'linear-gradient(to bottom, rgba(5,5,5,0.78) 0%, rgba(5,5,5,0.55) 40%, rgba(5,5,5,0.82) 72%, rgba(5,5,5,1) 100%)',
                     }}
                 />
                 <div
-                    className="absolute inset-0"
+                    className="absolute inset-0 pointer-events-none"
                     style={{
                         zIndex: 2,
                         background:
                             'radial-gradient(ellipse at center, transparent 42%, rgba(5,5,5,0.72) 100%)',
                     }}
                 />
-                <div className="noise-overlay" style={{ zIndex: 2 }} />
+                <div className="noise-overlay pointer-events-none" style={{ zIndex: 2 }} />
 
                 <div className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
-                    <motion.div
-                        className="text-center lg:text-left"
-                        initial={enter}
-                        animate={show}
-                        variants={staggerContainer}
-                    >
-                        <motion.div variants={fadeUp}>
+                    <div className="text-center lg:text-left">
+                        <div>
                             <div
                                 className="inline-flex items-center gap-2 mb-6 px-3 py-1.5 rounded-full"
                                 style={{
@@ -129,13 +115,13 @@ export default function HomeContent({
                                     Cangkringan · Sleman · DIY
                                 </span>
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div variants={fadeUp}>
+                        <div>
                             <p className="section-label mb-4">Padukuhan Digital</p>
-                        </motion.div>
+                        </div>
 
-                        <motion.div variants={fadeUp}>
+                        <div>
                             <h1
                                 className="font-black mb-5"
                                 style={{
@@ -149,9 +135,9 @@ export default function HomeContent({
                                 <br />
                                 <span className="gold-text">Potensi yang Nyata</span>
                             </h1>
-                        </motion.div>
+                        </div>
 
-                        <motion.div variants={fadeUp}>
+                        <div>
                             <p
                                 className="text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed mb-8"
                                 style={{ color: 'var(--muted)' }}
@@ -160,9 +146,9 @@ export default function HomeContent({
                                 dan pariwisata lereng Merapi. Informasi warga, wisatawan, dan
                                 mitra dalam satu tempat.
                             </p>
-                        </motion.div>
+                        </div>
 
-                        <motion.div variants={fadeUp}>
+                        <div>
                             <div className="flex flex-wrap justify-center lg:justify-start gap-3 mb-8">
                                 <Link href="/profil" className="btn-primary">
                                     Jelajahi Padukuhan
@@ -174,9 +160,9 @@ export default function HomeContent({
                                     Direktori UMKM
                                 </Link>
                             </div>
-                        </motion.div>
+                        </div>
 
-                        <motion.div variants={fadeUp}>
+                        <div>
                             <div className="flex flex-wrap justify-center lg:justify-start gap-3">
                                 {[
                                     { label: '658 Jiwa', href: '/profil' },
@@ -197,15 +183,10 @@ export default function HomeContent({
                                     </Link>
                                 ))}
                             </div>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
 
-                    <motion.div
-                        className="w-full max-w-md mx-auto lg:max-w-none lg:ml-auto space-y-4"
-                        initial={reduceMotion ? false : { opacity: 0.25, x: 16 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.65, delay: 0.15, ease: easeOut }}
-                    >
+                    <div className="w-full max-w-md mx-auto lg:max-w-none lg:ml-auto space-y-4">
                         <MerapiStatusServer />
 
                         <div className="surface-panel p-5 space-y-4">
@@ -288,11 +269,11 @@ export default function HomeContent({
                                 ))}
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
 
                 <div
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 scroll-indicator"
+                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 scroll-indicator pointer-events-none"
                     style={{ zIndex: 3 }}
                     aria-hidden="true"
                 >
@@ -308,13 +289,7 @@ export default function HomeContent({
             {/* ─── POTENSI ───────────────────────────────────────────────────── */}
             <section className="py-24 px-6" aria-labelledby="potensi-heading">
                 <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={fadeUp}
-                    >
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
                         <div>
                             <p className="section-label mb-3">Potensi Unggulan</p>
                             <h2 id="potensi-heading" className="section-heading">
@@ -328,17 +303,11 @@ export default function HomeContent({
                         <Link href="/profil" className="btn-ghost self-start md:self-auto">
                             Profil lengkap →
                         </Link>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        className="grid grid-cols-1 md:grid-cols-2 gap-5 auto-rows-[280px] md:auto-rows-[240px]"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={staggerContainer}
-                    >
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 auto-rows-[280px] md:auto-rows-[240px]">
                         {potensiCards.map((card) => (
-                            <motion.div key={card.href} variants={fadeUp} className={card.span}>
+                            <div key={card.href}>
                                 <Link
                                     href={card.href}
                                     className="group relative rounded-2xl overflow-hidden block shimmer-border h-full min-h-[240px]"
@@ -382,23 +351,17 @@ export default function HomeContent({
                                         </p>
                                     </div>
                                 </Link>
-                            </motion.div>
+                            </div>
                         ))}
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
             {/* ─── QUICK ACCESS ──────────────────────────────────────────────── */}
             <section className="px-6 pb-8" aria-label="Akses cepat">
-                <motion.div
-                    className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-                    initial={enter}
-                    whileInView={show}
-                    viewport={softViewport}
-                    variants={staggerContainer}
-                >
+                <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {quickAccess.map((item) => (
-                        <motion.div key={item.href} variants={fadeUp}>
+                        <div key={item.href}>
                             <Link href={item.href} className="card-surface p-5 flex items-start gap-4 group h-full">
                                 <span
                                     className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -419,9 +382,9 @@ export default function HomeContent({
                                     </span>
                                 </span>
                             </Link>
-                        </motion.div>
+                        </div>
                     ))}
-                </motion.div>
+                </div>
             </section>
 
             {/* ─── SEKTOR ────────────────────────────────────────────────────── */}
@@ -431,13 +394,7 @@ export default function HomeContent({
                 aria-labelledby="sektor-heading"
             >
                 <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        className="mb-12"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={fadeUp}
-                    >
+                    <div className="mb-12">
                         <p className="section-label mb-3">Sektor Padukuhan</p>
                         <h2 id="sektor-heading" className="section-heading">
                             7 Sektor Kehidupan
@@ -446,32 +403,20 @@ export default function HomeContent({
                             Jelajahi data, program, dan peluang di setiap sektor pembangunan
                             Padukuhan Plosorejo.
                         </p>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={staggerContainer}
-                    >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {sektorCards.map((card) => (
                             <SektorCard key={card.href} {...card} />
                         ))}
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
             {/* ─── UMKM ──────────────────────────────────────────────────────── */}
             <section className="py-24 px-6" aria-labelledby="umkm-heading">
                 <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={fadeUp}
-                    >
+                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
                         <div>
                             <p className="section-label mb-3">Ekonomi Lokal</p>
                             <h2 id="umkm-heading" className="section-heading">
@@ -481,17 +426,11 @@ export default function HomeContent({
                         <Link href="/sektor/umkm" className="btn-ghost self-start md:self-auto">
                             Lihat semua UMKM →
                         </Link>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={staggerContainer}
-                    >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         {featuredUmkm.map((umkm) => (
-                            <motion.div key={umkm.id} variants={fadeUp}>
+                            <div key={umkm.id}>
                                 <Link href="/sektor/umkm" className="card-surface p-5 flex flex-col gap-3 group h-full">
                                     <div className="flex items-center justify-between gap-2">
                                         <span
@@ -529,9 +468,9 @@ export default function HomeContent({
                                         </span>
                                     </div>
                                 </Link>
-                            </motion.div>
+                            </div>
                         ))}
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
@@ -542,13 +481,7 @@ export default function HomeContent({
                 aria-labelledby="berita-heading"
             >
                 <div className="max-w-7xl mx-auto">
-                    <motion.div
-                        className="flex items-end justify-between gap-6 mb-12"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={fadeUp}
-                    >
+                    <div className="flex items-end justify-between gap-6 mb-12">
                         <div>
                             <p className="section-label mb-3">Kabar Padukuhan</p>
                             <h2 id="berita-heading" className="section-heading">
@@ -562,15 +495,9 @@ export default function HomeContent({
                         >
                             Semua berita →
                         </Link>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        className="grid grid-cols-1 md:grid-cols-3 gap-5"
-                        initial={enter}
-                        whileInView={show}
-                        viewport={softViewport}
-                        variants={staggerContainer}
-                    >
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         {latestBerita.map((item) => (
                             <BeritaCard
                                 key={item.slug}
@@ -581,21 +508,15 @@ export default function HomeContent({
                                 ringkasan={item.ringkasan}
                             />
                         ))}
-                    </motion.div>
+                    </div>
                 </div>
             </section>
 
             {/* ─── CTA ───────────────────────────────────────────────────────── */}
             <section className="py-24 px-6" aria-labelledby="cta-heading">
-                <motion.div
-                    className="max-w-4xl mx-auto text-center surface-panel px-6 py-14 md:px-12 relative overflow-hidden"
-                    initial={reduceMotion ? false : { opacity: 0.25, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={softViewport}
-                    transition={{ duration: 0.55, ease: easeOut }}
-                >
+                <div className="max-w-4xl mx-auto text-center surface-panel px-6 py-14 md:px-12 relative overflow-hidden">
                     <div
-                        className="absolute -top-20 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl opacity-30"
+                        className="absolute -top-20 left-1/2 -translate-x-1/2 w-72 h-72 rounded-full blur-3xl opacity-30 pointer-events-none"
                         style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.45), transparent 70%)' }}
                         aria-hidden="true"
                     />
@@ -629,7 +550,7 @@ export default function HomeContent({
                             </Link>
                         </div>
                     </div>
-                </motion.div>
+                </div>
             </section>
         </div>
     )

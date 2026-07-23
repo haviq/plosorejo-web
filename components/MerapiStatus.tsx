@@ -1,6 +1,5 @@
 'use client'
 
-import { motion, useReducedMotion } from 'framer-motion'
 import Icon from '@/components/Icon'
 
 type Level = 'Normal' | 'Waspada' | 'Siaga' | 'Awas'
@@ -34,12 +33,12 @@ interface MerapiStatusProps {
   updatedAt?: string
 }
 
+/** Static card — no framer opacity (mobile reliability). */
 export default function MerapiStatus({
   level = 'Normal',
   deskripsi,
   updatedAt,
 }: MerapiStatusProps) {
-  const reduce = useReducedMotion()
   const cfg = levelConfig[level] || levelConfig.Normal
   const desc = deskripsi || cfg.desc
   const lastUpdate = updatedAt
@@ -53,64 +52,58 @@ export default function MerapiStatus({
     : ''
 
   return (
-    <motion.div
-      initial={reduce ? false : { opacity: 0.25, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: reduce ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      className="rounded-2xl border p-4 flex items-center gap-4 shadow-lg"
+      style={{
+        backgroundColor: cfg.bg,
+        borderColor: 'var(--border)',
+        backdropFilter: 'blur(16px)',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+      }}
+      role="status"
+      aria-label={`Status Gunung Merapi: ${level}`}
     >
-      <div
-        className="rounded-2xl border p-4 flex items-center gap-4 shadow-lg"
+      <span
+        className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
         style={{
-          backgroundColor: cfg.bg,
-          borderColor: 'var(--border)',
-          backdropFilter: 'blur(16px)',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+          background: 'rgba(0,0,0,0.25)',
+          border: '1px solid var(--border)',
+          color: cfg.color,
         }}
-        role="status"
-        aria-label={`Status Gunung Merapi: ${level}`}
+        aria-hidden="true"
       >
-        <span
-          className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{
-            background: 'rgba(0,0,0,0.25)',
-            border: '1px solid var(--border)',
-            color: cfg.color,
-          }}
-          aria-hidden="true"
-        >
-          <Icon name="merapi" size={22} />
-        </span>
+        <Icon name="merapi" size={22} />
+      </span>
 
-        <div className="flex-1 min-w-0 text-left">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className="text-xs font-medium uppercase tracking-wider"
-              style={{ color: 'var(--muted)' }}
-            >
-              Status Gunung Merapi
-            </span>
-            <span
-              className="flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full"
-              style={{
-                color: cfg.color,
-                backgroundColor: cfg.bg,
-                border: `1px solid ${cfg.color}33`,
-              }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-current pulse-dot" aria-hidden="true" />
-              {level}
-            </span>
-          </div>
-          <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
-            {desc}
-          </p>
-          {lastUpdate && (
-            <p className="text-xs mt-1" style={{ color: 'var(--muted2)' }}>
-              Diperbarui: {lastUpdate}
-            </p>
-          )}
+      <div className="flex-1 min-w-0 text-left">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span
+            className="text-xs font-medium uppercase tracking-wider"
+            style={{ color: 'var(--muted)' }}
+          >
+            Status Gunung Merapi
+          </span>
+          <span
+            className="flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full"
+            style={{
+              color: cfg.color,
+              backgroundColor: cfg.bg,
+              border: `1px solid ${cfg.color}33`,
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-current pulse-dot" aria-hidden="true" />
+            {level}
+          </span>
         </div>
+        <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+          {desc}
+        </p>
+        {lastUpdate && (
+          <p className="text-xs mt-1" style={{ color: 'var(--muted2)' }}>
+            Diperbarui: {lastUpdate}
+          </p>
+        )}
       </div>
-    </motion.div>
+    </div>
   )
 }

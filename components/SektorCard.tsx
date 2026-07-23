@@ -1,9 +1,5 @@
-'use client'
-
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import Icon from '@/components/Icon'
-import { fadeUp } from '@/components/motion'
 
 interface SektorCardProps {
   href: string
@@ -24,14 +20,14 @@ export default function SektorCard({
   const color = 'var(--gold)'
 
   return (
-    <motion.div variants={fadeUp} className="h-full">
+    <div className="h-full">
       <Link
         href={href}
         className="card-surface group p-5 flex flex-col gap-4 h-full relative overflow-hidden"
         aria-label={`Lihat sektor ${nama}`}
       >
         <div
-          className="absolute -top-10 -right-10 w-28 h-28 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          className="absolute -top-10 -right-10 w-28 h-28 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
           style={{ background: color }}
           aria-hidden="true"
         />
@@ -74,13 +70,10 @@ export default function SektorCard({
           </div>
         )}
 
-        <span
-          className="relative text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0"
-          style={{ color }}
-        >
+        <span className="relative text-xs font-semibold" style={{ color }}>
           Jelajahi sektor →
         </span>
       </Link>
-    </motion.div>
+    </div>
   )
 }

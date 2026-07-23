@@ -1,9 +1,5 @@
-'use client'
-
 import Link from 'next/link'
-import { motion } from 'framer-motion'
 import { formatTanggal } from '@/lib/utils'
-import { fadeUp } from '@/components/motion'
 
 interface BeritaCardProps {
   slug: string
@@ -23,14 +19,14 @@ export default function BeritaCard({
   const color = 'var(--gold)'
 
   return (
-    <motion.div variants={fadeUp} className="h-full">
+    <div className="h-full">
       <Link
         href={`/berita/${slug}`}
         className="card-surface group p-5 flex flex-col gap-3 h-full relative overflow-hidden"
         aria-label={`Baca berita: ${judul}`}
       >
         <div
-          className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
           style={{
             background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
           }}
@@ -69,6 +65,6 @@ export default function BeritaCard({
           <span aria-hidden="true">→</span>
         </span>
       </Link>
-    </motion.div>
+    </div>
   )
 }

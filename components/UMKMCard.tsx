@@ -1,10 +1,6 @@
-'use client'
-
-import { motion } from 'framer-motion'
 import { isOpenNow, waLink } from '@/lib/utils'
 import type { UMKMItem } from '@/lib/types'
 import Icon from '@/components/Icon'
-import { fadeUp } from '@/components/motion'
 
 interface UMKMCardProps {
   item: UMKMItem
@@ -20,12 +16,7 @@ export default function UMKMCard({ item }: UMKMCardProps) {
   const iconName = item.icon || item.jenis || 'umkm'
 
   return (
-    <motion.article
-      variants={fadeUp}
-      className="card-surface p-5 flex flex-col gap-3 h-full"
-      whileHover={{ y: -3 }}
-      transition={{ duration: 0.2 }}
-    >
+    <article className="card-surface p-5 flex flex-col gap-3 h-full">
       <div className="flex items-start gap-3">
         <span
           className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -119,6 +110,6 @@ export default function UMKMCard({ item }: UMKMCardProps) {
           </a>
         </div>
       </div>
-    </motion.article>
+    </article>
   )
 }

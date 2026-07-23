@@ -186,11 +186,23 @@ body {
   isolation: isolate;
 }
 
-/* Defensive: never leave interactive content fully invisible if animation fails */
+/* Defensive: interactive content must always stay fully opaque & clickable */
 main a,
 main button,
-main [role='button'] {
-  opacity: 1;
+main [role='button'],
+main [role='link'],
+.card-surface,
+.btn-primary,
+.btn-ghost,
+.btn-soft {
+  opacity: 1 !important;
+}
+
+/* Decorative layers never intercept taps */
+.site-bg,
+.noise-overlay,
+.scroll-indicator {
+  pointer-events: none !important;
 }
 
 *:focus-visible {
