@@ -238,9 +238,9 @@ export default function LeafletMap() {
       zoom={16}
       style={{ height: 560, width: '100%', borderRadius: '0.75rem', border: '1px solid var(--border)' }}
       zoomControl={false}
+      attributionControl={false}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <ZoomControl position="bottomright" />
