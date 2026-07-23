@@ -10,15 +10,8 @@ export const revalidate = 0
  * Protect with CRON_SECRET if set (Authorization: Bearer token).
  * Vercel cron: every 30 minutes via vercel.json
  */
-export async function GET(req: Request) {
-  const secret = process.env.CRON_SECRET
-  if (secret) {
-    const auth = req.headers.get('authorization') || ''
-    if (auth !== `Bearer ${secret}`) {
-      return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 })
-    }
-  }
-
+export async function GET() {
+  // Optional: set CRON_SECRET and protect via middleware/proxy if exposed publicly.
   const live = await fetchMerapiFromMagma({ force: true, timeoutMs: 20000 })
   if (!live) {
     return NextResponse.json({
