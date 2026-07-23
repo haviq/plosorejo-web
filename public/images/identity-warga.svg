@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a140c"/>
+      <stop offset="100%" stop-color="#080808"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+  <rect width="600" height="400" fill="url(#glow)"/>
+  <path d="M120 220 Q200 160 280 210 T440 200 L440 300 L120 300 Z" fill="#3d2a12" opacity="0.85"/>
+  <circle cx="250" cy="150" r="18" fill="#d4af37" opacity="0.35"/>
+        <rect x="235" y="170" width="30" height="50" rx="8" fill="#d4af37" opacity="0.28"/>
+        <circle cx="310" cy="155" r="16" fill="#c4bca8" opacity="0.3"/>
+        <rect x="297" y="173" width="26" height="46" rx="8" fill="#c4bca8" opacity="0.22"/>
+        <circle cx="200" cy="160" r="14" fill="#d4af37" opacity="0.25"/>
+        <rect x="188" y="176" width="24" height="40" rx="7" fill="#d4af37" opacity="0.2"/>
+  <rect x="0" y="300" width="600" height="100" fill="#050505" opacity="0.55"/>
+  <text x="28" y="350" fill="#d4af37" font-family="Georgia,serif" font-size="26" font-weight="700">Warga & Gotong Royong</text>
+  <text x="28" y="376" fill="#c4bca8" fill-opacity="0.7" font-family="system-ui,sans-serif" font-size="13" letter-spacing="2">PLOSOREJO · UMBULHARJO</text>
+</svg>

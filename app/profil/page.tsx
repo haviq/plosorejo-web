@@ -53,6 +53,49 @@ export default function ProfilPage() {
         description="Padukuhan Plosorejo, Jl. Balong, Kalurahan Umbulharjo, Cangkringan, Sleman — sentra sapi perah dan UMKM olahan susu di lereng Merapi."
       />
 
+      <section aria-label="Identitas visual padukuhan" className="space-y-4">
+        <h2 className="section-label">Wajah Padukuhan</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+          {[
+            { src: '/images/identity-warga.svg', alt: 'Warga dan gotong royong', title: 'Warga' },
+            { src: '/images/identity-susu.svg', alt: 'Sentra sapi perah', title: 'Sapi perah' },
+            { src: '/images/identity-alam.svg', alt: 'Alam lereng Merapi', title: 'Alam' },
+            { src: '/images/identity-budaya.svg', alt: 'Budaya dan tradisi', title: 'Budaya' },
+            { src: '/images/identity-umkm.svg', alt: 'UMKM lokal', title: 'UMKM' },
+            { src: '/images/identity-masjid.svg', alt: 'Kehidupan spiritual', title: 'Masjid' },
+          ].map((item) => (
+            <figure
+              key={item.src}
+              className="relative overflow-hidden rounded-2xl border min-h-[140px] sm:min-h-[170px]"
+              style={{ borderColor: 'var(--border)', background: 'var(--s1)' }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item.src}
+                alt={item.alt}
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                loading="lazy"
+                draggable={false}
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    'linear-gradient(to top, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0.1) 55%, transparent 100%)',
+                }}
+                aria-hidden="true"
+              />
+              <figcaption className="absolute bottom-0 left-0 right-0 p-3 text-sm font-semibold" style={{ color: 'var(--on-dark-text)' }}>
+                {item.title}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="text-xs" style={{ color: 'var(--muted2)' }}>
+          Foto lapangan bisa diganti lewat CMS/Sanity atau file di <code>public/images/</code>.
+        </p>
+      </section>
+
       <section aria-label="Informasi wilayah" className="space-y-4">
         <h2 className="section-label">Informasi Wilayah</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

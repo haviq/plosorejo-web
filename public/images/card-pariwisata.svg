@@ -1,21 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1a160e"/>
-      <stop offset="55%" stop-color="#12100c"/>
-      <stop offset="100%" stop-color="#0c0c0c"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a140c"/>
+      <stop offset="55%" stop-color="#100e0a"/>
+      <stop offset="100%" stop-color="#080808"/>
     </linearGradient>
-    <radialGradient id="orb" cx="70%" cy="22%" r="48%">
-      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.28"/>
-      <stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/>
+    <radialGradient id="orb" cx="65%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="800" height="1000" fill="url(#bg)"/>
   <rect width="800" height="1000" fill="url(#orb)"/>
-  <path d="M0 720 Q200 640 400 700 T800 680 L800 1000 L0 1000 Z" fill="#0a0a0a" opacity="0.85"/>
-  <path d="M0 820 Q250 760 500 800 T800 780 L800 1000 L0 1000 Z" fill="#080808"/>
-  <circle cx="400" cy="400" r="78" fill="none" stroke="#a78bfa" stroke-opacity="0.45" stroke-width="2"/>
-  <circle cx="400" cy="400" r="34" fill="#a78bfa" fill-opacity="0.18"/>
-  <text x="400" y="520" text-anchor="middle" fill="#a78bfa" fill-opacity="0.85" font-family="Georgia, serif" font-size="36" font-weight="700" letter-spacing="4">PARIWISATA</text>
-  <text x="400" y="560" text-anchor="middle" fill="#c4bca8" fill-opacity="0.55" font-family="system-ui,sans-serif" font-size="16" letter-spacing="3">PLOSOREJO</text>
+  <path d="M0 620 Q200 540 400 600 T800 580 L800 1000 L0 1000 Z" fill="#1c2a1a" opacity="0.85"/>
+  <path d="M0 760 Q250 700 500 750 T800 730 L800 1000 L0 1000 Z" fill="#0a0a0a"/>
+  <path d="M120 700 L400 360 L680 700 Z" fill="#2a2418" opacity="0.55"/>
+  <circle cx="400" cy="420" r="70" fill="none" stroke="#d4af37" stroke-opacity="0.4" stroke-width="2"/>
+  <circle cx="400" cy="420" r="28" fill="#d4af37" fill-opacity="0.18"/>
+  <text x="400" y="820" text-anchor="middle" fill="#d4af37" fill-opacity="0.9" font-family="Georgia,serif" font-size="40" font-weight="700" letter-spacing="6">PARIWISATA</text>
+  <text x="400" y="860" text-anchor="middle" fill="#c4bca8" fill-opacity="0.55" font-family="system-ui,sans-serif" font-size="16" letter-spacing="4">PLOSOREJO</text>
 </svg>

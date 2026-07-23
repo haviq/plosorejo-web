@@ -30,7 +30,7 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
 
   const toggle = () => {
     const now = Date.now()
-    if (now - lastToggleAt.current < 280) return
+    if (now - lastToggleAt.current < 180) return
     lastToggleAt.current = now
     setTheme((prev) => {
       const next: Theme = prev === 'dark' ? 'light' : 'dark'
@@ -44,7 +44,8 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
     <button
       type="button"
       onClick={toggle}
-      className={`site-header__icon-btn ${className}`}
+      className={`site-header__icon-btn touch-manipulation ${className}`}
+      style={{ position: 'relative', zIndex: 2 }}
       aria-label={theme === 'dark' ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}
       title={theme === 'dark' ? 'Mode terang' : 'Mode gelap'}
     >

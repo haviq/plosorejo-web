@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0e1210"/>
+      <stop offset="100%" stop-color="#080808"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="70%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="600" height="400" fill="url(#bg)"/>
+  <rect width="600" height="400" fill="url(#glow)"/>
+  <path d="M60 250 Q180 140 300 230 T500 220 L500 300 L60 300 Z" fill="#1c2a1a" opacity="0.85"/>
+  <path d="M180 250 L300 90 L420 250 Z" fill="#2a3a20" opacity="0.8"/>
+        <path d="M300 90 L320 130 L300 120 L280 130 Z" fill="#d4af37" opacity="0.35"/>
+        <path d="M80 250 Q200 200 320 240 T560 230 L560 300 L80 300 Z" fill="#152018"/>
+  <rect x="0" y="300" width="600" height="100" fill="#050505" opacity="0.55"/>
+  <text x="28" y="350" fill="#d4af37" font-family="Georgia,serif" font-size="26" font-weight="700">Alam Lereng Merapi</text>
+  <text x="28" y="376" fill="#c4bca8" fill-opacity="0.7" font-family="system-ui,sans-serif" font-size="13" letter-spacing="2">PLOSOREJO · UMBULHARJO</text>
+</svg>

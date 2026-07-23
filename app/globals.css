@@ -449,24 +449,46 @@ main [role='link'],
   pointer-events: none !important;
 }
 
-/* Hero media is non-interactive; content column receives taps */
+/* Hero: only interactive content receives taps (not media/overlays) */
 section[aria-label*='Hero'] {
-  pointer-events: none;
+  isolation: isolate;
 }
 
-section[aria-label*='Hero'] a,
-section[aria-label*='Hero'] button,
-section[aria-label*='Hero'] [role='button'],
-section[aria-label*='Hero'] [role='link'],
-section[aria-label*='Hero'] [role='status'],
-section[aria-label*='Hero'] .relative.z-20 {
+section[aria-label*='Hero'] > img,
+section[aria-label*='Hero'] > [aria-hidden='true'],
+section[aria-label*='Hero'] .noise-overlay,
+section[aria-label*='Hero'] .scroll-indicator {
+  pointer-events: none !important;
+}
+
+.hero-interactive,
+.hero-interactive a,
+.hero-interactive button,
+.hero-interactive [role='button'],
+.hero-interactive [role='link'],
+.hero-interactive [role='status'] {
   pointer-events: auto !important;
+  position: relative;
+  z-index: 2;
+}
+
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(212, 175, 55, 0.28);
 }
 
 @media (max-width: 1023px) {
   .btn-primary,
   .btn-ghost,
-  .btn-soft {
+  .btn-soft,
+  .touch-manipulation {
+    min-height: 44px;
+  }
+
+  a.card-surface,
+  a.shimmer-border,
+  .site-mobile-panel a,
+  .site-mobile-panel button {
     min-height: 44px;
   }
 }

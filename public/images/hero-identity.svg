@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b0a0f"/>
+      <stop offset="35%" stop-color="#1a140c"/>
+      <stop offset="70%" stop-color="#2a1c0c"/>
+      <stop offset="100%" stop-color="#0a0908"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="72%" cy="28%" r="28%">
+      <stop offset="0%" stop-color="#f0c040" stop-opacity="0.55"/>
+      <stop offset="45%" stop-color="#d4af37" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mtn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a2f18"/>
+      <stop offset="100%" stop-color="#120f0a"/>
+    </linearGradient>
+    <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f2a14"/>
+      <stop offset="100%" stop-color="#0d120a"/>
+    </linearGradient>
+    <linearGradient id="goldline" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d4af37" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#d4af37" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <rect width="1920" height="1080" fill="url(#sun)"/>
+  <!-- distant ridges -->
+  <path d="M0 640 L220 590 L480 620 L760 540 L980 580 L1200 500 L1450 560 L1700 520 L1920 560 L1920 1080 L0 1080 Z" fill="#1a160f" opacity="0.9"/>
+  <!-- Merapi peak -->
+  <path d="M640 1080 L760 720 L900 430 L1040 720 L1240 900 L1400 1080 Z" fill="url(#mtn)"/>
+  <path d="M900 430 L940 520 L900 500 L860 520 Z" fill="#f0c040" opacity="0.35"/>
+  <!-- terraces -->
+  <path d="M0 780 Q320 730 640 760 T1280 740 T1920 780 L1920 1080 L0 1080 Z" fill="url(#field)"/>
+  <path d="M0 860 Q400 820 800 850 T1600 840 T1920 870 L1920 1080 L0 1080 Z" fill="#0f140c"/>
+  <!-- village roofs cluster left -->
+  <g opacity="0.95">
+    <rect x="180" y="760" width="90" height="50" fill="#2a2114"/>
+    <polygon points="170,760 225,720 280,760" fill="#5a4520"/>
+    <rect x="290" y="770" width="70" height="42" fill="#241c12"/>
+    <polygon points="280,770 325,735 370,770" fill="#6b5224"/>
+    <rect x="380" y="755" width="110" height="58" fill="#2c2215"/>
+    <polygon points="368,755 435,705 500,755" fill="#7a5c28"/>
+    <!-- mosque dome -->
+    <rect x="520" y="730" width="36" height="70" fill="#1f1a12"/>
+    <circle cx="538" cy="720" r="28" fill="#d4af37" opacity="0.55"/>
+    <rect x="534" y="680" width="8" height="28" fill="#d4af37" opacity="0.7"/>
+  </g>
+  <!-- cows silhouettes -->
+  <g fill="#0a0a0a" opacity="0.75">
+    <ellipse cx="1320" cy="900" rx="48" ry="22"/>
+    <ellipse cx="1285" cy="885" rx="18" ry="14"/>
+    <ellipse cx="1450" cy="920" rx="42" ry="18"/>
+    <ellipse cx="1420" cy="905" rx="16" ry="12"/>
+  </g>
+  <!-- path -->
+  <path d="M900 1080 Q960 940 1020 860 Q1080 790 1180 740" fill="none" stroke="#3a3220" stroke-width="28" opacity="0.55"/>
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#goldline)" opacity="0.15"/>
+  <text x="120" y="180" fill="#d4af37" fill-opacity="0.35" font-family="Georgia,serif" font-size="28" letter-spacing="8">PADUKUHAN PLOSOREJO</text>
+  <text x="120" y="220" fill="#c4bca8" fill-opacity="0.28" font-family="system-ui,sans-serif" font-size="16" letter-spacing="4">CANGRINGAN · SLEMAN · LERENG MERAPI</text>
+</svg>

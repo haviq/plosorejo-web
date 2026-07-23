@@ -163,7 +163,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
             <ThemeToggle />
             <button
               type="button"
-              className="site-header__icon-btn"
+              className="site-header__icon-btn touch-manipulation"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               aria-expanded={mobileOpen}

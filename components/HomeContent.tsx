@@ -76,8 +76,8 @@ export default function HomeContent({
             >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                    src="/images/hero-merapi.svg"
-                    alt="Pemandangan lereng Gunung Merapi"
+                    src="/images/hero-identity.svg"
+                    alt="Identitas visual Padukuhan Plosorejo di lereng Merapi"
                     className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
                     style={{ zIndex: 0 }}
                     fetchPriority="high"
@@ -104,7 +104,7 @@ export default function HomeContent({
                 />
                 <div className="noise-overlay pointer-events-none" style={{ zIndex: 2 }} aria-hidden="true" />
 
-                <div className="relative z-20 on-dark w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center pointer-events-auto">
+                <div className="relative z-20 hero-interactive on-dark w-full max-w-7xl mx-auto px-6 pt-28 pb-24 grid lg:grid-cols-[1.15fr_0.85fr] gap-10 lg:gap-14 items-center">
                     <div className="text-center lg:text-left">
                         <div>
                             <div
@@ -290,6 +290,120 @@ export default function HomeContent({
 
             <StatsBar />
 
+            {/* ─── IDENTITAS PADUKUHAN ───────────────────────────────────────── */}
+            <section className="py-20 px-6" aria-labelledby="identitas-heading">
+                <div className="max-w-7xl mx-auto">
+                    <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center">
+                        <div>
+                            <p className="section-label mb-3">Identitas Padukuhan</p>
+                            <h2 id="identitas-heading" className="section-heading">
+                                Wajah <span className="gold-text">Plosorejo</span>
+                            </h2>
+                            <p className="mt-4 text-sm md:text-base leading-relaxed max-w-xl" style={{ color: 'var(--muted)' }}>
+                                Seperti desa wisata di lereng Merapi, Plosorejo punya wajah yang
+                                jelas: warga, sapi perah, budaya, dan alam. Portal ini menampilkan
+                                identitas itu agar warga, tamu, dan mitra langsung kenal padukuhan.
+                            </p>
+
+                            <div className="mt-6 grid grid-cols-2 gap-3">
+                                {[
+                                    { label: '4 RT · 1 RW', desc: 'Wilayah administratif' },
+                                    { label: '±45 ha', desc: 'Luas padukuhan' },
+                                    { label: 'Sentra susu', desc: 'Komoditas unggulan' },
+                                    { label: '±600 mdpl', desc: 'Lereng Merapi' },
+                                ].map((item) => (
+                                    <div
+                                        key={item.label}
+                                        className="rounded-xl p-4"
+                                        style={{
+                                            background: 'var(--s1)',
+                                            border: '1px solid var(--border)',
+                                        }}
+                                    >
+                                        <p className="text-base font-bold gold-text">{item.label}</p>
+                                        <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+                                            {item.desc}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="mt-7 flex flex-wrap gap-3">
+                                <Link href="/profil" className="btn-primary touch-manipulation">
+                                    Profil Padukuhan
+                                </Link>
+                                <Link href="/galeri" className="btn-ghost touch-manipulation">
+                                    Lihat Galeri
+                                </Link>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                            {[
+                                {
+                                    src: '/images/identity-warga.svg',
+                                    alt: 'Warga dan gotong royong Plosorejo',
+                                    title: 'Warga',
+                                    span: 'col-span-2',
+                                },
+                                {
+                                    src: '/images/identity-susu.svg',
+                                    alt: 'Sentra sapi perah Plosorejo',
+                                    title: 'Sapi perah',
+                                    span: '',
+                                },
+                                {
+                                    src: '/images/identity-alam.svg',
+                                    alt: 'Alam lereng Merapi',
+                                    title: 'Alam',
+                                    span: '',
+                                },
+                                {
+                                    src: '/images/identity-budaya.svg',
+                                    alt: 'Budaya dan tradisi lokal',
+                                    title: 'Budaya',
+                                    span: '',
+                                },
+                                {
+                                    src: '/images/identity-umkm.svg',
+                                    alt: 'UMKM lokal Plosorejo',
+                                    title: 'UMKM',
+                                    span: '',
+                                },
+                            ].map((item) => (
+                                <div
+                                    key={item.src}
+                                    className={`group relative overflow-hidden rounded-2xl border min-h-[140px] sm:min-h-[160px] ${item.span}`}
+                                    style={{ borderColor: 'var(--border)', background: 'var(--s1)' }}
+                                >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={item.src}
+                                        alt={item.alt}
+                                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none"
+                                        loading="lazy"
+                                        draggable={false}
+                                    />
+                                    <div
+                                        className="absolute inset-0 pointer-events-none"
+                                        style={{
+                                            background:
+                                                'linear-gradient(to top, rgba(5,5,5,0.82) 0%, rgba(5,5,5,0.15) 55%, transparent 100%)',
+                                        }}
+                                        aria-hidden="true"
+                                    />
+                                    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                                        <p className="text-sm font-semibold" style={{ color: 'var(--on-dark-text)' }}>
+                                            {item.title}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* ─── POTENSI ───────────────────────────────────────────────────── */}
             <section className="py-24 px-6" aria-labelledby="potensi-heading">
                 <div className="max-w-7xl mx-auto">
@@ -304,7 +418,7 @@ export default function HomeContent({
                                 semua potensi digarap bersama warga.
                             </p>
                         </div>
-                        <Link href="/profil" className="btn-ghost self-start md:self-auto">
+                        <Link href="/profil" className="btn-ghost self-start md:self-auto touch-manipulation">
                             Profil lengkap →
                         </Link>
                     </div>
@@ -314,7 +428,7 @@ export default function HomeContent({
                             <div key={card.href}>
                                 <Link
                                     href={card.href}
-                                    className="group relative rounded-2xl overflow-hidden block shimmer-border h-full min-h-[240px]"
+                                    className="group relative rounded-2xl overflow-hidden block shimmer-border h-full min-h-[240px] touch-manipulation"
                                     aria-label={`${card.kategori}: ${card.headline}`}
                                 >
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
