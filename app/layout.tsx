@@ -43,11 +43,26 @@ export const metadata: Metadata = {
   },
 }
 
+const themeBootScript = `
+(function(){
+  try {
+    var t = localStorage.getItem('plosorejo-theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+    document.documentElement.style.colorScheme = t;
+  } catch (e) {}
+})();`
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={`${inter.variable} ${playfair.variable} h-full antialiased`}>
+    <html lang="id" className={`${inter.variable} ${playfair.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body
         className="min-h-full flex flex-col"
         style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}

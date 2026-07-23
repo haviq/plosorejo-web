@@ -14,7 +14,8 @@
   --font-display: var(--font-playfair);
 }
 
-:root {
+:root,
+[data-theme='dark'] {
   --bg: #080808;
   --s1: #111111;
   --s2: #1a1a1a;
@@ -44,6 +45,56 @@
   --max-width: 1200px;
   --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.35);
   --shadow-gold: 0 0 32px rgba(212, 175, 55, 0.22);
+  --surface-soft: rgba(255, 255, 255, 0.03);
+  --nav-bg: rgba(8, 8, 8, 0.92);
+  --overlay-scrim: rgba(8, 8, 8, 0.98);
+  --btn-primary-fg: #080808;
+  --site-bg-base:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 175, 55, 0.08), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(212, 175, 55, 0.04), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 0% 80%, rgba(34, 197, 94, 0.03), transparent 50%),
+    linear-gradient(180deg, #0a0a0a 0%, #080808 40%, #0b0a08 100%);
+  --site-bg-glow-left: radial-gradient(circle, rgba(212, 175, 55, 0.16), transparent 70%);
+  --site-bg-glow-right: radial-gradient(circle, rgba(240, 192, 64, 0.1), transparent 70%);
+  --site-bg-vignette: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+}
+
+[data-theme='light'] {
+  --bg: #f7f3e8;
+  --s1: #ffffff;
+  --s2: #f1ebdc;
+  --s3: #e8e0cc;
+  --border: rgba(140, 110, 20, 0.18);
+  --border-strong: rgba(140, 110, 20, 0.32);
+  --gold: #b8921f;
+  --gold-bright: #d4af37;
+  --gold-dim: #8a6d16;
+  --gold-glow: rgba(184, 146, 31, 0.12);
+  --gold-glow-strong: rgba(184, 146, 31, 0.22);
+  --amber: #b8921f;
+  --green: #15803d;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #2563eb;
+  --text: #1c1914;
+  --muted: #6b6558;
+  --muted2: #938b7a;
+  --gradient: linear-gradient(135deg, #b8921f 0%, #d4af37 50%, #9a7a18 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(184, 146, 31, 0.16), rgba(212, 175, 55, 0.05));
+  --shadow-card: 0 12px 32px rgba(70, 55, 10, 0.08);
+  --shadow-gold: 0 0 24px rgba(184, 146, 31, 0.16);
+  --surface-soft: rgba(184, 146, 31, 0.08);
+  --nav-bg: rgba(247, 243, 232, 0.92);
+  --overlay-scrim: rgba(247, 243, 232, 0.98);
+  --btn-primary-fg: #1c1914;
+  --site-bg-base:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(184, 146, 31, 0.12), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(184, 146, 31, 0.06), transparent 50%),
+    radial-gradient(ellipse 50% 35% at 0% 80%, rgba(21, 128, 61, 0.04), transparent 50%),
+    linear-gradient(180deg, #faf6ec 0%, #f7f3e8 40%, #f3ecda 100%);
+  --site-bg-glow-left: radial-gradient(circle, rgba(184, 146, 31, 0.18), transparent 70%);
+  --site-bg-glow-right: radial-gradient(circle, rgba(212, 175, 55, 0.12), transparent 70%);
+  --site-bg-vignette: radial-gradient(ellipse at center, transparent 50%, rgba(120, 95, 30, 0.08) 100%);
 }
 
 html {
@@ -73,11 +124,7 @@ body {
 .site-bg__base {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 175, 55, 0.08), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 20%, rgba(212, 175, 55, 0.04), transparent 50%),
-    radial-gradient(ellipse 50% 35% at 0% 80%, rgba(34, 197, 94, 0.03), transparent 50%),
-    linear-gradient(180deg, #0a0a0a 0%, #080808 40%, #0b0a08 100%);
+  background: var(--site-bg-base);
 }
 
 .site-bg__glow {
@@ -92,7 +139,7 @@ body {
   height: 420px;
   top: 12%;
   left: -120px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.16), transparent 70%);
+  background: var(--site-bg-glow-left);
 }
 
 .site-bg__glow--right {
@@ -100,7 +147,7 @@ body {
   height: 480px;
   top: 48%;
   right: -160px;
-  background: radial-gradient(circle, rgba(240, 192, 64, 0.1), transparent 70%);
+  background: var(--site-bg-glow-right);
 }
 
 .site-bg__grid {
@@ -117,7 +164,7 @@ body {
 .site-bg__vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.55) 100%);
+  background: var(--site-bg-vignette);
 }
 
 .site-bg__noise {
@@ -187,7 +234,7 @@ body {
   justify-content: center;
   gap: 0.5rem;
   background: var(--gold);
-  color: #080808;
+  color: var(--btn-primary-fg);
   font-weight: 600;
   font-size: 0.875rem;
   padding: 12px 24px;

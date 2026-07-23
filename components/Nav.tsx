@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Icon from '@/components/Icon'
+import ThemeToggle from '@/components/ThemeToggle'
 
 const navLinks = [
   { href: '/', label: 'Beranda' },
@@ -68,12 +69,12 @@ export default function Nav() {
       <header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          backgroundColor: scrolled || mobileOpen ? 'rgba(8,8,8,0.92)' : 'transparent',
+          backgroundColor: scrolled || mobileOpen ? 'var(--nav-bg)' : 'transparent',
           backdropFilter: scrolled || mobileOpen ? 'blur(18px)' : 'none',
           WebkitBackdropFilter: scrolled || mobileOpen ? 'blur(18px)' : 'none',
           borderBottom:
             scrolled || mobileOpen ? '1px solid var(--border)' : '1px solid transparent',
-          boxShadow: scrolled ? '0 10px 40px rgba(0,0,0,0.35)' : 'none',
+          boxShadow: scrolled ? 'var(--shadow-card)' : 'none',
         }}
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -192,16 +193,16 @@ export default function Nav() {
                           style={{
                             color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
                             background: pathname.startsWith(href)
-                              ? 'rgba(212,175,55,0.08)'
+                              ? 'var(--gold-glow)'
                               : 'transparent',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(212,175,55,0.1)'
+                            e.currentTarget.style.background = 'var(--gold-glow)'
                             e.currentTarget.style.color = 'var(--text)'
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.background = pathname.startsWith(href)
-                              ? 'rgba(212,175,55,0.08)'
+                              ? 'var(--gold-glow)'
                               : 'transparent'
                             e.currentTarget.style.color = pathname.startsWith(href)
                               ? 'var(--gold)'
@@ -220,6 +221,7 @@ export default function Nav() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
+            <ThemeToggle />
             <Link href="/sektor/umkm" onClick={closeMenus} className="btn-ghost !py-2 !px-4 !text-xs">
               UMKM
             </Link>
@@ -233,12 +235,14 @@ export default function Nav() {
             </a>
           </div>
 
-          <button
-            className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg"
+          <div className="lg:hidden flex items-center gap-2">
+            <ThemeToggle />
+            <button
+            className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
             aria-expanded={mobileOpen}
-            style={{ border: '1px solid var(--border)' }}
+            style={{ border: '1px solid var(--border)', background: 'var(--surface-soft)' }}
           >
             <span
               className="block w-5 h-0.5 transition-all duration-300 origin-center"
@@ -262,13 +266,14 @@ export default function Nav() {
               }}
             />
           </button>
+          </div>
         </div>
       </header>
 
       <div
         className="fixed inset-0 z-40 flex flex-col lg:hidden transition-all duration-300"
         style={{
-          background: 'rgba(8,8,8,0.98)',
+          background: 'var(--overlay-scrim)',
           opacity: mobileOpen ? 1 : 0,
           pointerEvents: mobileOpen ? 'auto' : 'none',
           transform: mobileOpen ? 'translateY(0)' : 'translateY(-8px)',
@@ -308,8 +313,8 @@ export default function Nav() {
                   color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
                   border: '1px solid var(--border)',
                   background: pathname.startsWith(href)
-                    ? 'rgba(212,175,55,0.08)'
-                    : 'transparent',
+                    ? 'var(--gold-glow)'
+                    : 'var(--surface-soft)',
                 }}
               >
                 <Icon name={icon} size={14} />
