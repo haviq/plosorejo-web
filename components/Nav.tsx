@@ -84,6 +84,32 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     }
   }, [mobileOpen])
 
+  // Native capture listeners for hamburger — more reliable than React synthetic
+  // events on Android/Telegram WebView (pointerdown preventDefault often kills click).
+  useEffect(() => {
+    const el = hamburgerRef.current
+    if (!el) return
+
+    const activate = (e: Event) => {
+      if (e instanceof PointerEvent && e.button !== 0 && e.pointerType === 'mouse') return
+      e.preventDefault()
+      e.stopPropagation()
+      // Read live open state from DOM attribute (always current)
+      const open = document.documentElement.getAttribute('data-mobile-nav') === 'open'
+      if (open) closeMobile()
+      else openMobile()
+    }
+
+    el.addEventListener('pointerup', activate, { capture: true })
+    el.addEventListener('click', activate, { capture: true })
+    return () => {
+      el.removeEventListener('pointerup', activate, true)
+      el.removeEventListener('click', activate, true)
+    }
+    // open/close helpers are stable enough via refs below; rebind when open state changes
+    // so attribute path stays consistent.
+  }, [mobileOpen])
+
   useEffect(() => {
     if (!mobileOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -94,8 +120,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
       }
     }
     document.addEventListener('keydown', onKey)
-    const first = document.querySelector<HTMLElement>('#mobile-nav-panel a')
-    first?.focus()
+    // Don't auto-focus first link on open — steals context on mobile WebView
     return () => document.removeEventListener('keydown', onKey)
   }, [mobileOpen])
 
@@ -109,10 +134,19 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
         document.body.style.removeProperty('overflow')
         document.documentElement.style.removeProperty('overflow')
         document.body.style.pointerEvents = 'auto'
+        document.documentElement.style.pointerEvents = 'auto'
+      }
+      // Header controls must always remain tappable once preloader is done
+      if (pre !== 'active') {
+        const header = document.querySelector<HTMLElement>('.site-header')
+        if (header) {
+          header.style.pointerEvents = 'auto'
+          header.style.zIndex = '22000'
+        }
       }
     }
     unlock()
-    const id = window.setInterval(unlock, 2000)
+    const id = window.setInterval(unlock, 1500)
     window.addEventListener('pageshow', unlock)
     return () => {
       window.clearInterval(id)
@@ -130,7 +164,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
 
   const openMobile = () => {
     const now = Date.now()
-    // Only ignore double-fire of the *same* action (pointerdown + click)
+    // Only ignore double-fire of the *same* action (pointerup + click)
     if (lastHamAction.current === 'open' && now - lastHamAt.current < 280) return
     lastHamAt.current = now
     lastHamAction.current = 'open'
@@ -153,7 +187,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v9"
+        data-nav-build="header-inline-v10"
         role="banner"
         data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         data-mobile-open={mobileOpen ? '1' : '0'}
@@ -250,18 +284,17 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               className="site-header__icon-btn touch-manipulation"
               data-nav-hamburger="1"
               data-nav-open={mobileOpen ? '1' : '0'}
-              onPointerDown={(e) => {
-                // Prefer pointerdown for Android/Telegram WebView reliability
-                if (e.button !== 0 && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
+              // React fallbacks (native capture listeners attached in effect)
+              onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 if (mobileOpen) closeMobile()
                 else openMobile()
               }}
-              onClick={(e) => {
+              onPointerUp={(e) => {
+                if (e.button !== 0 && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
                 e.preventDefault()
                 e.stopPropagation()
-                // Debounced inside open/close helpers
                 if (mobileOpen) closeMobile()
                 else openMobile()
               }}
@@ -309,12 +342,13 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                 type="button"
                 className="site-header__icon-btn touch-manipulation"
                 data-nav-close="1"
-                onPointerDown={(e) => {
+                onClick={(e) => {
                   e.preventDefault()
                   e.stopPropagation()
                   closeMobile()
                 }}
-                onClick={(e) => {
+                onPointerUp={(e) => {
+                  if (e.button !== 0 && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
                   e.preventDefault()
                   e.stopPropagation()
                   closeMobile()

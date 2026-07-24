@@ -224,8 +224,8 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  /* Above mobile panel; below preloader (20000) only while preloader active */
-  z-index: 10050;
+  /* Always above preloader (20000), route curtain (19000), mobile panel (20900) */
+  z-index: 22000;
   pointer-events: auto !important;
   background-color: var(--nav-bg-top);
   backdrop-filter: blur(14px);
@@ -233,11 +233,14 @@ body {
   border-bottom: 1px solid var(--border);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
   isolation: isolate;
+  touch-action: manipulation;
 }
 
-/* Once preloader is done, nothing may cover header taps */
-html[data-preloader='skip'] .site-header {
-  z-index: 21000;
+/* Keep header on top after preloader too (redundant safety) */
+html[data-preloader='skip'] .site-header,
+html[data-preloader='active'] .site-header {
+  z-index: 22000 !important;
+  pointer-events: auto !important;
 }
 
 .site-header[data-scrolled='1'],
@@ -443,7 +446,7 @@ html[data-preloader='skip'] .site-header {
 .site-mobile-panel {
   position: fixed;
   inset: 0;
-  z-index: 20900; /* under header (21000 when preloader skip), above page content */
+  z-index: 21900; /* under header (22000), above page content */
   display: flex;
   flex-direction: column;
   /* Always solid dark so links never vanish in light/dark mix-ups */
@@ -1312,7 +1315,7 @@ html[data-preloader='skip'] .site-preloader {
 .site-preloader {
   position: fixed;
   inset: 0;
-  z-index: 20000;
+  z-index: 20000; /* below header (22000) so theme/hamburger stay tappable */
   display: grid;
   place-items: center;
   overflow: hidden;
