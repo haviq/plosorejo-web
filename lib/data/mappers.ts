@@ -17,7 +17,7 @@ import type {
   SanitySusu,
 } from '@/lib/data/sanity-types'
 import { safeMapsHref, isSafeHref, safeExternalHref } from '@/lib/safe-url'
-import { normalizeWa } from '@/lib/site'
+import { normalizeWa, isPlaceholderWa } from '@/lib/site'
 
 const JENIS_ICON: Record<string, string> = {
   Koperasi: 'koperasi',
@@ -41,6 +41,22 @@ function cleanText(input?: string | null, max = 2000): string {
     .slice(0, max)
 }
 
+/** Only https image URLs from known-ish hosts; blocks javascript: and data: */
+function safeImageUrl(input?: string | null): string | undefined {
+  if (!input) return undefined
+  const v = input.trim()
+  if (!v || v.length > 2000) return undefined
+  try {
+    const u = new URL(v)
+    if (u.protocol !== 'https:') return undefined
+    if (u.username || u.password) return undefined
+    // Block obvious non-image schemes already handled; allow CDN hosts + relative not used
+    return u.toString()
+  } catch {
+    return undefined
+  }
+}
+
 export function mapBerita(items: SanityBerita[]): BeritaItem[] {
   return items.map((b) => ({
     slug: cleanText(b.slug, 120),
@@ -49,7 +65,7 @@ export function mapBerita(items: SanityBerita[]): BeritaItem[] {
     kategori: cleanText(b.kategori, 80),
     ringkasan: cleanText(b.ringkasan, 500),
     isi: cleanText(b.isi, 20000),
-    fotoUrl: b.fotoUrl || undefined,
+    fotoUrl: safeImageUrl(b.fotoUrl) || undefined,
   }))
 }
 
@@ -79,7 +95,9 @@ export function mapGaleri(items: SanityGaleri[]): GaleriAlbum[] {
     count: g.fotoCount || g.count || g.fotoUrls?.length || 0,
     deskripsi: cleanText(g.deskripsi, 400),
     warna: cleanText(g.warna, 40) || 'var(--gold)',
-    foto: (g.fotoUrls || []).filter((u): u is string => Boolean(u && /^https?:\/\//i.test(u))),
+    foto: (g.fotoUrls || [])
+      .map((u) => safeImageUrl(u))
+      .filter((u): u is string => Boolean(u)),
   }))
 }
 
@@ -152,12 +170,25 @@ export function mergeSiteSettings(
   fallback: SiteSettings,
 ): SiteSettings {
   if (!data) return fallback
+
+  const waCms = normalizeWa(data.whatsapp)
+  const waFallback = normalizeWa(fallback.whatsapp)
+  let whatsapp = ''
+  if (waCms && !isPlaceholderWa(waCms)) whatsapp = waCms
+  else if (waFallback && !isPlaceholderWa(waFallback)) whatsapp = waFallback
+
+  const telCms = cleanText(data.telepon, 40)
+  const telFallback = cleanText(fallback.telepon, 40)
+  let telepon = ''
+  if (telCms && !isPlaceholderWa(telCms)) telepon = telCms
+  else if (telFallback && !isPlaceholderWa(telFallback)) telepon = telFallback
+
   return {
     title: cleanText(data.title, 120) || fallback.title,
     tagline: cleanText(data.tagline, 200) || fallback.tagline,
     alamat: cleanText(data.alamat, 300) || fallback.alamat,
-    telepon: cleanText(data.telepon, 40) || fallback.telepon,
-    whatsapp: normalizeWa(data.whatsapp) || fallback.whatsapp,
+    telepon,
+    whatsapp,
     email: cleanText(data.email, 120) || fallback.email,
     jamLayanan: cleanText(data.jamLayanan, 80) || fallback.jamLayanan,
     mapsUrl: safeMapsHref(data.mapsUrl) || fallback.mapsUrl,
@@ -166,12 +197,21 @@ export function mergeSiteSettings(
     youtube: cleanText(data.youtube, 120) || fallback.youtube,
     perangkat:
       data.perangkat && data.perangkat.length > 0
-        ? data.perangkat.map((p) => ({
-            ...p,
-            nama: cleanText(p.nama, 80),
-            jabatan: cleanText(p.jabatan, 80),
-            whatsapp: normalizeWa(p.whatsapp) || p.whatsapp,
-          }))
-        : fallback.perangkat,
+        ? data.perangkat.map((p) => {
+            const pWa = normalizeWa(p.whatsapp)
+            return {
+              ...p,
+              nama: cleanText(p.nama, 80),
+              jabatan: cleanText(p.jabatan, 80),
+              whatsapp: pWa && !isPlaceholderWa(pWa) ? pWa : '',
+            }
+          })
+        : fallback.perangkat.map((p) => {
+            const pWa = normalizeWa(p.whatsapp)
+            return {
+              ...p,
+              whatsapp: pWa && !isPlaceholderWa(pWa) ? pWa : '',
+            }
+          }),
   }
 }

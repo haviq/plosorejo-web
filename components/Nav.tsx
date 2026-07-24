@@ -32,6 +32,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
   const pathname = usePathname() || ''
   const wa = whatsapp || siteFallback.whatsapp
   const waHref = waLink(wa, 'Halo Padukuhan Plosorejo')
+  const waReady = waHref !== '#'
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [sektorOpen, setSektorOpen] = useState(false)
@@ -176,14 +177,20 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
             <Link href="/sektor/umkm" onClick={closeMenus} className="btn-ghost !py-2 !px-4 !text-xs">
               UMKM
             </Link>
-            <a
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary !py-2 !px-4 !text-xs"
-            >
-              WhatsApp
-            </a>
+            {waReady ? (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary !py-2 !px-4 !text-xs"
+              >
+                WhatsApp
+              </a>
+            ) : (
+              <Link href="/kontak" onClick={closeMenus} className="btn-primary !py-2 !px-4 !text-xs">
+                Kontak
+              </Link>
+            )}
           </div>
 
           {/* Always in DOM (SSR) — never portal-only */}
@@ -265,15 +272,17 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
                 Direktori UMKM
               </Link>
-              <a
-                href={waHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={closeMenus}
-                className="btn-ghost"
-              >
-                WhatsApp
-              </a>
+              {waReady ? (
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMenus}
+                  className="btn-ghost"
+                >
+                  WhatsApp
+                </a>
+              ) : null}
               <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
                 Kontak
               </Link>

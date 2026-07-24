@@ -3,7 +3,7 @@ import PageHeader from '@/components/PageHeader'
 import KontakForm from '@/components/KontakForm'
 import Icon from '@/components/Icon'
 import { getSiteSettings } from '@/lib/data'
-import { formatWaDisplay, waLink } from '@/lib/site'
+import { formatWaDisplay, isPlaceholderWa, waLink } from '@/lib/site'
 import { safeMapsHref } from '@/lib/safe-url'
 
 export const revalidate = 60
@@ -19,8 +19,20 @@ export default async function KontakPage() {
 
   const kontakList = [
     { icon: 'home', label: 'Alamat', value: site.alamat },
-    { icon: 'phone', label: 'Telepon Dukuh', value: site.telepon || formatWaDisplay(site.whatsapp) },
-    { icon: 'phone', label: 'WhatsApp', value: formatWaDisplay(site.whatsapp) },
+    {
+      icon: 'phone',
+      label: 'Telepon Dukuh',
+      value: isPlaceholderWa(site.whatsapp) && !site.telepon
+        ? 'Belum diisi (atur di /studio)'
+        : site.telepon && !isPlaceholderWa(site.telepon)
+          ? site.telepon
+          : formatWaDisplay(site.whatsapp),
+    },
+    {
+      icon: 'phone',
+      label: 'WhatsApp',
+      value: formatWaDisplay(site.whatsapp),
+    },
     { icon: 'email', label: 'Email', value: site.email },
     { icon: 'clock', label: 'Jam Pelayanan', value: site.jamLayanan },
   ]
@@ -74,7 +86,9 @@ export default async function KontakPage() {
         <section className="space-y-4" aria-label="Kontak perangkat desa">
           <h2 className="section-label">Perangkat Padukuhan</h2>
           <div className="space-y-3">
-            {site.perangkat.map(({ nama, jabatan, whatsapp, icon }) => (
+            {site.perangkat.map(({ nama, jabatan, whatsapp, icon }) => {
+              const canWa = !isPlaceholderWa(whatsapp)
+              return (
               <div key={nama} className="card-surface p-4 flex items-center gap-4">
                 <span
                   className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
@@ -87,17 +101,28 @@ export default async function KontakPage() {
                   <p className="font-semibold text-sm" style={{ color: 'var(--text)' }}>{nama}</p>
                   <p className="text-xs" style={{ color: 'var(--muted)' }}>{jabatan}</p>
                 </div>
-                <a
-                  href={waLink(whatsapp, `Halo ${nama}, saya ingin bertanya terkait padukuhan.`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="badge border"
-                  style={{ borderColor: 'var(--border)', color: 'var(--gold)' }}
-                >
-                  WA
-                </a>
+                {canWa ? (
+                  <a
+                    href={waLink(whatsapp, `Halo ${nama}, saya ingin bertanya terkait padukuhan.`)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="badge border"
+                    style={{ borderColor: 'var(--border)', color: 'var(--gold)' }}
+                  >
+                    WA
+                  </a>
+                ) : (
+                  <span
+                    className="badge border text-[10px]"
+                    style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+                    title="Nomor belum diisi di CMS"
+                  >
+                    WA —
+                  </span>
+                )}
               </div>
-            ))}
+              )
+            })}
           </div>
 
           <div className="card-surface p-5 space-y-3">

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { fetchMerapiFromMagma, fallbackMerapiStatus } from '@/lib/merapi'
+import { secretsEqual } from '@/lib/secure-compare'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -17,7 +18,6 @@ export async function GET(req: Request) {
   const isProd = process.env.NODE_ENV === 'production' || process.env.VERCEL === '1'
 
   if (isProd && (!secret || secret.length < 16)) {
-    // Fail closed in production when secret not configured
     return NextResponse.json(
       { ok: false, error: 'cron_not_configured' },
       { status: 503, headers: { 'Cache-Control': 'no-store' } },
@@ -30,7 +30,7 @@ export async function GET(req: Request) {
     const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
     const url = new URL(req.url)
     const q = url.searchParams.get('secret') || ''
-    if (bearer !== secret && q !== secret) {
+    if (!secretsEqual(bearer, secret) && !secretsEqual(q, secret)) {
       return NextResponse.json(
         { ok: false, error: 'unauthorized' },
         { status: 401, headers: { 'Cache-Control': 'no-store' } },

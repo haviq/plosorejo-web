@@ -13,10 +13,11 @@ export default function KontakForm({ whatsapp }: KontakFormProps) {
   const [kategori, setKategori] = useState('Informasi Umum')
 
   const isValid = nama.trim().length >= 2 && pesan.trim().length >= 5
+  const waReady = waLink(whatsapp || '', 'x') !== '#'
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!isValid) return
+    if (!isValid || !waReady) return
 
     const text = [
       `*Pesan dari Website Plosorejo*`,
@@ -96,16 +97,24 @@ export default function KontakForm({ whatsapp }: KontakFormProps) {
 
       <button
         type="submit"
-        disabled={!isValid}
+        disabled={!isValid || !waReady}
         className="btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation min-h-[44px]"
-        aria-disabled={!isValid}
+        aria-disabled={!isValid || !waReady}
       >
-        Kirim via WhatsApp
-        <span aria-hidden="true"> →</span>
+        {waReady ? (
+          <>
+            Kirim via WhatsApp
+            <span aria-hidden="true"> →</span>
+          </>
+        ) : (
+          'Nomor WA admin belum diisi'
+        )}
       </button>
 
       <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
-        Pesan akan dibuka di WhatsApp Anda — tinggal tekan kirim.
+        {waReady
+          ? 'Pesan akan dibuka di WhatsApp Anda — tinggal tekan kirim.'
+          : 'Admin: isi nomor WhatsApp di /studio → Pengaturan Situs.'}
       </p>
     </form>
   )

@@ -14,7 +14,18 @@ export function normalizeWa(input?: string | null): string {
   return digits
 }
 
+/** Demo / sample numbers used in seed content — do not show as live contact */
+export function isPlaceholderWa(input?: string | null): boolean {
+  const wa = normalizeWa(input)
+  if (!wa) return true
+  // Sequential demo patterns: 6281234567890, 6281234560001, etc.
+  if (/^628123456(789[0-9]|00\d{2})$/.test(wa)) return true
+  if (/^62812(3456){1,2}\d*$/.test(wa) && wa.includes('123456')) return true
+  return false
+}
+
 export function formatWaDisplay(input?: string | null): string {
+  if (isPlaceholderWa(input)) return 'Belum diisi (admin)'
   const wa = normalizeWa(input)
   if (!wa) return '-'
   // 62812... -> +62 812-...
@@ -29,6 +40,7 @@ export function formatWaDisplay(input?: string | null): string {
 }
 
 export function waLink(number?: string | null, text?: string): string {
+  if (isPlaceholderWa(number)) return '#'
   const wa = normalizeWa(number)
   // Indonesian mobile typically 10–15 digits with country code
   if (!wa || wa.length < 10 || wa.length > 16) return '#'

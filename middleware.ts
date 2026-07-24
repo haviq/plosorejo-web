@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { secretsEqual } from '@/lib/secure-compare'
 
 /**
  * Edge middleware:
- * - Protect /api/cron/* with CRON_SECRET when configured
- * - Light rate-limit headers for /api/merapi (real limit in route)
+ * - Protect /api/cron/* with CRON_SECRET when configured (Bearer preferred)
  * - Block common probe paths early
  * - Never expose stack details
  */
@@ -14,13 +14,14 @@ export function middleware(request: NextRequest) {
   // --- Cron protection -------------------------------------------------
   if (pathname.startsWith('/api/cron')) {
     const secret = process.env.CRON_SECRET
-    // If secret is set, require Authorization: Bearer <secret> OR ?secret=
-    // Vercel Cron sends Authorization: Bearer <CRON_SECRET> when configured.
+    // Vercel Cron sends Authorization: Bearer *** when configured.
     if (secret && secret.length >= 16) {
       const auth = request.headers.get('authorization') || ''
       const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
+      // Query secret still accepted for manual ops, but prefer Bearer (no log leak)
       const q = request.nextUrl.searchParams.get('secret') || ''
-      if (bearer !== secret && q !== secret) {
+      const ok = secretsEqual(bearer, secret) || secretsEqual(q, secret)
+      if (!ok) {
         return NextResponse.json(
           { ok: false, error: 'unauthorized' },
           {

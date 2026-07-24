@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { getSiteSettings } from '@/lib/data'
-import { formatWaDisplay, waLink } from '@/lib/site'
+import { formatWaDisplay, isPlaceholderWa, waLink } from '@/lib/site'
 
 const quickLinks = [
   { href: '/', label: 'Beranda' },
@@ -67,15 +67,25 @@ export default async function Footer() {
             <span className="badge" style={{ color: 'var(--muted)', background: 'var(--surface-soft)' }}>
               KKN UNRIYO 2026
             </span>
-            <a
-              href={waLink(site.whatsapp)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="badge"
-              style={{ color: 'var(--gold)', background: 'var(--gold-glow)' }}
-            >
-              WA {formatWaDisplay(site.whatsapp)}
-            </a>
+            {isPlaceholderWa(site.whatsapp) ? (
+              <span
+                className="badge"
+                style={{ color: 'var(--muted)', background: 'var(--surface-soft)' }}
+                title="Ganti nomor di /studio → Pengaturan Situs"
+              >
+                WA belum diisi
+              </span>
+            ) : (
+              <a
+                href={waLink(site.whatsapp)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="badge"
+                style={{ color: 'var(--gold)', background: 'var(--gold-glow)' }}
+              >
+                WA {formatWaDisplay(site.whatsapp)}
+              </a>
+            )}
           </div>
         </div>
 
