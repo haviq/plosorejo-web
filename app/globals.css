@@ -1094,23 +1094,18 @@ html[data-preloader='skip'] .site-preloader {
   color: rgba(26, 18, 4, 0.45);
 }
 
-/* Exit: fade + slide down, then unmount */
+/* Exit: hide immediately — native script adds this class */
 .site-preloader--exit {
-  animation: preloader-root-out 0.7s ease both;
-  pointer-events: none;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.28s ease !important;
+  animation: none !important;
 }
 
-.site-preloader--exit .site-preloader__layer--gold {
-  animation: preloader-curtain-out 0.7s cubic-bezier(0.77, 0, 0.18, 1) both;
-}
-
-.site-preloader--exit .site-preloader__layer--black {
-  animation: preloader-curtain-out 0.78s cubic-bezier(0.77, 0, 0.18, 1) both;
-  animation-delay: 0.05s;
-}
-
+.site-preloader--exit .site-preloader__layer--gold,
+.site-preloader--exit .site-preloader__layer--black,
 .site-preloader--exit .site-preloader__content {
-  animation: preloader-content-out 0.28s ease both;
+  animation: none !important;
 }
 
 @keyframes preloader-curtain-in {
