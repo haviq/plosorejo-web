@@ -59,6 +59,10 @@
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.06);
   --nav-bg: rgba(8, 8, 8, 0.92);
+  --nav-bg-top: rgba(8, 8, 8, 0.78);
+  --nav-icon-fg: #f5f0e4;
+  --nav-icon-bg: rgba(255, 255, 255, 0.06);
+  --nav-icon-border: rgba(212, 175, 55, 0.45);
   --overlay-scrim: rgba(8, 8, 8, 0.98);
   --btn-primary-fg: #080808;
   /* Always-light text for dark photo overlays (hero / media cards) */
@@ -107,6 +111,10 @@
   --glass-bg: rgba(255, 255, 255, 0.86);
   --glass-border: rgba(90, 72, 16, 0.16);
   --nav-bg: rgba(247, 243, 232, 0.96);
+  --nav-bg-top: rgba(247, 243, 232, 0.88);
+  --nav-icon-fg: #1a150c;
+  --nav-icon-bg: rgba(255, 255, 255, 0.92);
+  --nav-icon-border: rgba(122, 97, 16, 0.45);
   --overlay-scrim: rgba(247, 243, 232, 0.98);
   --btn-primary-fg: #14110c;
   --on-dark-text: #f5f0e4;
@@ -335,23 +343,34 @@ body {
   justify-content: center;
   gap: 5px;
   border-radius: 0.75rem;
-  border: 1px solid var(--border);
-  background: var(--surface-soft);
-  color: var(--text);
+  border: 1.5px solid var(--nav-icon-border);
+  background: var(--nav-icon-bg);
+  color: var(--nav-icon-fg);
   cursor: pointer;
   pointer-events: auto !important;
   touch-action: manipulation;
   -webkit-tap-highlight-color: rgba(212, 175, 55, 0.35);
+  position: relative;
+  z-index: 10070;
 }
 
 .site-header__burger-line {
   display: block;
-  width: 1.15rem;
-  height: 2px;
-  background: var(--text);
-  border-radius: 1px;
+  width: 1.2rem;
+  height: 2.5px;
+  background: var(--nav-icon-fg);
+  border-radius: 2px;
   transition: transform 0.2s ease, opacity 0.2s ease;
   pointer-events: none;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+}
+
+/* Theme toggle icons inherit button color */
+.site-header__icon-btn svg {
+  color: var(--nav-icon-fg);
+  stroke: currentColor;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 .site-header button,
@@ -945,6 +964,33 @@ section[aria-label*='Hero'] .scroll-indicator {
   opacity: 1;
 }
 
+/* Light mode: ensure header icons never blend into cream nav */
+[data-theme='light'] .site-header__icon-btn {
+  background: #ffffff !important;
+  border-color: rgba(122, 97, 16, 0.55) !important;
+  color: #14110c !important;
+  box-shadow: 0 1px 4px rgba(20, 17, 12, 0.12);
+}
+
+[data-theme='light'] .site-header__burger-line {
+  background: #14110c !important;
+}
+
+[data-theme='light'] .site-header__icon-btn svg {
+  color: #14110c !important;
+  stroke: #14110c !important;
+}
+
+[data-theme='dark'] .site-header__icon-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(212, 175, 55, 0.5) !important;
+  color: #f5f0e4 !important;
+}
+
+[data-theme='dark'] .site-header__burger-line {
+  background: #f5f0e4 !important;
+}
+
 /* Media overlays always use light-on-dark tokens, but only for text layers */
 .on-dark {
   color: var(--on-dark-text);
@@ -1294,6 +1340,20 @@ html[data-preloader='skip'] .site-preloader {
 /* Ensure tiles are visible (some WebViews hide broken images poorly) */
 .leaflet-tile-pane img.leaflet-tile {
   max-width: none !important;
+}
+
+/* Leaflet overlay paths must stay above tiles */
+.peta-map-shell .leaflet-overlay-pane {
+  z-index: 4 !important;
+}
+.peta-map-shell .leaflet-overlay-pane svg {
+  max-width: none !important;
+}
+.peta-map-shell .leaflet-overlay-pane path {
+  pointer-events: auto;
+}
+.peta-map-shell .leaflet-tooltip {
+  opacity: 1 !important;
 }
 
 /* When map is focused/dragged, header must still win */

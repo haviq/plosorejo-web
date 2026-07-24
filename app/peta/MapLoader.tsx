@@ -13,12 +13,10 @@ import {
 type MapComponent = ComponentType
 
 /**
- * Progressive map loader:
- * 1) Always show OSM embed immediately (never blank spinner-only)
- * 2) Try Leaflet interactive in background
- * 3) Swap to Leaflet when ready; keep OSM if it fails
+ * Prefer interactive Leaflet (RT boundaries + roads).
+ * OSM embed is only fallback when Leaflet fails/timeouts.
  */
-const LOAD_TIMEOUT_MS = 8000
+const LOAD_TIMEOUT_MS = 12000
 
 function StaticMapFallback({
   reason,
@@ -27,6 +25,7 @@ function StaticMapFallback({
   reason?: string
   compact?: boolean
 }) {
+  // Static OSM has no custom RT polygons — show clear notice
   const bbox = '110.4315,-7.6285,110.4445,-7.6165'
   const marker = '-7.62428,110.43829'
   const src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${marker}`
@@ -50,11 +49,19 @@ function StaticMapFallback({
           allowFullScreen
         />
       </div>
-      {reason ? (
-        <p className="text-xs text-center" style={{ color: 'var(--muted)' }}>
-          {reason}
-        </p>
-      ) : null}
+      <div
+        className="rounded-xl px-3 py-2 text-xs"
+        style={{
+          backgroundColor: 'var(--s1)',
+          border: '1px solid var(--border)',
+          color: 'var(--muted)',
+        }}
+        role="status"
+      >
+        <strong style={{ color: 'var(--gold)' }}>Mode cadangan:</strong> batas RT hijau & jalan
+        merah hanya ada di peta interaktif.
+        {reason ? ` (${reason})` : null}
+      </div>
       <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
         <a
           href="https://www.openstreetmap.org/?mlat=-7.62428&mlon=110.43829#map=16/-7.6228/110.4372"
@@ -65,8 +72,6 @@ function StaticMapFallback({
         >
           Buka di OpenStreetMap
         </a>
-        {' · '}
-        Peta interaktif (batas RT hijau + jalan merah) dimuat otomatis bila perangkat mendukung.
       </p>
     </div>
   )
@@ -82,7 +87,7 @@ class MapErrorBoundary extends Component<
     return { hasError: true }
   }
 
-  componentDidCatch(error: Error) {
+  componentDidCatch(error: Error, _info: ErrorInfo) {
     this.props.onError(error.message || 'Render peta gagal')
   }
 
@@ -94,8 +99,8 @@ class MapErrorBoundary extends Component<
 
 export default function MapLoader() {
   const [Map, setMap] = useState<MapComponent | null>(null)
-  const [phase, setPhase] = useState<'osm' | 'leaflet' | 'error'>('osm')
-  const [status, setStatus] = useState('Memuat peta interaktif di latar…')
+  const [phase, setPhase] = useState<'loading' | 'leaflet' | 'error'>('loading')
+  const [status, setStatus] = useState('Memuat peta interaktif…')
   const [attempt, setAttempt] = useState(0)
   const requestIdRef = useRef(0)
   const cancelledRef = useRef(false)
@@ -104,9 +109,6 @@ export default function MapLoader() {
     cancelledRef.current = false
     const requestId = ++requestIdRef.current
     let timeoutId = 0
-
-    // Fresh import every attempt — never reuse a rejected module promise
-    const load = () => import('./LeafletMap')
 
     const fail = (msg: string) => {
       if (cancelledRef.current || requestId !== requestIdRef.current) return
@@ -124,33 +126,34 @@ export default function MapLoader() {
     }
 
     timeoutId = window.setTimeout(() => {
-      // Keep OSM visible; stop waiting for Leaflet
       if (requestId === requestIdRef.current && !cancelledRef.current) {
+        // Only fall back if Leaflet not ready
         setPhase((p) => (p === 'leaflet' ? p : 'error'))
-        setStatus('Peta interaktif tidak tersedia di perangkat ini — menampilkan peta cadangan.')
+        setStatus('Timeout memuat peta interaktif')
       }
     }, LOAD_TIMEOUT_MS)
 
-    setPhase('osm')
-    setStatus('Memuat peta interaktif di latar…')
+    setPhase('loading')
+    setStatus(attempt > 0 ? 'Mencoba lagi…' : 'Memuat peta interaktif (batas RT + jalan)…')
     setMap(null)
 
-    load()
+    // Prefetch CSS already bundled with LeafletMap; dynamic import for chunk
+    import('./LeafletMap')
       .then((mod) => {
         if (typeof mod?.default === 'function') {
           ok(mod.default)
         } else {
-          fail('Modul peta tidak valid.')
+          fail('Modul peta tidak valid')
         }
       })
       .catch((err: unknown) => {
         const msg = err instanceof Error ? err.message : 'Gagal memuat modul peta'
-        if (attempt < 1) {
+        if (attempt < 2) {
           window.setTimeout(() => {
             if (!cancelledRef.current && requestId === requestIdRef.current) {
               setAttempt((n) => n + 1)
             }
-          }, 400)
+          }, 500)
           return
         }
         fail(msg)
@@ -162,7 +165,6 @@ export default function MapLoader() {
     }
   }, [attempt])
 
-  // Leaflet ready
   if (phase === 'leaflet' && Map) {
     return (
       <div className="space-y-2">
@@ -175,14 +177,18 @@ export default function MapLoader() {
         >
           <Map />
         </MapErrorBoundary>
+        <p className="text-[11px] text-center" style={{ color: 'var(--muted2)' }}>
+          Hijau = batas RT/padukuhan · Merah = jalan utama · Ketuk zona untuk detail
+        </p>
       </div>
     )
   }
 
-  // Always show OSM immediately — never spinner-only
-  return (
-    <div className="space-y-3">
-      {phase !== 'error' ? (
+  if (phase === 'loading') {
+    // Show OSM underneath while loading so page never looks blank,
+    // but auto-upgrade when Leaflet ready
+    return (
+      <div className="space-y-2">
         <div
           className="flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs"
           style={{
@@ -191,38 +197,8 @@ export default function MapLoader() {
             color: 'var(--muted)',
           }}
           role="status"
-          aria-live="polite"
         >
-          <span>{status || 'Menyiapkan peta interaktif…'}</span>
-          <button
-            type="button"
-            onClick={() => {
-              cancelledRef.current = true
-              setPhase('error')
-              setStatus('Menggunakan peta cadangan.')
-              setMap(null)
-            }}
-            className="shrink-0 px-3 py-2 rounded-lg font-semibold touch-manipulation"
-            style={{
-              border: '1px solid var(--border)',
-              color: 'var(--text)',
-              minHeight: 40,
-            }}
-          >
-            Cukup peta ini
-          </button>
-        </div>
-      ) : (
-        <div
-          className="flex flex-wrap items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs"
-          style={{
-            backgroundColor: 'var(--s1)',
-            border: '1px solid var(--border)',
-            color: 'var(--muted)',
-          }}
-          role="status"
-        >
-          <span>{status || 'Mode peta cadangan'}</span>
+          <span>{status}</span>
           <button
             type="button"
             onClick={() => {
@@ -232,11 +208,41 @@ export default function MapLoader() {
             className="shrink-0 px-3 py-2 rounded-lg font-semibold touch-manipulation"
             style={{ color: 'var(--gold)', border: '1px solid var(--border)', minHeight: 40 }}
           >
-            Coba interaktif
+            Muat ulang
           </button>
         </div>
-      )}
-      <StaticMapFallback reason={phase === 'error' ? status || undefined : undefined} />
+        {/* Temporary basemap while chunk loads */}
+        <StaticMapFallback compact />
+      </div>
+    )
+  }
+
+  // error → OSM + retry
+  return (
+    <div className="space-y-2">
+      <div
+        className="flex flex-wrap items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs"
+        style={{
+          backgroundColor: 'var(--s1)',
+          border: '1px solid var(--border)',
+          color: 'var(--muted)',
+        }}
+        role="status"
+      >
+        <span>{status || 'Peta interaktif gagal dimuat'}</span>
+        <button
+          type="button"
+          onClick={() => {
+            cancelledRef.current = false
+            setAttempt((n) => n + 1)
+          }}
+          className="shrink-0 px-3 py-2 rounded-lg font-semibold touch-manipulation"
+          style={{ color: 'var(--gold)', border: '1px solid var(--border)', minHeight: 40 }}
+        >
+          Coba interaktif
+        </button>
+      </div>
+      <StaticMapFallback reason={status || undefined} />
     </div>
   )
 }

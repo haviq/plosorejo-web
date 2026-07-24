@@ -472,17 +472,19 @@ export default function LeafletMap() {
         />
         <ZoomControl position="bottomright" />
 
-      {/* ===== RT zones (hijau berjenjang) ===== */}
+      {/* ===== RT zones (hijau berjenjang) — stroke tebal biar kelihatan di mobile ===== */}
       {RT_ZONES.map((rt) => (
         <Polygon
           key={rt.name}
           positions={rt.coords}
           pathOptions={{
-            color: rt.color,
+            color: '#14532d',
             fillColor: rt.fillColor,
-            fillOpacity: 0.28,
-            weight: 1.5,
-            opacity: 0.85,
+            fillOpacity: 0.38,
+            weight: 3,
+            opacity: 1,
+            lineJoin: 'round',
+            lineCap: 'round',
           }}
         >
           <Tooltip sticky>
@@ -531,11 +533,13 @@ export default function LeafletMap() {
       <Polygon
         positions={PADUKUHAN_BOUNDARY}
         pathOptions={{
-          color: '#15803d',
+          color: '#166534',
           fillColor: '#22c55e',
-          fillOpacity: 0.04,
-          weight: 3.5,
-          opacity: 0.95,
+          fillOpacity: 0.06,
+          weight: 4.5,
+          opacity: 1,
+          dashArray: undefined,
+          lineJoin: 'round',
         }}
       >
         <Tooltip sticky>
@@ -566,10 +570,11 @@ export default function LeafletMap() {
           key={line.name}
           positions={line.coords}
           pathOptions={{
-            color: '#14532d',
-            weight: 2,
-            opacity: 0.7,
-            dashArray: '7 5',
+            color: '#052e16',
+            weight: 3,
+            opacity: 0.9,
+            dashArray: '8 6',
+            lineCap: 'round',
           }}
         >
           <Tooltip sticky>

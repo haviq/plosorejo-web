@@ -101,14 +101,16 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v3"
+        data-nav-build="header-inline-v4"
         role="banner"
+        data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         style={{
-          backgroundColor: scrolled || mobileOpen ? 'var(--nav-bg)' : 'rgba(8,8,8,0.72)',
+          // Theme tokens — never hardcode dark glass in light mode
+          backgroundColor: scrolled || mobileOpen ? 'var(--nav-bg)' : 'var(--nav-bg-top)',
           backdropFilter: 'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
           borderBottom: '1px solid var(--border)',
-          boxShadow: scrolled ? 'var(--shadow-card)' : 'none',
+          boxShadow: scrolled || mobileOpen ? 'var(--shadow-card)' : 'none',
         }}
       >
         <div className="site-header__bar">
