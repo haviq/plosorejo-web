@@ -126,11 +126,20 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
   }
 
   const lastHamAt = useRef(0)
-  const toggleMobile = () => {
+
+  const openMobile = () => {
     const now = Date.now()
-    if (now - lastHamAt.current < 350) return
+    if (now - lastHamAt.current < 280) return
     lastHamAt.current = now
-    setMobileOpen((v) => !v)
+    setMobileOpen(true)
+  }
+
+  const closeMobile = () => {
+    const now = Date.now()
+    if (now - lastHamAt.current < 280) return
+    lastHamAt.current = now
+    setMobileOpen(false)
+    setSektorOpen(false)
   }
 
   const isActive = (href: string) =>
@@ -140,7 +149,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v8"
+        data-nav-build="header-inline-v9"
         role="banner"
         data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         data-mobile-open={mobileOpen ? '1' : '0'}
@@ -236,47 +245,45 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               type="button"
               className="site-header__icon-btn touch-manipulation"
               data-nav-hamburger="1"
+              data-nav-open={mobileOpen ? '1' : '0'}
               onPointerDown={(e) => {
                 // Prefer pointerdown for Android/Telegram WebView reliability
                 if (e.button !== 0 && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
                 e.preventDefault()
                 e.stopPropagation()
-                toggleMobile()
+                if (mobileOpen) closeMobile()
+                else openMobile()
               }}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                // Debounced inside toggleMobile — safe if pointerdown already fired
-                toggleMobile()
+                // Debounced inside open/close helpers
+                if (mobileOpen) closeMobile()
+                else openMobile()
               }}
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-panel"
               style={{
                 color: '#f0c040',
-                borderColor: 'rgba(240,192,64,0.85)',
-                background: 'rgba(8,8,8,0.82)',
-                boxShadow: '0 0 0 1px rgba(240,192,64,0.35), 0 2px 10px rgba(0,0,0,0.35)',
+                borderColor: 'rgba(240,192,64,0.9)',
+                background: 'rgba(8,8,8,0.92)',
+                boxShadow: '0 0 0 1px rgba(240,192,64,0.4), 0 2px 10px rgba(0,0,0,0.45)',
               }}
             >
-              <span
-                className="site-header__burger-line"
-                style={{
-                  background: '#f0c040',
-                  transform: mobileOpen ? 'rotate(45deg) translate(0, 7px)' : 'none',
-                }}
-              />
-              <span
-                className="site-header__burger-line"
-                style={{ background: '#f0c040', opacity: mobileOpen ? 0 : 1 }}
-              />
-              <span
-                className="site-header__burger-line"
-                style={{
-                  background: '#f0c040',
-                  transform: mobileOpen ? 'rotate(-45deg) translate(0, -7px)' : 'none',
-                }}
-              />
+              {mobileOpen ? (
+                /* Explicit X — clearer than rotating 3 burger lines */
+                <span className="site-header__close-x" aria-hidden="true">
+                  <span className="site-header__close-x-line site-header__close-x-line--a" />
+                  <span className="site-header__close-x-line site-header__close-x-line--b" />
+                </span>
+              ) : (
+                <>
+                  <span className="site-header__burger-line" style={{ background: '#f0c040' }} />
+                  <span className="site-header__burger-line" style={{ background: '#f0c040' }} />
+                  <span className="site-header__burger-line" style={{ background: '#f0c040' }} />
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -292,6 +299,36 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
           aria-label="Menu navigasi"
         >
           <div className="site-mobile-panel__inner">
+            <div className="site-mobile-panel__top">
+              <p className="site-mobile-panel__brand">Menu</p>
+              <button
+                type="button"
+                className="site-header__icon-btn touch-manipulation"
+                data-nav-close="1"
+                onPointerDown={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  closeMobile()
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  closeMobile()
+                }}
+                aria-label="Tutup menu"
+                style={{
+                  color: '#f0c040',
+                  borderColor: 'rgba(240,192,64,0.9)',
+                  background: 'rgba(8,8,8,0.92)',
+                }}
+              >
+                <span className="site-header__close-x" aria-hidden="true">
+                  <span className="site-header__close-x-line site-header__close-x-line--a" />
+                  <span className="site-header__close-x-line site-header__close-x-line--b" />
+                </span>
+              </button>
+            </div>
+
             <nav aria-label="Menu mobile">
               {navLinks.map(({ href, label }) => (
                 <Link
@@ -299,7 +336,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                   href={href}
                   onClick={closeMenus}
                   className="site-mobile-panel__link"
-                  style={{ color: isActive(href) ? 'var(--gold)' : 'var(--text)' }}
+                  style={{ color: isActive(href) ? '#f0c040' : '#f5f0e4' }}
                   aria-current={isActive(href) ? 'page' : undefined}
                 >
                   {label}
@@ -307,12 +344,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               ))}
             </nav>
 
-            <p
-              className="mt-6 mb-3 text-xs tracking-[0.2em] uppercase font-semibold"
-              style={{ color: 'var(--muted)' }}
-            >
-              Sektor
-            </p>
+            <p className="site-mobile-panel__section-label">Sektor</p>
             <div className="grid grid-cols-2 gap-2">
               {sektorLinks.map(({ href, label, icon }) => (
                 <Link
@@ -321,7 +353,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                   onClick={closeMenus}
                   className="site-mobile-panel__chip"
                   style={{
-                    color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
+                    color: pathname.startsWith(href) ? '#f0c040' : '#d2c9b4',
                   }}
                 >
                   <Icon name={icon} size={14} />

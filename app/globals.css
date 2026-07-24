@@ -446,26 +446,61 @@ html[data-preloader='skip'] .site-header {
   z-index: 20900; /* under header (21000 when preloader skip), above page content */
   display: flex;
   flex-direction: column;
-  background: var(--overlay-scrim);
+  /* Always solid dark so links never vanish in light/dark mix-ups */
+  background: #080808;
+  color: #f5f0e4;
   pointer-events: auto !important;
   overscroll-behavior: contain;
 }
 
 .site-mobile-panel__inner {
-  padding: 5.5rem 1.5rem 2rem;
+  padding: 5.25rem 1.25rem 2rem;
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
+.site-mobile-panel__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.site-mobile-panel__brand {
+  margin: 0;
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  color: #f0c040;
+}
+
+.site-mobile-panel__section-label {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #9a9a9a;
+}
+
 .site-mobile-panel__link {
   display: block;
   font-family: var(--font-playfair), Georgia, serif;
-  font-size: 1.5rem;
+  font-size: 1.55rem;
   font-weight: 600;
-  padding: 0.75rem 0;
+  padding: 0.8rem 0;
   min-height: 48px;
   touch-action: manipulation;
+  color: #f5f0e4 !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12);
+}
+
+.site-mobile-panel__link:active {
+  color: #f0c040 !important;
 }
 
 .site-mobile-panel__chip {
@@ -476,11 +511,41 @@ html[data-preloader='skip'] .site-header {
   min-height: 44px;
   padding: 0.65rem 0.75rem;
   border-radius: 0.75rem;
-  border: 1px solid var(--border);
-  background: var(--surface-soft);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  background: rgba(255, 255, 255, 0.04);
   font-size: 0.8rem;
   text-align: center;
   touch-action: manipulation;
+  color: #d2c9b4 !important;
+}
+
+/* Explicit close X (two diagonal bars) */
+.site-header__close-x {
+  position: relative;
+  width: 1.15rem;
+  height: 1.15rem;
+  display: block;
+  pointer-events: none;
+}
+
+.site-header__close-x-line {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1.15rem;
+  height: 2.5px;
+  margin-left: -0.575rem;
+  margin-top: -1.25px;
+  background: #f0c040;
+  border-radius: 2px;
+}
+
+.site-header__close-x-line--a {
+  transform: rotate(45deg);
+}
+
+.site-header__close-x-line--b {
+  transform: rotate(-45deg);
 }
 
 /* Defensive: interactive content must always stay fully opaque & clickable */
