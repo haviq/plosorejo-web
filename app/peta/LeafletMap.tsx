@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   MapContainer,
   TileLayer,
@@ -401,7 +401,10 @@ const markers = (poiData as { lat: number; lng: number; label: string; type: str
 )
 
 export default function LeafletMap() {
+  const [mounted, setMounted] = useState(false)
+
   useEffect(() => {
+    setMounted(true)
     try {
       fixLeafletIcons()
     } catch {
@@ -423,15 +426,14 @@ export default function LeafletMap() {
     }
   }, [])
 
-  // Avoid rendering until we have a real browser window (extra guard for edge WebViews)
-  if (typeof window === 'undefined') {
+  // Client-only mount gate (avoids SSR/hydration blank map)
+  if (!mounted) {
     return (
       <div
-        className="w-full rounded-xl flex items-center justify-center text-sm"
-        style={{ height: 480, backgroundColor: 'var(--s2)', border: '1px solid var(--border)', color: 'var(--muted)' }}
-      >
-        Memuat peta…
-      </div>
+        className="w-full rounded-xl"
+        style={{ height: 560, backgroundColor: 'var(--s2)', border: '1px solid var(--border)' }}
+        aria-hidden="true"
+      />
     )
   }
 

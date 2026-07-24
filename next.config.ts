@@ -32,10 +32,10 @@ const publicCsp = [
   // Next.js + theme/preloader boot scripts need inline; Sanity CDN images
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com",
+  "img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com https://cdnjs.cloudflare.com",
   "font-src 'self' data:",
-  "connect-src 'self' https://cdn.sanity.io https://*.api.sanity.io https://*.sanity.io https://magma.esdm.go.id https://*.basemaps.cartocdn.com",
-  "frame-src 'self' https://www.openstreetmap.org",
+  "connect-src 'self' https://cdn.sanity.io https://*.api.sanity.io https://*.sanity.io https://magma.esdm.go.id https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://tile.openstreetmap.org",
+  "frame-src 'self' https://www.openstreetmap.org https://openstreetmap.org",
   "worker-src 'self' blob:",
   "upgrade-insecure-requests",
 ].join('; ')

@@ -1276,12 +1276,24 @@ html[data-preloader='skip'] .site-preloader {
   isolation: isolate;
   overflow: hidden;
   border-radius: 0.75rem;
-  touch-action: pan-y;
+  /* Allow horizontal map drag + vertical page scroll */
+  touch-action: manipulation;
+  min-height: 280px;
+  background: var(--s2);
 }
 
 .peta-map-shell .leaflet-container {
   position: relative !important;
   z-index: 0 !important;
+  min-height: 280px;
+  height: 560px;
+  width: 100%;
+  background: #1a1a1a;
+}
+
+/* Ensure tiles are visible (some WebViews hide broken images poorly) */
+.leaflet-tile-pane img.leaflet-tile {
+  max-width: none !important;
 }
 
 /* When map is focused/dragged, header must still win */
