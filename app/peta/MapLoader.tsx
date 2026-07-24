@@ -12,7 +12,17 @@ import {
 
 type MapComponent = ComponentType
 
-const LOAD_TIMEOUT_MS = 10000
+/** Fail fast to OSM embed — better than a stuck spinner on slow mobile. */
+const LOAD_TIMEOUT_MS = 4500
+
+/** Warm the chunk as soon as this module evaluates (peta page only). */
+const mapChunkPromise: Promise<{ default: MapComponent }> | null =
+  typeof window !== 'undefined'
+    ? import('./LeafletMap').catch((err) => {
+        // Keep rejection for callers; do not throw at module scope
+        return Promise.reject(err)
+      })
+    : null
 
 /** OpenStreetMap embed — always works even if Leaflet chunk fails on mobile */
 function StaticMapFallback({ reason }: { reason?: string }) {
@@ -44,8 +54,7 @@ function StaticMapFallback({ reason }: { reason?: string }) {
         </p>
       ) : null}
       <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
-        Peta interaktif penuh (batas RT hijau + jalan merah) membutuhkan JavaScript modern.
-        {' '}
+        Peta interaktif penuh (batas RT hijau + jalan merah) membutuhkan JavaScript modern.{' '}
         <a
           href={`https://www.openstreetmap.org/?mlat=-7.62428&mlon=110.43829#map=16/-7.6228/110.4372`}
           target="_blank"
@@ -87,9 +96,11 @@ export default function MapLoader() {
   const [attempt, setAttempt] = useState(0)
   const [useFallback, setUseFallback] = useState(false)
   const requestIdRef = useRef(0)
+  const manualSkipRef = useRef(false)
 
   useEffect(() => {
-    // Token-based cancel: only ignore stale responses, never leave loading hung
+    if (manualSkipRef.current) return
+
     const requestId = ++requestIdRef.current
     let timeoutId = 0
     let settled = false
@@ -100,7 +111,7 @@ export default function MapLoader() {
     setMap(null)
 
     const settleError = (msg: string) => {
-      if (settled || requestId !== requestIdRef.current) return
+      if (settled || requestId !== requestIdRef.current || manualSkipRef.current) return
       settled = true
       window.clearTimeout(timeoutId)
       setError(msg)
@@ -109,7 +120,7 @@ export default function MapLoader() {
     }
 
     const settleOk = (comp: MapComponent) => {
-      if (settled || requestId !== requestIdRef.current) return
+      if (settled || requestId !== requestIdRef.current || manualSkipRef.current) return
       settled = true
       window.clearTimeout(timeoutId)
       setMap(() => comp)
@@ -119,11 +130,12 @@ export default function MapLoader() {
     }
 
     timeoutId = window.setTimeout(() => {
-      settleError('Peta interaktif terlalu lama dimuat di perangkat ini.')
+      settleError('Peta interaktif terlalu lama dimuat — menampilkan peta cadangan.')
     }, LOAD_TIMEOUT_MS)
 
-    // Prefer dynamic import; also race a microtask so we always leave loading state
-    import('./LeafletMap')
+    const load = mapChunkPromise ?? import('./LeafletMap')
+
+    load
       .then((mod) => {
         if (typeof mod?.default === 'function') {
           settleOk(mod.default)
@@ -133,15 +145,35 @@ export default function MapLoader() {
       })
       .catch((err: unknown) => {
         const msg = err instanceof Error ? err.message : 'Gagal memuat modul peta'
+        // One automatic retry on first failure (network flake)
+        if (attempt === 0) {
+          window.setTimeout(() => {
+            if (!settled && requestId === requestIdRef.current) {
+              setAttempt(1)
+            }
+          }, 300)
+          return
+        }
         settleError(msg)
       })
 
     return () => {
-      // Do NOT mark settled — allow in-flight import to complete if remount races.
-      // Only invalidate by bumping requestId on next effect.
       window.clearTimeout(timeoutId)
     }
   }, [attempt])
+
+  const skipToFallback = () => {
+    manualSkipRef.current = true
+    setUseFallback(true)
+    setLoading(false)
+    setError('Dilewati manual — menampilkan peta cadangan.')
+    setMap(null)
+  }
+
+  const retryInteractive = () => {
+    manualSkipRef.current = false
+    setAttempt((n) => n + 1)
+  }
 
   if (useFallback || (error && !Map)) {
     return (
@@ -155,26 +187,19 @@ export default function MapLoader() {
           }}
           role="status"
         >
-          <p style={{ color: 'var(--text)', fontWeight: 600 }}>
-            Peta interaktif diganti mode cadangan
-          </p>
+          <p style={{ color: 'var(--text)', fontWeight: 600 }}>Peta cadangan aktif</p>
           {error ? <p className="text-xs max-w-md">{error}</p> : null}
           <button
             type="button"
-            onClick={() => {
-              setUseFallback(false)
-              setError(null)
-              setAttempt((n) => n + 1)
-            }}
-            className="px-4 py-2 rounded-lg text-xs font-bold touch-manipulation"
+            onClick={retryInteractive}
+            className="mt-1 px-4 py-2 rounded-lg text-xs font-semibold touch-manipulation"
             style={{
-              backgroundColor: 'var(--gold)',
-              color: '#111',
+              border: '1px solid var(--border)',
+              color: 'var(--gold)',
               minHeight: 44,
-              minWidth: 140,
             }}
           >
-            Coba peta interaktif
+            Coba peta interaktif lagi
           </button>
         </div>
         <StaticMapFallback reason={error || undefined} />
@@ -190,15 +215,25 @@ export default function MapLoader() {
         aria-busy="true"
         aria-live="polite"
       >
-        <span>Memuat peta…</span>
-        <span className="text-[11px] opacity-70">Mengambil peta interaktif & data wilayah</span>
+        <span>Memuat peta interaktif…</span>
+        <span className="text-[11px] opacity-70">Batas RT, jalan, dan titik penting desa</span>
+        <div
+          className="w-40 h-1.5 rounded-full overflow-hidden"
+          style={{ background: 'var(--border)' }}
+          aria-hidden="true"
+        >
+          <div
+            className="h-full rounded-full"
+            style={{
+              width: '40%',
+              background: 'var(--gold)',
+              animation: 'map-load-pulse 1.1s ease-in-out infinite',
+            }}
+          />
+        </div>
         <button
           type="button"
-          onClick={() => {
-            setUseFallback(true)
-            setLoading(false)
-            setError('Dilewati manual — menampilkan peta cadangan.')
-          }}
+          onClick={skipToFallback}
           className="mt-2 px-4 py-2 rounded-lg text-xs font-semibold touch-manipulation"
           style={{
             border: '1px solid var(--border)',
@@ -208,6 +243,16 @@ export default function MapLoader() {
         >
           Tampilkan peta sekarang
         </button>
+        <style jsx>{`
+          @keyframes map-load-pulse {
+            0% {
+              transform: translateX(-120%);
+            }
+            100% {
+              transform: translateX(280%);
+            }
+          }
+        `}</style>
       </div>
     )
   }

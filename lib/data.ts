@@ -25,7 +25,12 @@ import {
   kknArsipQuery,
   produksiSusuRecentQuery,
 } from '@/sanity/lib/queries'
-import { fallbackMerapiStatus, fetchMerapiFromMagma, MAGMA_TINGKAT_URL } from '@/lib/merapi'
+import {
+  fallbackMerapiStatus,
+  fetchMerapiFromMagma,
+  mergeMerapiCopy,
+  MAGMA_TINGKAT_URL,
+} from '@/lib/merapi'
 import {
   mapBerita,
   mapUMKM,
@@ -124,10 +129,13 @@ export async function getMerapiStatus(): Promise<MerapiStatusData> {
 
   const live = await fetchMerapiFromMagma()
   if (live) {
+    const copy = mergeMerapiCopy(live.level, live.deskripsi, cms?.deskripsi)
     return {
       ...live,
-      deskripsi: cms?.deskripsi?.trim() ? cms.deskripsi : live.deskripsi,
-      note: cms?.deskripsi?.trim() ? 'Level dari MAGMA · catatan lokal dari admin' : undefined,
+      deskripsi: copy.deskripsi,
+      note: copy.note
+        ? `Catatan admin: ${copy.note}`
+        : undefined,
     }
   }
 

@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server'
-import { fetchMerapiFromMagma, fallbackMerapiStatus, MAGMA_TINGKAT_URL } from '@/lib/merapi'
+import {
+  fetchMerapiFromMagma,
+  fallbackMerapiStatus,
+  mergeMerapiCopy,
+  MAGMA_TINGKAT_URL,
+} from '@/lib/merapi'
 import { sanityFetch } from '@/sanity/lib/client'
 import { merapiStatusQuery } from '@/sanity/lib/queries'
 import { safeOfficialHref } from '@/lib/safe-url'
@@ -79,12 +84,18 @@ export async function GET(req: Request) {
 
     const live = await fetchMerapiFromMagma({ force, timeoutMs: 15000 })
     if (live) {
+      const copy = mergeMerapiCopy(
+        live.level,
+        live.deskripsi,
+        sanitizeText(cms?.deskripsi, 400),
+      )
       return NextResponse.json(
         {
           ok: true,
           data: {
             ...live,
-            deskripsi: sanitizeText(cms?.deskripsi, 400) || live.deskripsi,
+            deskripsi: copy.deskripsi,
+            note: copy.note,
             reportUrl: safeOfficialHref(live.reportUrl) || undefined,
             officialUrl: safeOfficialHref(live.officialUrl) || MAGMA_TINGKAT_URL,
           },

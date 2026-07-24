@@ -35,10 +35,48 @@ const LEVEL_FROM_ROMAN: Record<string, MerapiLevel> = {
 }
 
 const LEVEL_DESC: Record<MerapiLevel, string> = {
-  Normal: 'Aktivitas vulkanik dalam batas normal (Level I)',
-  Waspada: 'Peningkatan aktivitas — waspada (Level II)',
-  Siaga: 'Aktivitas tinggi / erupsi mungkin — siaga (Level III)',
-  Awas: 'Bahaya tinggi — awas (Level IV)',
+  Normal: 'Aktivitas vulkanik dalam batas normal (Level I). Tetap pantau info resmi.',
+  Waspada: 'Peningkatan aktivitas terdeteksi (Level II). Waspada dan ikuti arahan BPPTKG/PVMBG.',
+  Siaga:
+    'Aktivitas tinggi / erupsi mungkin terjadi (Level III). Warga di zona bahaya mengikuti arahan resmi.',
+  Awas: 'Bahaya tinggi (Level IV). Evakuasi / larangan masuk zona bahaya berlaku sesuai arahan resmi.',
+}
+
+/** Phrases that contradict a non-Normal level if used as the primary deskripsi */
+const NORMALISH =
+  /\b(batas normal|kondisi normal|aktivitas normal|dalam kondisi aman|tidak ada ancaman)\b/i
+
+/**
+ * Prefer MAGMA deskripsi; only keep CMS text as a side note when it does not
+ * contradict the live level (e.g. "normal" while level is Siaga).
+ */
+export function mergeMerapiCopy(
+  level: MerapiLevel,
+  magmaDeskripsi?: string | null,
+  cmsDeskripsi?: string | null,
+): { deskripsi: string; note?: string } {
+  const magma =
+    (magmaDeskripsi || '').trim() ||
+    LEVEL_DESC[level] ||
+    LEVEL_DESC.Normal
+  const cms = (cmsDeskripsi || '').trim()
+  if (!cms) return { deskripsi: magma }
+
+  // Manual-looking CMS copy that says "normal" while level is elevated → ignore for primary
+  if (level !== 'Normal' && NORMALISH.test(cms)) {
+    return { deskripsi: magma }
+  }
+
+  // Same / near-duplicate → keep magma only
+  if (cms.toLowerCase() === magma.toLowerCase()) {
+    return { deskripsi: magma }
+  }
+
+  // CMS is additive local note only
+  return {
+    deskripsi: magma,
+    note: cms.length > 180 ? `${cms.slice(0, 180)}…` : cms,
+  }
 }
 
 /** Simple in-memory cache for serverless warm instances */
