@@ -4,6 +4,7 @@ import KontakForm from '@/components/KontakForm'
 import Icon from '@/components/Icon'
 import { getSiteSettings } from '@/lib/data'
 import { formatWaDisplay, waLink } from '@/lib/site'
+import { safeMapsHref } from '@/lib/safe-url'
 
 export const revalidate = 60
 
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
 
 export default async function KontakPage() {
   const site = await getSiteSettings()
+  const mapsUrl = safeMapsHref(site.mapsUrl)
 
   const kontakList = [
     { icon: 'home', label: 'Alamat', value: site.alamat },
@@ -53,9 +55,9 @@ export default async function KontakPage() {
             ))}
           </div>
 
-          {site.mapsUrl && (
+          {mapsUrl && (
             <a
-              href={site.mapsUrl}
+              href={mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-ghost w-full"

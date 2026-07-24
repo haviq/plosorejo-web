@@ -4,10 +4,13 @@ export const SITE_URL = 'https://plosorejo-web.vercel.app'
 
 export function normalizeWa(input?: string | null): string {
   if (!input) return ''
-  const digits = input.replace(/\D/g, '')
+  // Keep digits only; reject absurd lengths
+  const digits = input.replace(/\D/g, '').slice(0, 18)
   if (!digits) return ''
   if (digits.startsWith('0')) return `62${digits.slice(1)}`
   if (digits.startsWith('62')) return digits
+  // Local mobile without leading 0 (8xxxx) → assume ID
+  if (digits.startsWith('8') && digits.length >= 9) return `62${digits}`
   return digits
 }
 
@@ -27,13 +30,17 @@ export function formatWaDisplay(input?: string | null): string {
 
 export function waLink(number?: string | null, text?: string): string {
   const wa = normalizeWa(number)
-  if (!wa) return '#'
+  // Indonesian mobile typically 10–15 digits with country code
+  if (!wa || wa.length < 10 || wa.length > 16) return '#'
   const base = `https://wa.me/${wa}`
-  return text ? `${base}?text=${encodeURIComponent(text)}` : base
+  if (!text) return base
+  // Cap message size so we don't build huge URLs
+  const safe = text.slice(0, 900)
+  return `${base}?text=${encodeURIComponent(safe)}`
 }
 
 export function shareWhatsApp(url: string, title: string): string {
-  const text = `${title}\n${url}`
+  const text = `${title.slice(0, 200)}\n${url}`.slice(0, 900)
   return `https://wa.me/?text=${encodeURIComponent(text)}`
 }
 
@@ -42,5 +49,5 @@ export function shareFacebook(url: string): string {
 }
 
 export function shareX(url: string, title: string): string {
-  return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`
+  return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title.slice(0, 200))}`
 }

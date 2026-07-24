@@ -2,6 +2,7 @@
 
 import Icon from '@/components/Icon'
 import { levelColor, type MerapiLevel } from '@/lib/merapi'
+import { safeOfficialHref } from '@/lib/safe-url'
 
 interface MerapiStatusProps {
   level?: MerapiLevel
@@ -46,6 +47,11 @@ export default function MerapiStatus({
       : source === 'sanity'
         ? 'Admin CMS'
         : 'Data cadangan')
+
+  const safeReport = safeOfficialHref(reportUrl)
+  const safeOfficial =
+    safeOfficialHref(officialUrl) ||
+    'https://magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas'
 
   return (
     <div
@@ -110,9 +116,9 @@ export default function MerapiStatus({
         </div>
 
         <div className="flex flex-wrap gap-2 mt-2">
-          {reportUrl && (
+          {safeReport && (
             <a
-              href={reportUrl}
+              href={safeReport}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[11px] font-semibold underline-offset-2 hover:underline"
@@ -122,7 +128,7 @@ export default function MerapiStatus({
             </a>
           )}
           <a
-            href={officialUrl}
+            href={safeOfficial}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[11px] font-semibold underline-offset-2 hover:underline"

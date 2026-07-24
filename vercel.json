@@ -3,8 +3,24 @@
     {
       "source": "/api/merapi",
       "headers": [
-        { "key": "Cache-Control", "value": "s-maxage=300, stale-while-revalidate=900" }
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=300, stale-while-revalidate=900"
+        }
       ]
+    },
+    {
+      "source": "/api/cron/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
+      ]
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/merapi",
+      "schedule": "*/30 * * * *"
     }
   ]
 }

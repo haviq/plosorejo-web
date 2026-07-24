@@ -1,4 +1,6 @@
-import { isOpenNow, waLink } from '@/lib/utils'
+import { isOpenNow } from '@/lib/utils'
+import { waLink } from '@/lib/site'
+import { safeMapsHref } from '@/lib/safe-url'
 import type { UMKMItem } from '@/lib/types'
 import Icon from '@/components/Icon'
 
@@ -13,6 +15,7 @@ export default function UMKMCard({ item }: UMKMCardProps) {
     item.whatsapp,
     `Halo, saya tertarik dengan produk ${item.nama}. Boleh saya tahu info lebih lanjut?`,
   )
+  const mapsUrl = safeMapsHref(item.gmaps)
   const iconName = item.icon || item.jenis || 'umkm'
 
   return (
@@ -86,9 +89,9 @@ export default function UMKMCard({ item }: UMKMCardProps) {
         </span>
 
         <div className="flex items-center gap-2">
-          {item.gmaps && (
+          {mapsUrl && (
             <a
-              href={item.gmaps}
+              href={mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
@@ -98,16 +101,18 @@ export default function UMKMCard({ item }: UMKMCardProps) {
               Maps
             </a>
           )}
-          <a
-            href={waUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-90"
-            style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
-            aria-label={`Hubungi ${item.nama} via WhatsApp`}
-          >
-            WhatsApp
-          </a>
+          {waUrl !== '#' && (
+            <a
+              href={waUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-90"
+              style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
+              aria-label={`Hubungi ${item.nama} via WhatsApp`}
+            >
+              WhatsApp
+            </a>
+          )}
         </div>
       </div>
     </article>

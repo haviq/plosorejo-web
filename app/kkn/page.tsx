@@ -4,6 +4,7 @@ import PageHeader from '@/components/PageHeader'
 import Icon from '@/components/Icon'
 import { getKknData } from '@/lib/data'
 import { formatTanggal } from '@/lib/utils'
+import { isSafeHref, safeExternalHref } from '@/lib/safe-url'
 
 export const revalidate = 60
 
@@ -93,10 +94,22 @@ export default async function KknPage() {
               <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
                 {item.ringkasan}
               </p>
-              {item.link && (
-                <Link href={item.link} className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
-                  Lihat terkait →
-                </Link>
+              {item.link && isSafeHref(item.link) && (
+                item.link.startsWith('/') ? (
+                  <Link href={item.link} className="text-sm font-semibold" style={{ color: 'var(--gold)' }}>
+                    Lihat terkait →
+                  </Link>
+                ) : safeExternalHref(item.link) ? (
+                  <a
+                    href={safeExternalHref(item.link)!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-semibold"
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    Lihat terkait →
+                  </a>
+                ) : null
               )}
             </article>
           ))}
