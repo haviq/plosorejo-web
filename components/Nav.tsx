@@ -126,18 +126,22 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
   }
 
   const lastHamAt = useRef(0)
+  const lastHamAction = useRef<'open' | 'close' | null>(null)
 
   const openMobile = () => {
     const now = Date.now()
-    if (now - lastHamAt.current < 280) return
+    // Only ignore double-fire of the *same* action (pointerdown + click)
+    if (lastHamAction.current === 'open' && now - lastHamAt.current < 280) return
     lastHamAt.current = now
+    lastHamAction.current = 'open'
     setMobileOpen(true)
   }
 
   const closeMobile = () => {
     const now = Date.now()
-    if (now - lastHamAt.current < 280) return
+    if (lastHamAction.current === 'close' && now - lastHamAt.current < 280) return
     lastHamAt.current = now
+    lastHamAction.current = 'close'
     setMobileOpen(false)
     setSektorOpen(false)
   }
