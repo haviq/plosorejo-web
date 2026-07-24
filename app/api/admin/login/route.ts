@@ -17,7 +17,10 @@ export async function GET(req: Request) {
     {
       ok: true,
       admin: requestIsAdmin(req),
-      pinFromEnv: Boolean((process.env.ADMIN_PIN || '').trim()),
+      pinFromEnv: Boolean(
+        (process.env.ADMIN_PIN || process.env.ADMIN_PIN_CODE || process.env.PLOSOREJO_ADMIN_PIN || '')
+          .trim(),
+      ),
     },
     { headers: { 'Cache-Control': 'no-store' } },
   )

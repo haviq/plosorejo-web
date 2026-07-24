@@ -24,9 +24,24 @@ export default function SiteShell({
 }) {
   const pathname = usePathname() || ''
   const isStudio = pathname.startsWith('/studio')
+  const isAdmin = pathname.startsWith('/admin')
 
   if (isStudio) {
     return <>{children}</>
+  }
+
+  // Minimal chrome for internal ops — no marketing footer noise
+  if (isAdmin) {
+    return (
+      <>
+        <SiteBackground />
+        <div className="site-content min-h-screen">
+          <main id="main-content" className="flex-1" tabIndex={-1}>
+            {children}
+          </main>
+        </div>
+      </>
+    )
   }
 
   return (

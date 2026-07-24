@@ -78,6 +78,11 @@ const bootHeadScript = `
     var seen = false;
     try { seen = sessionStorage.getItem('plosorejo-preloader') === '1'; } catch (e1) {}
     try { if (!seen) seen = localStorage.getItem('plosorejo-preloader') === '1'; } catch (e2) {}
+    // Skip intro on internal routes (admin / studio)
+    try {
+      var p = (location && location.pathname) || '';
+      if (p.indexOf('/admin') === 0 || p.indexOf('/studio') === 0) seen = true;
+    } catch (ePath) {}
     if (seen) {
       document.documentElement.setAttribute('data-preloader', 'skip');
     }

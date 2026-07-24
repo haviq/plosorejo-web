@@ -8,18 +8,26 @@ const COOKIE = 'plosorejo_admin'
 const MAX_AGE_SEC = 60 * 60 * 12 // 12h
 
 export function getAdminPin(): string {
-  const fromEnv = (process.env.ADMIN_PIN || '').trim()
-  if (fromEnv.length >= 8) return fromEnv
-  // Fallback only when ADMIN_PIN unset — never expose this string in UI/nav/docs public
-  if (process.env.NODE_ENV === 'production' || process.env.VERCEL === '1') {
-    // Prefer env in prod; temporary fallback keeps demo alive until ADMIN_PIN is set
-    return process.env.ADMIN_PIN_FALLBACK?.trim() || 'plosorejo2026'
+  // Accept common env name variants users might set in Vercel UI
+  const candidates = [
+    process.env.ADMIN_PIN,
+    process.env.ADMIN_PIN_CODE,
+    process.env.PLOSOREJO_ADMIN_PIN,
+  ]
+  for (const raw of candidates) {
+    const v = (raw || '').trim()
+    if (v.length >= 4) return v
   }
+  // Temporary demo fallback only when no env is set
   return 'plosorejo2026'
 }
 
 export function isAdminPinConfigured(): boolean {
-  return (process.env.ADMIN_PIN || '').trim().length >= 8
+  return (
+    (process.env.ADMIN_PIN || process.env.ADMIN_PIN_CODE || process.env.PLOSOREJO_ADMIN_PIN || '')
+      .trim()
+      .length >= 4
+  )
 }
 
 /** Lightweight signed token: base64url(payload).hmac */
