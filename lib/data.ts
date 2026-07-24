@@ -11,6 +11,8 @@ import kknJson from '@/content/kkn.json'
 import susuJson from '@/content/susu.json'
 import poiJson from '@/content/poi.json'
 import galeriJson from '@/content/galeri.json'
+import agendaJson from '@/content/agenda.json'
+import daruratJson from '@/content/darurat.json'
 import { sanityFetch } from '@/sanity/lib/client'
 import {
   beritaListQuery,
@@ -63,6 +65,8 @@ import type {
   SusuData,
   PoiItem,
   MerapiStatusData,
+  AgendaItem,
+  DaruratData,
 } from '@/lib/types'
 
 const galeriFallback = galeriJson as GaleriAlbum[]
@@ -189,6 +193,20 @@ export async function getSusuData(): Promise<SusuData> {
 
 export async function getPoiList(): Promise<PoiItem[]> {
   return poiJson as PoiItem[]
+}
+
+export async function getAgendaList(): Promise<AgendaItem[]> {
+  const list = (agendaJson as AgendaItem[]).slice()
+  list.sort((a, b) => a.tanggal.localeCompare(b.tanggal))
+  return list
+}
+
+export async function getDaruratData(): Promise<DaruratData> {
+  const data = daruratJson as DaruratData
+  return {
+    ...data,
+    kontak: [...data.kontak].sort((a, b) => (a.prioritas ?? 99) - (b.prioritas ?? 99)),
+  }
 }
 
 export type { MerapiStatusData }

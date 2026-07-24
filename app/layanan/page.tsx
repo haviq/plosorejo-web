@@ -111,7 +111,13 @@ export default async function LayananPage() {
                 </div>
               )}
 
-              <div className="mt-auto pt-2">
+              <div className="mt-auto pt-2 flex flex-col gap-2">
+                <Link
+                  href={`/layanan/ajukan?layanan=${item.id}`}
+                  className="btn-primary w-full text-sm text-center"
+                >
+                  Ajukan online →
+                </Link>
                 <a
                   href={waLink(
                     site.whatsapp,
@@ -121,7 +127,7 @@ export default async function LayananPage() {
                   rel="noopener noreferrer"
                   className="btn-ghost w-full text-sm"
                 >
-                  Tanya via WhatsApp →
+                  Tanya via WhatsApp
                 </a>
               </div>
             </article>
@@ -130,16 +136,19 @@ export default async function LayananPage() {
       </section>
 
       <section className="surface-panel p-6 md:p-8 text-center space-y-3">
-        <h2 className="section-heading text-2xl">Butuh bantuan langsung?</h2>
+        <h2 className="section-heading text-2xl">Ajukan surat tanpa antre dulu?</h2>
         <p className="text-sm max-w-xl mx-auto" style={{ color: 'var(--muted)' }}>
-          Datang ke balai pada jam layanan, atau kirim pesan WhatsApp ke admin padukuhan.
+          Isi form online, kirim ke WhatsApp petugas, lalu datang tinggal melengkapi syarat.
         </p>
         <div className="flex flex-wrap justify-center gap-3 pt-2">
+          <Link href="/layanan/ajukan" className="btn-primary">
+            Form pengajuan online
+          </Link>
           <a
             href={waLink(site.whatsapp, 'Halo, saya ingin bertanya tentang layanan administrasi padukuhan.')}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary"
+            className="btn-ghost"
           >
             Chat WhatsApp
           </a>

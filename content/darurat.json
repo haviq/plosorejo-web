@@ -1,0 +1,66 @@
+{
+  "updatedAt": "2026-07-24",
+  "titikKumpul": "Lapangan / area terbuka dekat Balai Padukuhan Plosorejo (ikuti arahan RT)",
+  "jalurEvakuasi": "Mengikuti arahan BPBD Sleman / BPPTKG. Pantau MAGMA ESDM dan info padukuhan.",
+  "kontak": [
+    {
+      "id": "dukuh",
+      "nama": "Dukuh Plosorejo",
+      "jabatan": "Kepala Padukuhan",
+      "telepon": "6287872680562",
+      "kategori": "Padukuhan",
+      "prioritas": 1
+    },
+    {
+      "id": "bpbd-sleman",
+      "nama": "BPBD Sleman",
+      "jabatan": "Penanggulangan Bencana",
+      "telepon": "0274-868514",
+      "kategori": "Pemerintah",
+      "prioritas": 2,
+      "catatan": "Konfirmasi nomor di kanal resmi BPBD bila berubah"
+    },
+    {
+      "id": "polsek",
+      "nama": "Polsek Cangkringan",
+      "jabatan": "Keamanan",
+      "telepon": "0274-4462004",
+      "kategori": "Keamanan",
+      "prioritas": 2
+    },
+    {
+      "id": "puskesmas",
+      "nama": "Puskesmas Cangkringan",
+      "jabatan": "Kesehatan",
+      "telepon": "0274-4477045",
+      "kategori": "Kesehatan",
+      "prioritas": 2
+    },
+    {
+      "id": "damkar",
+      "nama": "Pemadam Kebakaran Sleman",
+      "jabatan": "Damkar",
+      "telepon": "0274-868436",
+      "kategori": "Darurat",
+      "prioritas": 1
+    },
+    {
+      "id": "ambulan",
+      "nama": "Ambulans / 119",
+      "jabatan": "Gawat darurat medis",
+      "telepon": "119",
+      "kategori": "Kesehatan",
+      "prioritas": 1
+    },
+    {
+      "id": "magma",
+      "nama": "MAGMA ESDM",
+      "jabatan": "Status Gunung Api",
+      "telepon": "",
+      "url": "https://magma.esdm.go.id/v1/gunung-api/tingkat-aktivitas",
+      "kategori": "Info Resmi",
+      "prioritas": 1,
+      "catatan": "Sumber status Merapi resmi"
+    }
+  ]
+}

@@ -155,3 +155,32 @@ export interface MerapiStatusData {
   rawLevelLabel?: string
   note?: string
 }
+
+export interface AgendaItem {
+  id: string
+  judul: string
+  tanggal: string
+  waktu: string
+  lokasi: string
+  kategori: string
+  deskripsi: string
+  penting?: boolean
+}
+
+export interface DaruratKontak {
+  id: string
+  nama: string
+  jabatan: string
+  telepon?: string
+  url?: string
+  kategori: string
+  prioritas?: number
+  catatan?: string
+}
+
+export interface DaruratData {
+  updatedAt: string
+  titikKumpul: string
+  jalurEvakuasi: string
+  kontak: DaruratKontak[]
+}

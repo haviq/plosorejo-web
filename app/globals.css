@@ -1668,3 +1668,98 @@ html[data-preloader='skip'] .site-preloader {
   z-index: 5 !important;
 }
 
+/* ── Emergency banner (elevated Merapi) ─────────────────────── */
+.emergency-banner {
+  position: sticky;
+  top: 3.75rem; /* under fixed header */
+  z-index: 21000;
+  width: 100%;
+  pointer-events: auto;
+}
+
+.emergency-banner__inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0.65rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+}
+
+.emergency-banner__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.65rem;
+  border: 1px solid;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.emergency-banner__title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.emergency-banner__desc {
+  font-size: 0.8rem;
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.emergency-banner__body {
+  flex: 1 1 12rem;
+}
+
+.emergency-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.emergency-banner__cta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.emergency-banner__close {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.emergency-banner__close:hover {
+  color: var(--text);
+  border-color: var(--gold);
+}
+
+@media (max-width: 640px) {
+  .emergency-banner {
+    top: 3.5rem;
+  }
+  .emergency-banner__inner {
+    padding: 0.55rem 0.85rem;
+  }
+}
+
+

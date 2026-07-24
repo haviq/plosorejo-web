@@ -1,0 +1,62 @@
+[
+  {
+    "id": "posyandu-agustus",
+    "judul": "Posyandu Balita RT 01–04",
+    "tanggal": "2026-08-05",
+    "waktu": "08.00 – 11.00 WIB",
+    "lokasi": "Balai Padukuhan Plosorejo",
+    "kategori": "Kesehatan",
+    "deskripsi": "Pemeriksaan berat badan, imunisasi, dan konseling gizi balita. Bawa KIA dan KTP orang tua.",
+    "penting": true
+  },
+  {
+    "id": "ronda-malam",
+    "judul": "Ronda Malam Bergilir",
+    "tanggal": "2026-08-08",
+    "waktu": "22.00 – 04.00 WIB",
+    "lokasi": "Pos ronda masing-masing RT",
+    "kategori": "Keamanan",
+    "deskripsi": "Jadwal ronda bergilir per RT. Koordinasi dengan ketua RT setempat.",
+    "penting": false
+  },
+  {
+    "id": "merti-desa",
+    "judul": "Persiapan Merti Padukuhan",
+    "tanggal": "2026-08-16",
+    "waktu": "09.00 – 12.00 WIB",
+    "lokasi": "Masjid Asy Syams & lapangan padukuhan",
+    "kategori": "Budaya",
+    "deskripsi": "Rapat panitia dan gotong royong persiapan merti padukuhan. Warga diundang hadir.",
+    "penting": true
+  },
+  {
+    "id": "pelatihan-umkm",
+    "judul": "Pelatihan Pengemasan Produk UMKM",
+    "tanggal": "2026-08-20",
+    "waktu": "13.00 – 16.00 WIB",
+    "lokasi": "Balai Padukuhan Plosorejo",
+    "kategori": "UMKM",
+    "deskripsi": "Pelatihan label, packaging, dan foto produk untuk pelaku UMKM binaan. Daftar via WhatsApp admin.",
+    "penting": false
+  },
+  {
+    "id": "sosialisasi-merapi",
+    "judul": "Sosialisasi Kesiapsiagaan Merapi",
+    "tanggal": "2026-08-27",
+    "waktu": "19.30 – 21.00 WIB",
+    "lokasi": "Balai Padukuhan Plosorejo",
+    "kategori": "Darurat",
+    "deskripsi": "Update jalur evakuasi, titik kumpul, dan nomor penting. Wajib diikuti perwakilan tiap RT.",
+    "penting": true
+  },
+  {
+    "id": "kerja-bakti",
+    "judul": "Kerja Bakti Bersih Lingkungan",
+    "tanggal": "2026-09-07",
+    "waktu": "07.00 – 10.00 WIB",
+    "lokasi": "Seluruh RT Plosorejo",
+    "kategori": "Lingkungan",
+    "deskripsi": "Bersih saluran, potong rumput, dan penataan jalur. Bawa alat masing-masing.",
+    "penting": false
+  }
+]

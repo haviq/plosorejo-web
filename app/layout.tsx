@@ -3,7 +3,7 @@ import { Inter, Playfair_Display } from 'next/font/google'
 import './globals.css'
 import SiteShell from '@/components/SiteShell'
 import SitePreloader from '@/components/SitePreloader'
-import { getSiteSettings } from '@/lib/data'
+import { getMerapiStatus, getSiteSettings } from '@/lib/data'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -45,6 +45,15 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Plosorejo',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
   },
 }
 
@@ -154,19 +163,31 @@ const bootHeadScript = `
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const site = await getSiteSettings()
+  const [site, merapi] = await Promise.all([getSiteSettings(), getMerapiStatus()])
 
   return (
     <html lang="id" className={`${inter.variable} ${playfair.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootHeadScript }} />
+        <meta name="theme-color" content="#0a0a0a" />
+        <link rel="manifest" href="/manifest.webmanifest" />
       </head>
       <body
         className="min-h-full flex flex-col"
         style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}
       >
         <SitePreloader />
-        <SiteShell whatsapp={site.whatsapp}>{children}</SiteShell>
+        <SiteShell
+          whatsapp={site.whatsapp}
+          merapi={{
+            level: merapi.level,
+            roman: merapi.roman,
+            deskripsi: merapi.deskripsi,
+            updatedAt: merapi.updatedAt,
+          }}
+        >
+          {children}
+        </SiteShell>
       </body>
     </html>
   )

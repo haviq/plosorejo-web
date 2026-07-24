@@ -107,28 +107,28 @@ const potensiCards = [
 
 const quickAccess = [
   {
-    href: '/layanan',
+    href: '/layanan/ajukan',
     icon: 'document',
-    title: 'Layanan Administrasi',
-    desc: 'Syarat surat, alur, dan jam pelayanan balai',
+    title: 'Ajukan Surat Online',
+    desc: 'Form digital → WhatsApp petugas balai',
   },
   {
-    href: '/susu',
-    icon: 'susu',
-    title: 'Produksi Susu',
-    desc: 'Data harian & rantai pasok susu segar',
+    href: '/agenda',
+    icon: 'clock',
+    title: 'Agenda Padukuhan',
+    desc: 'Posyandu, ronda, merti, pelatihan',
   },
   {
-    href: '/peta',
-    icon: 'peta',
-    title: 'Peta Interaktif',
-    desc: 'Lokasi UMKM, fasilitas, dan destinasi',
+    href: '/darurat',
+    icon: 'merapi',
+    title: 'Info Darurat',
+    desc: 'Status Merapi & nomor penting',
   },
   {
-    href: '/kkn',
-    icon: 'digital',
-    title: 'Arsip KKN',
-    desc: 'Dokumentasi program KKN UNRIYO Unit 9',
+    href: '/sektor/umkm',
+    icon: 'umkm',
+    title: 'Pesan UMKM',
+    desc: 'Order produk lokal via WhatsApp',
   },
 ]
 

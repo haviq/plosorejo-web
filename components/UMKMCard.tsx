@@ -1,14 +1,19 @@
+'use client'
+
+import { useState } from 'react'
+import type { UMKMItem } from '@/lib/types'
 import { isOpenNow } from '@/lib/utils'
 import { waLink } from '@/lib/site'
 import { safeMapsHref } from '@/lib/safe-url'
-import type { UMKMItem } from '@/lib/types'
 import Icon from '@/components/Icon'
+import OrderUMKMForm from '@/components/OrderUMKMForm'
 
 interface UMKMCardProps {
   item: UMKMItem
 }
 
 export default function UMKMCard({ item }: UMKMCardProps) {
+  const [orderOpen, setOrderOpen] = useState(false)
   const color = 'var(--gold)'
   const open = item.aktif && isOpenNow(item.jamBuka)
   const waUrl = waLink(
@@ -17,6 +22,7 @@ export default function UMKMCard({ item }: UMKMCardProps) {
   )
   const mapsUrl = safeMapsHref(item.gmaps)
   const iconName = item.icon || item.jenis || 'umkm'
+  const canOrder = waUrl !== '#'
 
   return (
     <article className="card-surface p-5 flex flex-col gap-3 h-full">
@@ -76,45 +82,57 @@ export default function UMKMCard({ item }: UMKMCardProps) {
         </p>
       )}
 
-      <div
-        className="flex items-center justify-between mt-auto pt-3 border-t gap-2"
-        style={{ borderColor: 'var(--border)' }}
-      >
-        <span
-          className="flex items-center gap-1 text-xs"
-          style={{ color: item.aktif ? 'var(--gold)' : 'var(--muted)' }}
+      {orderOpen && canOrder ? (
+        <div
+          className="mt-1 rounded-xl p-3 border"
+          style={{ borderColor: 'rgba(212,175,55,0.35)', background: 'var(--surface-soft)' }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
-          {item.aktif ? 'Aktif' : 'Tidak Aktif'}
-        </span>
-
-        <div className="flex items-center gap-2">
-          {mapsUrl && (
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
-              style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
-              aria-label={`Lokasi ${item.nama} di Google Maps`}
-            >
-              Maps
-            </a>
-          )}
-          {waUrl !== '#' && (
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+          <OrderUMKMForm item={item} onClose={() => setOrderOpen(false)} />
+        </div>
+      ) : (
+        <div className="mt-auto pt-1 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-2">
+            {mapsUrl && (
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
+                style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+                aria-label={`Lokasi ${item.nama} di Google Maps`}
+              >
+                Maps
+              </a>
+            )}
+            {canOrder && (
+              <a
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors"
+                style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
+                aria-label={`Chat ${item.nama} via WhatsApp`}
+              >
+                Chat
+              </a>
+            )}
+          </div>
+          {canOrder ? (
+            <button
+              type="button"
+              onClick={() => setOrderOpen(true)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-opacity hover:opacity-90"
               style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
-              aria-label={`Hubungi ${item.nama} via WhatsApp`}
             >
-              WhatsApp
-            </a>
+              Pesan
+            </button>
+          ) : (
+            <span className="text-xs" style={{ color: 'var(--muted2)' }}>
+              WA belum diisi
+            </span>
           )}
         </div>
-      </div>
+      )}
     </article>
   )
 }

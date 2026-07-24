@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/profil', label: 'Profil' },
   { href: '/berita', label: 'Berita' },
   { href: '/layanan', label: 'Layanan' },
+  { href: '/agenda', label: 'Agenda' },
   { href: '/galeri', label: 'Galeri' },
   { href: '/peta', label: 'Peta' },
   { href: '/kontak', label: 'Kontak' },
@@ -335,8 +336,14 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
-              Direktori UMKM
+            <Link href="/layanan/ajukan" onClick={closeMenus} className="btn-primary">
+              Ajukan Surat
+            </Link>
+            <Link href="/darurat" onClick={closeMenus} className="btn-ghost">
+              Info Darurat
+            </Link>
+            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-ghost">
+              UMKM
             </Link>
             {waReady ? (
               <a
@@ -349,9 +356,6 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                 WhatsApp
               </a>
             ) : null}
-            <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
-              Kontak
-            </Link>
           </div>
         </div>
       </div>
