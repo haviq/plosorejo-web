@@ -16,11 +16,5 @@
         { "key": "X-Content-Type-Options", "value": "nosniff" }
       ]
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/cron/merapi",
-      "schedule": "*/30 * * * *"
-    }
   ]
 }

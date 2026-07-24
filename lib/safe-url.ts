@@ -1,5 +1,6 @@
 /**
  * URL / href safety helpers — prevent javascript: / data: openers from CMS content.
+ * Browser-safe: no Node Buffer / crypto (safe to import from client components).
  */
 
 const BLOCKED_PROTOCOLS = /^(javascript|data|vbscript|file):/i
@@ -30,7 +31,6 @@ export function safeExternalHref(value?: string | null): string | null {
     const u = new URL(v)
     // Block credentials in URL
     if (u.username || u.password) return null
-    // Only allow common public hosts we actually use + generic https
     if (u.protocol !== 'https:' && u.protocol !== 'http:') return null
     return u.toString()
   } catch {
@@ -72,25 +72,5 @@ export function safeOfficialHref(value?: string | null): string | null {
     return href
   } catch {
     return null
-  }
-}
-
-/** Timing-safe string compare for secrets (Node). */
-export function timingSafeEqualString(a: string, b: string): boolean {
-  if (typeof a !== 'string' || typeof b !== 'string') return false
-  const ba = Buffer.from(a)
-  const bb = Buffer.from(b)
-  if (ba.length !== bb.length) {
-    // still compare to reduce length oracle somewhat
-    const dummy = Buffer.alloc(ba.length)
-    Buffer.compare(ba, dummy)
-    return false
-  }
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { timingSafeEqual } = require('crypto') as typeof import('crypto')
-    return timingSafeEqual(ba, bb)
-  } catch {
-    return a === b
   }
 }
