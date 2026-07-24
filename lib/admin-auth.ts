@@ -10,7 +10,11 @@ const MAX_AGE_SEC = 60 * 60 * 12 // 12h
 export function getAdminPin(): string {
   const fromEnv = (process.env.ADMIN_PIN || '').trim()
   if (fromEnv.length >= 8) return fromEnv
-  // Local/demo only — change in production via ADMIN_PIN
+  // Fallback only when ADMIN_PIN unset — never expose this string in UI/nav/docs public
+  if (process.env.NODE_ENV === 'production' || process.env.VERCEL === '1') {
+    // Prefer env in prod; temporary fallback keeps demo alive until ADMIN_PIN is set
+    return process.env.ADMIN_PIN_FALLBACK?.trim() || 'plosorejo2026'
+  }
   return 'plosorejo2026'
 }
 

@@ -38,9 +38,6 @@ export default function ProposalPage() {
         <Link href="/demo" className="btn-ghost text-sm">
           Demo multi-desa
         </Link>
-        <Link href="/admin" className="btn-ghost text-sm">
-          Panel admin
-        </Link>
         <PrintButton />
       </div>
 
@@ -56,11 +53,11 @@ export default function ProposalPage() {
             Sistem Informasi Padukuhan Siap Pakai
           </h2>
           <p className="text-sm leading-relaxed max-w-2xl" style={{ color: 'var(--muted)' }}>
-            Portal warga + CMS + peta + status Merapi + layanan surat online + UMKM + agenda + panel
-            admin + opsi multi-desa. Termasuk implementasi, training, dan operasi 12 bulan.
+            Portal warga + CMS + peta + status Merapi + layanan surat online + UMKM + agenda + opsi
+            multi-desa. Termasuk implementasi, training, dan operasi 12 bulan.
           </p>
           <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-            Live: https://plosorejo-web.vercel.app · Demo: /demo · Status: PLJ-DEMO01 · Admin: /admin
+            Live: https://plosorejo-web.vercel.app · Demo: /demo · Status: PLJ-DEMO01
           </p>
         </header>
 

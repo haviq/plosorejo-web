@@ -141,9 +141,6 @@ export default async function Footer() {
               Hubungi
             </Link>
           </div>
-          <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-            Admin konten: <Link href="/studio" className="underline" style={{ color: 'var(--gold)' }}>/studio</Link>
-          </p>
         </div>
       </div>
 

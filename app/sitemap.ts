@@ -13,7 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/layanan/status',
     '/agenda',
     '/darurat',
-    '/admin',
     '/demo',
     '/demo/plosorejo',
     '/demo/sumberejo',

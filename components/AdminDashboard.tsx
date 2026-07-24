@@ -34,7 +34,6 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [items, setItems] = useState<Row[]>([])
   const [busyKode, setBusyKode] = useState<string | null>(null)
-  const [hint, setHint] = useState('')
 
   const refresh = useCallback(async () => {
     const r = await fetch('/api/pengajuan?all=1', { credentials: 'include' })
@@ -58,9 +57,6 @@ export default function AdminDashboard() {
         if (j.admin) {
           setAuthed(true)
           await refresh()
-        }
-        if (!j.pinFromEnv) {
-          setHint('Demo PIN: plosorejo2026 — set ADMIN_PIN di Vercel untuk produksi.')
         }
       } catch {
         /* ignore */
@@ -124,25 +120,25 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <p className="text-sm" style={{ color: 'var(--muted)' }}>
-        Memuat panel admin…
+        Memuat…
       </p>
     )
   }
 
   if (!authed) {
     return (
-      <form onSubmit={login} className="card-surface p-6 max-w-md space-y-4">
+      <form onSubmit={login} className="card-surface p-6 max-w-md space-y-4 mx-auto">
         <div>
           <h2 className="font-bold text-lg" style={{ color: 'var(--text)' }}>
-            Masuk Admin Padukuhan
+            Akses internal
           </h2>
           <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
-            Kelola status pengajuan surat. PIN diset di environment <code>ADMIN_PIN</code>.
+            Halaman ini tidak dipublikasikan. Masukkan kode akses.
           </p>
         </div>
         <div>
           <label htmlFor="admin-pin" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
-            PIN admin
+            Kode akses
           </label>
           <input
             id="admin-pin"
@@ -161,17 +157,9 @@ export default function AdminDashboard() {
             {error}
           </p>
         )}
-        {hint && (
-          <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-            {hint}
-          </p>
-        )}
         <button type="submit" className="btn-primary w-full min-h-[48px]">
           Masuk
         </button>
-        <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-          Konten berita/UMKM tetap lewat <Link href="/studio" className="underline" style={{ color: 'var(--gold)' }}>/studio</Link> (Sanity).
-        </p>
       </form>
     )
   }
@@ -279,33 +267,6 @@ export default function AdminDashboard() {
             </article>
           ))
         )}
-      </div>
-
-      <div className="surface-panel p-4 text-sm space-y-2" style={{ color: 'var(--muted)' }}>
-        <p className="font-semibold" style={{ color: 'var(--text)' }}>
-          Modul admin lanjutan
-        </p>
-        <ul className="list-disc pl-5 space-y-1">
-          <li>
-            Agenda / darurat: edit file JSON atau Sanity — shortcut{' '}
-            <Link href="/agenda" style={{ color: 'var(--gold)' }}>
-              /agenda
-            </Link>
-            ,{' '}
-            <Link href="/darurat" style={{ color: 'var(--gold)' }}>
-              /darurat
-            </Link>
-          </li>
-          <li>
-            Konten berita & UMKM: <Link href="/studio" style={{ color: 'var(--gold)' }}>/studio</Link>
-          </li>
-          <li>
-            Multi-desa demo:{' '}
-            <Link href="/demo" style={{ color: 'var(--gold)' }}>
-              /demo
-            </Link>
-          </li>
-        </ul>
       </div>
     </div>
   )
