@@ -114,7 +114,7 @@ export default function KontakForm({ whatsapp }: KontakFormProps) {
       <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
         {waReady
           ? 'Pesan akan dibuka di WhatsApp Anda — tinggal tekan kirim.'
-          : 'Admin: isi nomor WhatsApp di /studio → Pengaturan Situs.'}
+          : 'Admin: isi nomor WhatsApp di pengaturan situs (Sanity Studio).'}
       </p>
     </form>
   )

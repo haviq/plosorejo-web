@@ -77,7 +77,7 @@ export default async function Footer() {
               <span
                 className="badge"
                 style={{ color: 'var(--muted)', background: 'var(--surface-soft)' }}
-                title="Ganti nomor di /studio → Pengaturan Situs"
+                title="Nomor WhatsApp admin belum diisi"
               >
                 WA belum diisi
               </span>
