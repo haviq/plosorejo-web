@@ -3,39 +3,44 @@
 import {
   Component,
   useEffect,
-  useRef,
   useState,
-  type ComponentType,
   type ErrorInfo,
   type ReactNode,
 } from 'react'
+import dynamic from 'next/dynamic'
+import MapBoundarySvg from '@/components/MapBoundarySvg'
+import { MAP_BBOX, MAP_CENTER } from '@/lib/map-geometry'
 
-type MapComponent = ComponentType
+const LOAD_TIMEOUT_MS = 9000
 
-/**
- * Prefer interactive Leaflet (RT boundaries + roads).
- * OSM embed is only fallback when Leaflet fails/timeouts.
- */
-const LOAD_TIMEOUT_MS = 12000
+const LeafletMapDynamic = dynamic(() => import('./LeafletMap'), {
+  ssr: false,
+  loading: () => null,
+})
 
-function StaticMapFallback({
+function BoundaryMapFallback({
   reason,
   compact,
+  showRetry,
+  onRetry,
 }: {
   reason?: string
   compact?: boolean
+  showRetry?: boolean
+  onRetry?: () => void
 }) {
-  // Static OSM has no custom RT polygons — show clear notice
-  const bbox = '110.4315,-7.6285,110.4445,-7.6165'
-  const marker = '-7.62428,110.43829'
+  const { west, south, east, north } = MAP_BBOX
+  const bbox = `${west},${south},${east},${north}`
+  const marker = `${MAP_CENTER[0]},${MAP_CENTER[1]}`
   const src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${marker}`
+  const height = compact ? 360 : 500
 
   return (
     <div className="w-full space-y-3">
       <div
-        className="w-full overflow-hidden rounded-xl"
+        className="relative w-full overflow-hidden rounded-xl"
         style={{
-          height: compact ? 360 : 480,
+          height,
           border: '1px solid var(--border)',
           backgroundColor: 'var(--s2)',
         }}
@@ -43,36 +48,54 @@ function StaticMapFallback({
         <iframe
           title="Peta Padukuhan Plosorejo (OpenStreetMap)"
           src={src}
-          className="w-full h-full border-0"
+          className="absolute inset-0 w-full h-full border-0"
           loading="eager"
           referrerPolicy="no-referrer-when-downgrade"
           allowFullScreen
+          style={{ zIndex: 0 }}
         />
-      </div>
-      <div
-        className="rounded-xl px-3 py-2 text-xs"
-        style={{
-          backgroundColor: 'var(--s1)',
-          border: '1px solid var(--border)',
-          color: 'var(--muted)',
-        }}
-        role="status"
-      >
-        <strong style={{ color: 'var(--gold)' }}>Mode cadangan:</strong> batas RT hijau & jalan
-        merah hanya ada di peta interaktif.
-        {reason ? ` (${reason})` : null}
-      </div>
-      <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
-        <a
-          href="https://www.openstreetmap.org/?mlat=-7.62428&mlon=110.43829#map=16/-7.6228/110.4372"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline"
-          style={{ color: 'var(--gold)' }}
+        {/* ALWAYS show RT / padukuhan / roads even without Leaflet */}
+        <MapBoundarySvg />
+        <div
+          className="absolute left-2 bottom-2 rounded-lg px-2 py-1 text-[10px] font-semibold"
+          style={{
+            zIndex: 3,
+            background: 'rgba(8,8,8,0.78)',
+            color: '#ecfdf5',
+            border: '1px solid rgba(74,222,128,0.55)',
+            pointerEvents: 'none',
+          }}
         >
-          Buka di OpenStreetMap
-        </a>
-      </p>
+          Hijau = batas RT · Merah = jalan
+        </div>
+      </div>
+
+      {(reason || showRetry) && (
+        <div
+          className="flex flex-wrap items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs"
+          style={{
+            backgroundColor: 'var(--s1)',
+            border: '1px solid var(--border)',
+            color: 'var(--muted)',
+          }}
+          role="status"
+        >
+          <span>
+            <strong style={{ color: 'var(--gold)' }}>Batas RT tetap ditampilkan.</strong>
+            {reason ? ` ${reason}` : ' Mode cadangan (OSM + overlay).'}
+          </span>
+          {showRetry && onRetry ? (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="shrink-0 px-3 py-2 rounded-lg font-semibold touch-manipulation"
+              style={{ color: 'var(--gold)', border: '1px solid var(--border)', minHeight: 40 }}
+            >
+              Coba interaktif
+            </button>
+          ) : null}
+        </div>
+      )}
     </div>
   )
 }
@@ -97,152 +120,47 @@ class MapErrorBoundary extends Component<
   }
 }
 
+/**
+ * Prefer Leaflet; if it fails/timeouts, still show OSM + SVG RT borders.
+ * Boundaries must never disappear on mobile.
+ */
 export default function MapLoader() {
-  const [Map, setMap] = useState<MapComponent | null>(null)
-  const [phase, setPhase] = useState<'loading' | 'leaflet' | 'error'>('loading')
-  const [status, setStatus] = useState('Memuat peta interaktif…')
+  const [mode, setMode] = useState<'try-leaflet' | 'fallback'>('try-leaflet')
+  const [status, setStatus] = useState('')
   const [attempt, setAttempt] = useState(0)
-  const requestIdRef = useRef(0)
-  const cancelledRef = useRef(false)
 
   useEffect(() => {
-    cancelledRef.current = false
-    const requestId = ++requestIdRef.current
-    let timeoutId = 0
-
-    const fail = (msg: string) => {
-      if (cancelledRef.current || requestId !== requestIdRef.current) return
-      setMap(null)
-      setPhase('error')
-      setStatus(msg)
-    }
-
-    const ok = (comp: MapComponent) => {
-      if (cancelledRef.current || requestId !== requestIdRef.current) return
-      window.clearTimeout(timeoutId)
-      setMap(() => comp)
-      setPhase('leaflet')
-      setStatus('')
-    }
-
-    timeoutId = window.setTimeout(() => {
-      if (requestId === requestIdRef.current && !cancelledRef.current) {
-        // Only fall back if Leaflet not ready
-        setPhase((p) => (p === 'leaflet' ? p : 'error'))
-        setStatus('Timeout memuat peta interaktif')
-      }
+    if (mode !== 'try-leaflet') return
+    const t = window.setTimeout(() => {
+      setMode('fallback')
+      setStatus('Timeout memuat peta interaktif')
     }, LOAD_TIMEOUT_MS)
+    return () => window.clearTimeout(t)
+  }, [mode, attempt])
 
-    setPhase('loading')
-    setStatus(attempt > 0 ? 'Mencoba lagi…' : 'Memuat peta interaktif (batas RT + jalan)…')
-    setMap(null)
-
-    // Prefetch CSS already bundled with LeafletMap; dynamic import for chunk
-    import('./LeafletMap')
-      .then((mod) => {
-        if (typeof mod?.default === 'function') {
-          ok(mod.default)
-        } else {
-          fail('Modul peta tidak valid')
-        }
-      })
-      .catch((err: unknown) => {
-        const msg = err instanceof Error ? err.message : 'Gagal memuat modul peta'
-        if (attempt < 2) {
-          window.setTimeout(() => {
-            if (!cancelledRef.current && requestId === requestIdRef.current) {
-              setAttempt((n) => n + 1)
-            }
-          }, 500)
-          return
-        }
-        fail(msg)
-      })
-
-    return () => {
-      cancelledRef.current = true
-      window.clearTimeout(timeoutId)
-    }
-  }, [attempt])
-
-  if (phase === 'leaflet' && Map) {
-    return (
-      <div className="space-y-2">
-        <MapErrorBoundary
-          onError={(msg) => {
-            setMap(null)
-            setPhase('error')
-            setStatus(msg)
-          }}
-        >
-          <Map />
-        </MapErrorBoundary>
-        <p className="text-[11px] text-center" style={{ color: 'var(--muted2)' }}>
-          Hijau = batas RT/padukuhan · Merah = jalan utama · Ketuk zona untuk detail
-        </p>
-      </div>
-    )
+  const retry = () => {
+    setStatus('')
+    setMode('try-leaflet')
+    setAttempt((n) => n + 1)
   }
 
-  if (phase === 'loading') {
-    // Show OSM underneath while loading so page never looks blank,
-    // but auto-upgrade when Leaflet ready
-    return (
-      <div className="space-y-2">
-        <div
-          className="flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs"
-          style={{
-            backgroundColor: 'var(--s1)',
-            border: '1px solid var(--border)',
-            color: 'var(--muted)',
-          }}
-          role="status"
-        >
-          <span>{status}</span>
-          <button
-            type="button"
-            onClick={() => {
-              cancelledRef.current = false
-              setAttempt((n) => n + 1)
-            }}
-            className="shrink-0 px-3 py-2 rounded-lg font-semibold touch-manipulation"
-            style={{ color: 'var(--gold)', border: '1px solid var(--border)', minHeight: 40 }}
-          >
-            Muat ulang
-          </button>
-        </div>
-        {/* Temporary basemap while chunk loads */}
-        <StaticMapFallback compact />
-      </div>
-    )
+  if (mode === 'fallback') {
+    return <BoundaryMapFallback reason={status || undefined} showRetry onRetry={retry} />
   }
 
-  // error → OSM + retry
   return (
-    <div className="space-y-2">
-      <div
-        className="flex flex-wrap items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs"
-        style={{
-          backgroundColor: 'var(--s1)',
-          border: '1px solid var(--border)',
-          color: 'var(--muted)',
+    <div className="space-y-2" key={`leaflet-${attempt}`}>
+      <MapErrorBoundary
+        onError={(msg) => {
+          setStatus(msg)
+          setMode('fallback')
         }}
-        role="status"
       >
-        <span>{status || 'Peta interaktif gagal dimuat'}</span>
-        <button
-          type="button"
-          onClick={() => {
-            cancelledRef.current = false
-            setAttempt((n) => n + 1)
-          }}
-          className="shrink-0 px-3 py-2 rounded-lg font-semibold touch-manipulation"
-          style={{ color: 'var(--gold)', border: '1px solid var(--border)', minHeight: 40 }}
-        >
-          Coba interaktif
-        </button>
-      </div>
-      <StaticMapFallback reason={status || undefined} />
+        <LeafletMapDynamic />
+      </MapErrorBoundary>
+      <p className="text-[11px] text-center" style={{ color: 'var(--muted2)' }}>
+        Hijau = batas RT/padukuhan · Merah = jalan utama · Ketuk zona untuk detail
+      </p>
     </div>
   )
 }

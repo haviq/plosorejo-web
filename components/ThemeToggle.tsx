@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline'
 
 type Theme = 'dark' | 'light'
@@ -41,6 +41,7 @@ function applyTheme(theme: Theme) {
 export default function ThemeToggle({ className = '' }: { className?: string }) {
   const [theme, setTheme] = useState<Theme>('dark')
   const [mounted, setMounted] = useState(false)
+  const lastToggleAt = useRef(0)
 
   useEffect(() => {
     const preferred = readTheme()
@@ -70,6 +71,9 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
   }, [])
 
   const toggle = () => {
+    const now = Date.now()
+    if (now - lastToggleAt.current < 350) return
+    lastToggleAt.current = now
     const current = readTheme()
     const next: Theme = current === 'dark' ? 'light' : 'dark'
     applyTheme(next)
@@ -93,11 +97,17 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
       data-theme-toggle="1"
       aria-label={theme === 'dark' ? 'Aktifkan mode terang' : 'Aktifkan mode gelap'}
       title={theme === 'dark' ? 'Mode terang' : 'Mode gelap'}
+      style={{
+        color: '#f0c040',
+        borderColor: 'rgba(240,192,64,0.85)',
+        background: 'rgba(8,8,8,0.82)',
+        boxShadow: '0 0 0 1px rgba(240,192,64,0.35), 0 2px 10px rgba(0,0,0,0.35)',
+      }}
     >
       {mounted && theme === 'light' ? (
-        <MoonIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
+        <MoonIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" strokeWidth={2.4} />
       ) : (
-        <SunIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" />
+        <SunIcon className="w-5 h-5 pointer-events-none" aria-hidden="true" strokeWidth={2.4} />
       )}
     </button>
   )

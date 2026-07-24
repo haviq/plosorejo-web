@@ -99,6 +99,52 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [mobileOpen])
 
+  // Capture-phase handler: Android/Telegram WebViews often drop React onClick.
+  // This is the single source of truth for hamburger toggles.
+  useEffect(() => {
+    let lastAt = 0
+    const onPointer = (e: Event) => {
+      const t = e.target as Element | null
+      if (!t?.closest?.('[data-nav-hamburger="1"]')) return
+      const now = Date.now()
+      if (now - lastAt < 400) return
+      lastAt = now
+      // Mark so React onClick is ignored
+      try {
+        ;(window as unknown as { __navHamAt?: number }).__navHamAt = now
+      } catch {
+        /* ignore */
+      }
+      e.preventDefault()
+      e.stopPropagation()
+      setMobileOpen((v) => !v)
+    }
+    document.addEventListener('pointerdown', onPointer, true)
+    return () => document.removeEventListener('pointerdown', onPointer, true)
+  }, [])
+
+  // Hard unlock: never leave page non-interactive after overlays
+  useEffect(() => {
+    const unlock = () => {
+      // If preloader/curtain not active, ensure body can receive events
+      const pre = document.documentElement.getAttribute('data-preloader')
+      const curtain = document.documentElement.getAttribute('data-route-curtain')
+      const nav = document.documentElement.getAttribute('data-mobile-nav')
+      if (pre !== 'active' && curtain !== 'active' && nav !== 'open') {
+        document.body.style.removeProperty('overflow')
+        document.documentElement.style.removeProperty('overflow')
+        document.body.style.pointerEvents = 'auto'
+      }
+    }
+    unlock()
+    const id = window.setInterval(unlock, 1500)
+    window.addEventListener('pageshow', unlock)
+    return () => {
+      window.clearInterval(id)
+      window.removeEventListener('pageshow', unlock)
+    }
+  }, [])
+
   const closeMenus = () => {
     setMobileOpen(false)
     setSektorOpen(false)
@@ -115,7 +161,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v6"
+        data-nav-build="header-inline-v7"
         role="banner"
         data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         data-mobile-open={mobileOpen ? '1' : '0'}
@@ -214,25 +260,40 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
+                // If pointerdown capture already toggled, skip React click
+                try {
+                  const at = (window as unknown as { __navHamAt?: number }).__navHamAt || 0
+                  if (Date.now() - at < 450) return
+                } catch {
+                  /* ignore */
+                }
                 toggleMobile()
               }}
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-panel"
+              style={{
+                color: '#f0c040',
+                borderColor: 'rgba(240,192,64,0.85)',
+                background: 'rgba(8,8,8,0.82)',
+                boxShadow: '0 0 0 1px rgba(240,192,64,0.35), 0 2px 10px rgba(0,0,0,0.35)',
+              }}
             >
               <span
                 className="site-header__burger-line"
                 style={{
+                  background: '#f0c040',
                   transform: mobileOpen ? 'rotate(45deg) translate(0, 7px)' : 'none',
                 }}
               />
               <span
                 className="site-header__burger-line"
-                style={{ opacity: mobileOpen ? 0 : 1 }}
+                style={{ background: '#f0c040', opacity: mobileOpen ? 0 : 1 }}
               />
               <span
                 className="site-header__burger-line"
                 style={{
+                  background: '#f0c040',
                   transform: mobileOpen ? 'rotate(-45deg) translate(0, -7px)' : 'none',
                 }}
               />

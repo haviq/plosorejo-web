@@ -350,6 +350,7 @@ html[data-preloader='skip'] .site-header {
   pointer-events: auto !important;
 }
 
+/* Always high-contrast gold controls — never invisible on dark header */
 .site-header__icon-btn {
   width: 48px;
   height: 48px;
@@ -361,9 +362,9 @@ html[data-preloader='skip'] .site-header {
   justify-content: center;
   gap: 5px;
   border-radius: 0.75rem;
-  border: 1.5px solid var(--nav-icon-border);
-  background: var(--nav-icon-bg);
-  color: var(--nav-icon-fg);
+  border: 1.5px solid rgba(240, 192, 64, 0.85) !important;
+  background: rgba(8, 8, 8, 0.88) !important;
+  color: #f0c040 !important;
   cursor: pointer;
   pointer-events: auto !important;
   touch-action: manipulation;
@@ -375,25 +376,41 @@ html[data-preloader='skip'] .site-header {
   margin: 0;
   padding: 0;
   flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(240, 192, 64, 0.28), 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 .site-header__burger-line {
   display: block;
   width: 1.2rem;
   height: 2.5px;
-  background: var(--nav-icon-fg);
+  background: #f0c040 !important;
   border-radius: 2px;
   transition: transform 0.2s ease, opacity 0.2s ease;
   pointer-events: none;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.35);
 }
 
 /* Theme toggle icons inherit button color */
 .site-header__icon-btn svg {
-  color: var(--nav-icon-fg);
-  stroke: currentColor;
+  color: #f0c040 !important;
+  stroke: #f0c040 !important;
   width: 1.25rem;
   height: 1.25rem;
+}
+
+[data-theme='light'] .site-header__icon-btn {
+  background: #1a150c !important;
+  border-color: #d4af37 !important;
+  color: #f0c040 !important;
+}
+
+[data-theme='light'] .site-header__burger-line {
+  background: #f0c040 !important;
+}
+
+[data-theme='light'] .site-header__icon-btn svg {
+  color: #f0c040 !important;
+  stroke: #f0c040 !important;
 }
 
 .site-header button,
@@ -988,31 +1005,24 @@ section[aria-label*='Hero'] .scroll-indicator {
   opacity: 1;
 }
 
-/* Light mode: ensure header icons never blend into cream nav */
-[data-theme='light'] .site-header__icon-btn {
-  background: #ffffff !important;
-  border-color: rgba(122, 97, 16, 0.55) !important;
-  color: #14110c !important;
-  box-shadow: 0 1px 4px rgba(20, 17, 12, 0.12);
-}
-
-[data-theme='light'] .site-header__burger-line {
-  background: #14110c !important;
-}
-
-[data-theme='light'] .site-header__icon-btn svg {
-  color: #14110c !important;
-  stroke: #14110c !important;
-}
-
+/* Gold controls always — never blend into header (light or dark) */
+[data-theme='light'] .site-header__icon-btn,
 [data-theme='dark'] .site-header__icon-btn {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(212, 175, 55, 0.5) !important;
-  color: #f5f0e4 !important;
+  background: rgba(8, 8, 8, 0.9) !important;
+  border-color: rgba(240, 192, 64, 0.9) !important;
+  color: #f0c040 !important;
+  box-shadow: 0 0 0 1px rgba(240, 192, 64, 0.3), 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
+[data-theme='light'] .site-header__burger-line,
 [data-theme='dark'] .site-header__burger-line {
-  background: #f5f0e4 !important;
+  background: #f0c040 !important;
+}
+
+[data-theme='light'] .site-header__icon-btn svg,
+[data-theme='dark'] .site-header__icon-btn svg {
+  color: #f0c040 !important;
+  stroke: #f0c040 !important;
 }
 
 /* Media overlays always use light-on-dark tokens, but only for text layers */
@@ -1064,13 +1074,19 @@ td {
   position: fixed;
   inset: 0;
   z-index: 19000;
-  pointer-events: none;
+  pointer-events: none !important;
   overflow: hidden;
 }
 
-.route-curtain--cover,
-.route-curtain--hold {
+/* Only block briefly during cover; never trap permanently */
+.route-curtain--cover {
   pointer-events: auto;
+}
+
+.route-curtain--hold,
+.route-curtain--reveal,
+.route-curtain--idle {
+  pointer-events: none !important;
 }
 
 .route-curtain__panel {

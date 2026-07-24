@@ -9,6 +9,7 @@ const COVER_MS = 380
 const HOLD_MS = 120
 const REVEAL_MS = 420
 const TOTAL_MS = COVER_MS + HOLD_MS + REVEAL_MS
+const FAILSAFE_MS = 1400
 
 const LABELS: Record<string, string> = {
   berita: 'Berita',
@@ -55,6 +56,7 @@ export default function RouteCurtain() {
     setLabel('')
     document.documentElement.removeAttribute('data-route-curtain')
     document.body.style.removeProperty('overflow')
+    document.documentElement.style.removeProperty('overflow')
   }
 
   const runCycle = (nextLabel?: string) => {
@@ -92,7 +94,26 @@ export default function RouteCurtain() {
         finish()
       }, TOTAL_MS),
     )
+    // Hard failsafe — never leave curtain blocking navbar
+    timers.current.push(
+      window.setTimeout(() => {
+        if (cycleId.current !== id) return
+        finish()
+      }, FAILSAFE_MS),
+    )
   }
+
+  // Global failsafe: if attribute stuck, clear after 2s
+  useEffect(() => {
+    const tick = () => {
+      if (document.documentElement.getAttribute('data-route-curtain') === 'active' && !busy.current) {
+        finish()
+      }
+    }
+    const id = window.setInterval(tick, 1000)
+    return () => window.clearInterval(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Pathname change → animate (skip first mount / preloader session)
   useEffect(() => {
