@@ -84,32 +84,6 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     }
   }, [mobileOpen])
 
-  // Native capture listeners for hamburger — more reliable than React synthetic
-  // events on Android/Telegram WebView (pointerdown preventDefault often kills click).
-  useEffect(() => {
-    const el = hamburgerRef.current
-    if (!el) return
-
-    const activate = (e: Event) => {
-      if (e instanceof PointerEvent && e.button !== 0 && e.pointerType === 'mouse') return
-      e.preventDefault()
-      e.stopPropagation()
-      // Read live open state from DOM attribute (always current)
-      const open = document.documentElement.getAttribute('data-mobile-nav') === 'open'
-      if (open) closeMobile()
-      else openMobile()
-    }
-
-    el.addEventListener('pointerup', activate, { capture: true })
-    el.addEventListener('click', activate, { capture: true })
-    return () => {
-      el.removeEventListener('pointerup', activate, true)
-      el.removeEventListener('click', activate, true)
-    }
-    // open/close helpers are stable enough via refs below; rebind when open state changes
-    // so attribute path stays consistent.
-  }, [mobileOpen])
-
   useEffect(() => {
     if (!mobileOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -120,7 +94,6 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
       }
     }
     document.addEventListener('keydown', onKey)
-    // Don't auto-focus first link on open — steals context on mobile WebView
     return () => document.removeEventListener('keydown', onKey)
   }, [mobileOpen])
 
@@ -136,7 +109,6 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
         document.body.style.pointerEvents = 'auto'
         document.documentElement.style.pointerEvents = 'auto'
       }
-      // Header controls must always remain tappable once preloader is done
       if (pre !== 'active') {
         const header = document.querySelector<HTMLElement>('.site-header')
         if (header) {
@@ -159,25 +131,14 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     setSektorOpen(false)
   }
 
+  // ONE activation gate for open+close. Previous open/close split debounce
+  // let pointerup open then click immediately close (menu "flash").
   const lastHamAt = useRef(0)
-  const lastHamAction = useRef<'open' | 'close' | null>(null)
-
-  const openMobile = () => {
+  const toggleMobile = () => {
     const now = Date.now()
-    // Only ignore double-fire of the *same* action (pointerup + click)
-    if (lastHamAction.current === 'open' && now - lastHamAt.current < 280) return
+    if (now - lastHamAt.current < 400) return
     lastHamAt.current = now
-    lastHamAction.current = 'open'
-    setMobileOpen(true)
-  }
-
-  const closeMobile = () => {
-    const now = Date.now()
-    if (lastHamAction.current === 'close' && now - lastHamAt.current < 280) return
-    lastHamAt.current = now
-    lastHamAction.current = 'close'
-    setMobileOpen(false)
-    setSektorOpen(false)
+    setMobileOpen((v) => !v)
   }
 
   const isActive = (href: string) =>
@@ -187,7 +148,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v10"
+        data-nav-build="header-inline-v11"
         role="banner"
         data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         data-mobile-open={mobileOpen ? '1' : '0'}
@@ -278,25 +239,17 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
 
           <div className="site-header__mobile-actions">
             <ThemeToggle />
+            {/* Same button slot: ☰ when closed, X when open — no second X below */}
             <button
               ref={hamburgerRef}
               type="button"
               className="site-header__icon-btn touch-manipulation"
               data-nav-hamburger="1"
               data-nav-open={mobileOpen ? '1' : '0'}
-              // React fallbacks (native capture listeners attached in effect)
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                if (mobileOpen) closeMobile()
-                else openMobile()
-              }}
-              onPointerUp={(e) => {
-                if (e.button !== 0 && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
-                e.preventDefault()
-                e.stopPropagation()
-                if (mobileOpen) closeMobile()
-                else openMobile()
+                toggleMobile()
               }}
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               aria-expanded={mobileOpen}
@@ -309,7 +262,6 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               }}
             >
               {mobileOpen ? (
-                /* Explicit X — clearer than rotating 3 burger lines */
                 <span className="site-header__close-x" aria-hidden="true">
                   <span className="site-header__close-x-line site-header__close-x-line--a" />
                   <span className="site-header__close-x-line site-header__close-x-line--b" />
@@ -336,37 +288,6 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
           aria-label="Menu navigasi"
         >
           <div className="site-mobile-panel__inner">
-            <div className="site-mobile-panel__top">
-              <p className="site-mobile-panel__brand">Menu</p>
-              <button
-                type="button"
-                className="site-header__icon-btn touch-manipulation"
-                data-nav-close="1"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  closeMobile()
-                }}
-                onPointerUp={(e) => {
-                  if (e.button !== 0 && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
-                  e.preventDefault()
-                  e.stopPropagation()
-                  closeMobile()
-                }}
-                aria-label="Tutup menu"
-                style={{
-                  color: '#f0c040',
-                  borderColor: 'rgba(240,192,64,0.9)',
-                  background: 'rgba(8,8,8,0.92)',
-                }}
-              >
-                <span className="site-header__close-x" aria-hidden="true">
-                  <span className="site-header__close-x-line site-header__close-x-line--a" />
-                  <span className="site-header__close-x-line site-header__close-x-line--b" />
-                </span>
-              </button>
-            </div>
-
             <nav aria-label="Menu mobile">
               {navLinks.map(({ href, label }) => (
                 <Link
