@@ -941,7 +941,7 @@ td {
   color: var(--text);
 }
 
-/* ── Site preloader (gold + black curtains, typewriter) ──────── */
+/* ── Site preloader (gold + black, two-line title) ───────────── */
 /* Returning session: hide before paint (set by layout boot script) */
 html[data-preloader='skip'] .site-preloader {
   display: none !important;
@@ -955,9 +955,12 @@ html[data-preloader='skip'] .site-preloader {
   place-items: center;
   overflow: hidden;
   pointer-events: auto;
-  touch-action: none;
-  /* Solid fallback so first paint is NEVER transparent on mobile */
+  /* allow tap-to-skip; still prevent scroll behind */
+  touch-action: manipulation;
+  cursor: pointer;
   background: #080808;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .site-preloader__layer {
@@ -966,25 +969,25 @@ html[data-preloader='skip'] .site-preloader {
   right: 0;
   top: 0;
   height: 100%;
-  /* Visible by default — animation is enhancement, not required for cover */
   transform: translate3d(0, 0, 0);
   will-change: transform;
+  pointer-events: none;
 }
 
 .site-preloader__layer--black {
   z-index: 1;
   background: #080808;
-  animation: preloader-curtain-in 0.55s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation: preloader-curtain-in 0.5s cubic-bezier(0.77, 0, 0.18, 1) both;
 }
 
 .site-preloader__layer--gold {
   z-index: 2;
+  /* Full-bleed soft gold so text always sits on gold, not the black wedge */
   background:
-    linear-gradient(160deg, #f0c040 0%, #d4af37 38%, #8a6a18 72%, #3a2a08 100%);
-  clip-path: polygon(0 0, 100% 0, 100% 58%, 0 72%);
-  animation: preloader-curtain-in 0.7s cubic-bezier(0.77, 0, 0.18, 1) both;
-  animation-delay: 0.05s;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    radial-gradient(120% 80% at 50% 35%, #f3c84a 0%, #d4af37 42%, #7a5a14 78%, #1a1408 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  animation: preloader-curtain-in 0.65s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.04s;
 }
 
 .site-preloader__layer--gold::after {
@@ -992,13 +995,13 @@ html[data-preloader='skip'] .site-preloader {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 42%),
     repeating-linear-gradient(
       -18deg,
-      rgba(255, 255, 255, 0.05) 0 1px,
-      transparent 1px 10px
+      rgba(255, 255, 255, 0.045) 0 1px,
+      transparent 1px 12px
     );
-  opacity: 0.55;
+  opacity: 0.5;
   pointer-events: none;
 }
 
@@ -1006,81 +1009,108 @@ html[data-preloader='skip'] .site-preloader {
   position: relative;
   z-index: 3;
   text-align: center;
-  padding: 1.5rem;
-  max-width: 92vw;
-  /* Stay readable even if animation is delayed/disabled */
+  padding: 1.25rem 1.1rem;
+  width: min(92vw, 28rem);
   opacity: 1;
-  animation: preloader-content-in 0.45s ease both;
-  animation-delay: 0.2s;
+  animation: preloader-content-in 0.4s ease both;
+  animation-delay: 0.12s;
+  pointer-events: none; /* clicks hit the root overlay for skip */
 }
 
 .site-preloader__eyebrow {
-  font-size: 0.7rem;
-  letter-spacing: 0.28em;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
-  margin-bottom: 1rem;
+  color: rgba(20, 14, 4, 0.62);
+  margin: 0 0 0.85rem;
+  font-weight: 600;
 }
 
 .site-preloader__title {
   margin: 0;
   font-family: var(--font-playfair), Georgia, serif;
   font-weight: 900;
-  font-size: clamp(1.35rem, 5.6vw, 2.75rem);
-  letter-spacing: 0.14em;
-  line-height: 1.2;
-  color: #f8f1d8;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
-  min-height: 1.35em;
+  /* Two-line title: never mid-word wrap on narrow phones */
+  font-size: clamp(1.55rem, 8.2vw, 2.85rem);
+  letter-spacing: 0.08em;
+  line-height: 1.12;
+  color: #1a1204;
+  text-shadow: 0 1px 0 rgba(255, 240, 180, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.12em;
+}
+
+.site-preloader__line-text {
+  display: block;
+  white-space: nowrap;
+  min-height: 1.12em;
+}
+
+.site-preloader__line-placeholder {
+  visibility: hidden;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .site-preloader__char {
   display: inline-block;
-  animation: preloader-char-pop 0.28s ease both;
-}
-
-.site-preloader__char--space {
-  width: 0.35em;
+  animation: preloader-char-pop 0.24s ease both;
 }
 
 .site-preloader__caret {
   display: inline-block;
-  width: 0.08em;
-  height: 0.95em;
-  margin-left: 0.12em;
-  vertical-align: -0.08em;
-  background: #f0c040;
-  box-shadow: 0 0 12px rgba(240, 192, 64, 0.8);
+  width: 0.07em;
+  height: 0.9em;
+  margin-left: 0.1em;
+  vertical-align: -0.06em;
+  background: #1a1204;
+  box-shadow: 0 0 10px rgba(26, 18, 4, 0.35);
   animation: preloader-caret 0.7s steps(1) infinite;
 }
 
-.site-preloader__line {
-  width: min(220px, 50vw);
+.site-preloader__rule {
+  width: min(180px, 46vw);
   height: 1px;
-  margin: 1.1rem auto 0.85rem;
-  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  margin: 1rem auto 0.75rem;
+  background: linear-gradient(90deg, transparent, rgba(26, 18, 4, 0.55), transparent);
 }
 
 .site-preloader__sub {
   margin: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(212, 175, 55, 0.75);
+  color: rgba(26, 18, 4, 0.7);
+  font-weight: 600;
 }
 
-/* Exit: curtains slide top → bottom off-screen */
+.site-preloader__hint {
+  margin: 0.9rem 0 0;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(26, 18, 4, 0.45);
+}
+
+/* Exit: fade + slide down, then unmount */
+.site-preloader--exit {
+  animation: preloader-root-out 0.7s ease both;
+  pointer-events: none;
+}
+
 .site-preloader--exit .site-preloader__layer--gold {
-  animation: preloader-curtain-out 0.75s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation: preloader-curtain-out 0.7s cubic-bezier(0.77, 0, 0.18, 1) both;
 }
 
 .site-preloader--exit .site-preloader__layer--black {
-  animation: preloader-curtain-out 0.85s cubic-bezier(0.77, 0, 0.18, 1) both;
-  animation-delay: 0.08s;
+  animation: preloader-curtain-out 0.78s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.05s;
 }
 
 .site-preloader--exit .site-preloader__content {
-  animation: preloader-content-out 0.35s ease both;
+  animation: preloader-content-out 0.28s ease both;
 }
 
 @keyframes preloader-curtain-in {
@@ -1101,10 +1131,16 @@ html[data-preloader='skip'] .site-preloader {
   }
 }
 
+@keyframes preloader-root-out {
+  to {
+    opacity: 0;
+  }
+}
+
 @keyframes preloader-content-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -1115,14 +1151,14 @@ html[data-preloader='skip'] .site-preloader {
 @keyframes preloader-content-out {
   to {
     opacity: 0;
-    transform: translateY(-8px);
+    transform: translateY(-6px);
   }
 }
 
 @keyframes preloader-char-pop {
   from {
     opacity: 0;
-    transform: translateY(0.35em);
+    transform: translateY(0.28em);
   }
   to {
     opacity: 1;
@@ -1141,15 +1177,33 @@ html[data-preloader='skip'] .site-preloader {
   }
 }
 
+@media (max-width: 380px) {
+  .site-preloader__title {
+    font-size: clamp(1.4rem, 9.2vw, 1.85rem);
+    letter-spacing: 0.05em;
+  }
+
+  .site-preloader__eyebrow,
+  .site-preloader__sub {
+    letter-spacing: 0.1em;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .site-preloader__layer--black,
   .site-preloader__layer--gold,
   .site-preloader__content,
   .site-preloader__char,
+  .site-preloader--exit,
   .site-preloader--exit .site-preloader__layer--black,
   .site-preloader--exit .site-preloader__layer--gold,
   .site-preloader--exit .site-preloader__content {
     animation: none !important;
+  }
+
+  /* Still hide on exit when motion is reduced */
+  .site-preloader--exit {
+    opacity: 0 !important;
   }
 }
 
