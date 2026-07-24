@@ -36,6 +36,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [sektorOpen, setSektorOpen] = useState(false)
   const sektorRef = useRef<HTMLLIElement>(null)
+  const hamburgerRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -70,6 +71,23 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     }
   }, [mobileOpen])
 
+  // Escape closes mobile sheet; restore focus to hamburger
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false)
+        setSektorOpen(false)
+        hamburgerRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    // Focus first link for keyboard users
+    const first = document.querySelector<HTMLElement>('#mobile-nav-panel a')
+    first?.focus()
+    return () => document.removeEventListener('keydown', onKey)
+  }, [mobileOpen])
+
   const closeMenus = () => {
     setMobileOpen(false)
     setSektorOpen(false)
@@ -83,6 +101,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
       <header
         className="site-header"
         data-nav-build="header-inline-v3"
+        role="banner"
         style={{
           backgroundColor: scrolled || mobileOpen ? 'var(--nav-bg)' : 'rgba(8,8,8,0.72)',
           backdropFilter: 'blur(14px)',
@@ -171,6 +190,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
           <div className="site-header__mobile-actions">
             <ThemeToggle />
             <button
+              ref={hamburgerRef}
               type="button"
               className="site-header__icon-btn touch-manipulation"
               onClick={() => setMobileOpen((v) => !v)}

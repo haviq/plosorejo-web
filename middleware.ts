@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server'
 /**
  * Edge middleware:
  * - Protect /api/cron/* with CRON_SECRET when configured
+ * - Light rate-limit headers for /api/merapi (real limit in route)
  * - Block common probe paths early
  * - Never expose stack details
  */

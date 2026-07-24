@@ -97,9 +97,11 @@ export default function KontakForm({ whatsapp }: KontakFormProps) {
       <button
         type="submit"
         disabled={!isValid}
-        className="btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed"
+        className="btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation min-h-[44px]"
+        aria-disabled={!isValid}
       >
-        Kirim via WhatsApp →
+        Kirim via WhatsApp
+        <span aria-hidden="true"> →</span>
       </button>
 
       <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>

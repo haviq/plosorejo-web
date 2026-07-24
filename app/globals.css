@@ -498,6 +498,54 @@ section[aria-label*='Hero'] .scroll-indicator {
   outline-offset: 2px;
 }
 
+/* Screen-reader only (Tailwind v4 may not ship this utility) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Keyboard skip navigation */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: 0;
+  z-index: 10000;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-md);
+  background: var(--gold);
+  color: var(--btn-primary-fg);
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transform: translateY(-150%);
+  transition: transform 0.15s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0.75rem);
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* Prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 ::selection {
   background: rgba(212, 175, 55, 0.28);
   color: var(--text);

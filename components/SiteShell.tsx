@@ -22,11 +22,16 @@ export default function SiteShell({
   return (
     <>
       <SiteBackground />
+      <a href="#main-content" className="skip-link">
+        Langsung ke konten utama
+      </a>
       {/* Nav MUST stay outside .site-content isolation so fixed header
           is never trapped under main/hero/map stacking contexts on mobile. */}
       <Nav whatsapp={whatsapp} />
       <div className="site-content">
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1" tabIndex={-1}>
+          {children}
+        </main>
         <Footer />
       </div>
     </>
