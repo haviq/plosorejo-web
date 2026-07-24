@@ -1209,9 +1209,8 @@ html[data-preloader='skip'] .site-preloader {
   place-items: center;
   overflow: hidden;
   pointer-events: auto;
-  /* allow tap-to-skip; still prevent scroll behind */
   touch-action: manipulation;
-  cursor: pointer;
+  cursor: default;
   background: #080808;
   -webkit-user-select: none;
   user-select: none;
@@ -1223,7 +1222,7 @@ html[data-preloader='skip'] .site-preloader {
   right: 0;
   top: 0;
   height: 100%;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0, -105%, 0);
   will-change: transform;
   pointer-events: none;
 }
@@ -1239,9 +1238,8 @@ html[data-preloader='skip'] .site-preloader {
   /* Full-bleed soft gold so text always sits on gold, not the black wedge */
   background:
     radial-gradient(120% 80% at 50% 35%, #f3c84a 0%, #d4af37 42%, #7a5a14 78%, #1a1408 100%);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  animation: preloader-curtain-in 0.65s cubic-bezier(0.77, 0, 0.18, 1) both;
-  animation-delay: 0.04s;
+  animation: preloader-curtain-in 0.58s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.05s;
 }
 
 .site-preloader__layer--gold::after {
@@ -1348,18 +1346,29 @@ html[data-preloader='skip'] .site-preloader {
   color: rgba(26, 18, 4, 0.45);
 }
 
-/* Exit: hide immediately — native script adds this class */
+/* Auto exit: curtain slides bottom → top (upward) */
 .site-preloader--exit {
-  opacity: 0 !important;
   pointer-events: none !important;
-  transition: opacity 0.28s ease !important;
-  animation: none !important;
+  background: transparent !important;
 }
 
-.site-preloader--exit .site-preloader__layer--gold,
-.site-preloader--exit .site-preloader__layer--black,
+.site-preloader--exit .site-preloader__layer--gold {
+  animation: preloader-curtain-up 0.52s cubic-bezier(0.77, 0, 0.18, 1) both !important;
+}
+
+.site-preloader--exit .site-preloader__layer--black {
+  animation: preloader-curtain-up 0.46s cubic-bezier(0.77, 0, 0.18, 1) both !important;
+  animation-delay: 0.05s !important;
+}
+
 .site-preloader--exit .site-preloader__content {
-  animation: none !important;
+  animation: preloader-content-out 0.22s ease both !important;
+}
+
+.site-preloader--gone {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 @keyframes preloader-curtain-in {
@@ -1368,6 +1377,16 @@ html[data-preloader='skip'] .site-preloader {
   }
   to {
     transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Exit upward = bottom→top motion of the curtain leaving */
+@keyframes preloader-curtain-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -105%, 0);
   }
 }
 
@@ -1400,7 +1419,7 @@ html[data-preloader='skip'] .site-preloader {
 @keyframes preloader-content-out {
   to {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(-8px);
   }
 }
 

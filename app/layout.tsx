@@ -68,12 +68,16 @@ const bootHeadScript = `
 
 /**
  * Native preloader controller — no React.
- * Must work even if hydration fails / is delayed on mobile.
+ * Auto-play: cover top→bottom, hold, reveal bottom→top (exit upward).
+ * Tap still skips early; never traps the user.
  */
 const preloaderBodyScript = `
 (function(){
   var KEY='plosorejo-preloader';
   var dead=false;
+  var HOLD_MS=900;      /* title visible after cover */
+  var EXIT_MS=520;      /* curtain slide up */
+  var FAILSAFE_MS=3500; /* never trap */
 
   function mark(){
     try{sessionStorage.setItem(KEY,'1');}catch(e){}
@@ -85,20 +89,26 @@ const preloaderBodyScript = `
       document.documentElement.style.overflow='';
     }catch(e){}
   }
-  function kill(){
+  function removeEl(el){
+    try{
+      if(el && el.parentNode) el.parentNode.removeChild(el);
+    }catch(e){}
+  }
+  function kill(instant){
     if(dead) return;
     dead=true;
     mark();
     unlock();
     var el=document.getElementById('site-preloader');
     if(!el) return;
-    el.classList.add('site-preloader--exit');
     el.style.pointerEvents='none';
-    el.style.opacity='0';
-    el.style.transition='opacity .28s ease';
-    window.setTimeout(function(){
-      if(el && el.parentNode) el.parentNode.removeChild(el);
-    }, 320);
+    if(instant){
+      el.classList.add('site-preloader--gone');
+      removeEl(el);
+      return;
+    }
+    el.classList.add('site-preloader--exit');
+    window.setTimeout(function(){ removeEl(el); }, EXIT_MS + 40);
   }
 
   function boot(){
@@ -111,36 +121,46 @@ const preloaderBodyScript = `
          document.documentElement.getAttribute('data-preloader')==='skip'){
         mark();
         unlock();
-        if(el.parentNode) el.parentNode.removeChild(el);
+        removeEl(el);
         return;
       }
+    }catch(e){}
+
+    /* Reduced motion → quick fade */
+    var reduced=false;
+    try{
+      reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }catch(e){}
 
     document.body.style.overflow='hidden';
     document.documentElement.style.overflow='hidden';
     document.documentElement.setAttribute('data-preloader','active');
+    el.classList.add('site-preloader--auto');
 
     function onSkip(ev){
       if(ev){
         try{ev.preventDefault();}catch(e){}
         try{ev.stopPropagation();}catch(e){}
       }
-      kill();
+      kill(false);
     }
 
-    /* Multiple event types for stubborn mobile browsers */
+    /* Optional early skip (still works, not required) */
     el.addEventListener('click', onSkip, true);
     el.addEventListener('touchend', onSkip, true);
-    el.addEventListener('touchstart', onSkip, true);
-    el.addEventListener('pointerup', onSkip, true);
     document.addEventListener('keydown', function(e){
       if(e.key==='Escape'||e.key==='Enter'||e.key===' ') onSkip(e);
     }, true);
 
-    /* Hard auto-close — never trap the user */
-    window.setTimeout(kill, 2200);
-    /* Extra failsafe */
-    window.setTimeout(kill, 4000);
+    if(reduced){
+      window.setTimeout(function(){ kill(true); }, 400);
+      return;
+    }
+
+    /* Auto timeline:
+       0–0.7s cover (CSS), ~0.7s+hold title, then reveal up */
+    window.setTimeout(function(){ kill(false); }, HOLD_MS + 700);
+    window.setTimeout(function(){ kill(true); }, FAILSAFE_MS);
   }
 
   if(document.readyState==='loading'){

@@ -1,6 +1,6 @@
 /**
  * Server-rendered preloader markup only.
- * Dismiss logic lives in layout.tsx inline script (runs without React).
+ * Auto-play dismiss lives in layout.tsx inline script (no click required).
  */
 export default function SitePreloader() {
   return (
@@ -21,7 +21,7 @@ export default function SitePreloader() {
         </h1>
         <div className="site-preloader__rule" aria-hidden="true" />
         <p className="site-preloader__sub">Umbulharjo · Sleman · Lereng Merapi</p>
-        <p className="site-preloader__hint">Ketuk untuk lanjut</p>
+        <p className="site-preloader__hint">Membuka portal…</p>
       </div>
     </div>
   )
