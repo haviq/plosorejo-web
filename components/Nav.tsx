@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import Icon from '@/components/Icon'
 import ThemeToggle from '@/components/ThemeToggle'
-import BodyPortal from '@/components/BodyPortal'
 import { waLink } from '@/lib/site'
 import siteFallback from '@/content/site.json'
 
@@ -105,9 +104,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     setSektorOpen(false)
   }
 
-  const toggleMobile = (e?: React.MouseEvent) => {
-    e?.preventDefault()
-    e?.stopPropagation()
+  const toggleMobile = () => {
     setMobileOpen((v) => !v)
   }
 
@@ -118,7 +115,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v5"
+        data-nav-build="header-inline-v6"
         role="banner"
         data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         data-mobile-open={mobileOpen ? '1' : '0'}
@@ -207,7 +204,6 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
             )}
           </div>
 
-          {/* Always in DOM (SSR) — never portal-only */}
           <div className="site-header__mobile-actions">
             <ThemeToggle />
             <button
@@ -215,7 +211,11 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               type="button"
               className="site-header__icon-btn touch-manipulation"
               data-nav-hamburger="1"
-              onClick={toggleMobile}
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                toggleMobile()
+              }}
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               aria-expanded={mobileOpen}
               aria-controls="mobile-nav-panel"
@@ -241,77 +241,75 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
         </div>
       </header>
 
-      {/* Portal to body so fixed panel is never trapped under map/hero stacking */}
+      {/* Fixed sibling (not portaled) — always available the same frame as open */}
       {mobileOpen ? (
-        <BodyPortal>
-          <div
-            id="mobile-nav-panel"
-            className="site-mobile-panel"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu navigasi"
-          >
-            <div className="site-mobile-panel__inner">
-              <nav aria-label="Menu mobile">
-                {navLinks.map(({ href, label }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={closeMenus}
-                    className="site-mobile-panel__link"
-                    style={{ color: isActive(href) ? 'var(--gold)' : 'var(--text)' }}
-                    aria-current={isActive(href) ? 'page' : undefined}
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-
-              <p
-                className="mt-6 mb-3 text-xs tracking-[0.2em] uppercase font-semibold"
-                style={{ color: 'var(--muted)' }}
-              >
-                Sektor
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {sektorLinks.map(({ href, label, icon }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    onClick={closeMenus}
-                    className="site-mobile-panel__chip"
-                    style={{
-                      color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
-                    }}
-                  >
-                    <Icon name={icon} size={14} />
-                    {label}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
-                  Direktori UMKM
+        <div
+          id="mobile-nav-panel"
+          className="site-mobile-panel"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu navigasi"
+        >
+          <div className="site-mobile-panel__inner">
+            <nav aria-label="Menu mobile">
+              {navLinks.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={closeMenus}
+                  className="site-mobile-panel__link"
+                  style={{ color: isActive(href) ? 'var(--gold)' : 'var(--text)' }}
+                  aria-current={isActive(href) ? 'page' : undefined}
+                >
+                  {label}
                 </Link>
-                {waReady ? (
-                  <a
-                    href={waHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={closeMenus}
-                    className="btn-ghost"
-                  >
-                    WhatsApp
-                  </a>
-                ) : null}
-                <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
-                  Kontak
+              ))}
+            </nav>
+
+            <p
+              className="mt-6 mb-3 text-xs tracking-[0.2em] uppercase font-semibold"
+              style={{ color: 'var(--muted)' }}
+            >
+              Sektor
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {sektorLinks.map(({ href, label, icon }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={closeMenus}
+                  className="site-mobile-panel__chip"
+                  style={{
+                    color: pathname.startsWith(href) ? 'var(--gold)' : 'var(--muted)',
+                  }}
+                >
+                  <Icon name={icon} size={14} />
+                  {label}
                 </Link>
-              </div>
+              ))}
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
+                Direktori UMKM
+              </Link>
+              {waReady ? (
+                <a
+                  href={waHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMenus}
+                  className="btn-ghost"
+                >
+                  WhatsApp
+                </a>
+              ) : null}
+              <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
+                Kontak
+              </Link>
             </div>
           </div>
-        </BodyPortal>
+        </div>
       ) : null}
     </>
   )

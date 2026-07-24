@@ -224,6 +224,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
+  /* Above mobile panel; below preloader (20000) only while preloader active */
   z-index: 10050;
   pointer-events: auto !important;
   background-color: var(--nav-bg-top);
@@ -231,6 +232,12 @@ body {
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  isolation: isolate;
+}
+
+/* Once preloader is done, nothing may cover header taps */
+html[data-preloader='skip'] .site-header {
+  z-index: 21000;
 }
 
 .site-header[data-scrolled='1'],
@@ -415,11 +422,11 @@ body {
   }
 }
 
-/* Mobile full-screen menu — only mounted when open (portaled to body) */
+/* Mobile full-screen menu — sibling of header, not trapped under content */
 .site-mobile-panel {
   position: fixed;
   inset: 0;
-  z-index: 10045; /* below header (10050) so hamburger stays clickable to close */
+  z-index: 20900; /* under header (21000 when preloader skip), above page content */
   display: flex;
   flex-direction: column;
   background: var(--overlay-scrim);
@@ -1213,9 +1220,12 @@ td {
 }
 
 /* ── Site preloader (gold + black, two-line title) ───────────── */
-/* Returning session: hide before paint (set by layout boot script) */
+/* Returning session / dismissed: hide before paint (set by layout boot script) */
 html[data-preloader='skip'] .site-preloader {
   display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
 .site-preloader {

@@ -9,6 +9,12 @@ const STORAGE_KEY = 'plosorejo-theme'
 
 function readTheme(): Theme {
   try {
+    const attr = document.documentElement.getAttribute('data-theme')
+    if (attr === 'light' || attr === 'dark') return attr
+  } catch {
+    /* ignore */
+  }
+  try {
     const stored = window.localStorage.getItem(STORAGE_KEY)
     if (stored === 'light' || stored === 'dark') return stored
   } catch {
@@ -42,7 +48,6 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
     applyTheme(preferred)
     setMounted(true)
 
-    // Keep multiple ThemeToggle instances (desktop + mobile) in sync.
     const onStorage = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY && (e.newValue === 'light' || e.newValue === 'dark')) {
         setTheme(e.newValue)
@@ -53,6 +58,7 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
       const next = (e as CustomEvent<Theme>).detail
       if (next === 'light' || next === 'dark') {
         setTheme(next)
+        applyTheme(next)
       }
     }
     window.addEventListener('storage', onStorage)
@@ -64,9 +70,7 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
   }, [])
 
   const toggle = () => {
-    const currentAttr = document.documentElement.getAttribute('data-theme')
-    const current: Theme =
-      currentAttr === 'light' || currentAttr === 'dark' ? currentAttr : theme || 'dark'
+    const current = readTheme()
     const next: Theme = current === 'dark' ? 'light' : 'dark'
     applyTheme(next)
     setTheme(next)
