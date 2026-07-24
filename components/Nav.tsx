@@ -99,34 +99,9 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     return () => document.removeEventListener('keydown', onKey)
   }, [mobileOpen])
 
-  // Capture-phase handler: Android/Telegram WebViews often drop React onClick.
-  // This is the single source of truth for hamburger toggles.
-  useEffect(() => {
-    let lastAt = 0
-    const onPointer = (e: Event) => {
-      const t = e.target as Element | null
-      if (!t?.closest?.('[data-nav-hamburger="1"]')) return
-      const now = Date.now()
-      if (now - lastAt < 400) return
-      lastAt = now
-      // Mark so React onClick is ignored
-      try {
-        ;(window as unknown as { __navHamAt?: number }).__navHamAt = now
-      } catch {
-        /* ignore */
-      }
-      e.preventDefault()
-      e.stopPropagation()
-      setMobileOpen((v) => !v)
-    }
-    document.addEventListener('pointerdown', onPointer, true)
-    return () => document.removeEventListener('pointerdown', onPointer, true)
-  }, [])
-
   // Hard unlock: never leave page non-interactive after overlays
   useEffect(() => {
     const unlock = () => {
-      // If preloader/curtain not active, ensure body can receive events
       const pre = document.documentElement.getAttribute('data-preloader')
       const curtain = document.documentElement.getAttribute('data-route-curtain')
       const nav = document.documentElement.getAttribute('data-mobile-nav')
@@ -137,7 +112,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
       }
     }
     unlock()
-    const id = window.setInterval(unlock, 1500)
+    const id = window.setInterval(unlock, 2000)
     window.addEventListener('pageshow', unlock)
     return () => {
       window.clearInterval(id)
@@ -150,7 +125,11 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     setSektorOpen(false)
   }
 
+  const lastHamAt = useRef(0)
   const toggleMobile = () => {
+    const now = Date.now()
+    if (now - lastHamAt.current < 350) return
+    lastHamAt.current = now
     setMobileOpen((v) => !v)
   }
 
@@ -161,7 +140,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v7"
+        data-nav-build="header-inline-v8"
         role="banner"
         data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         data-mobile-open={mobileOpen ? '1' : '0'}
@@ -257,16 +236,17 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               type="button"
               className="site-header__icon-btn touch-manipulation"
               data-nav-hamburger="1"
+              onPointerDown={(e) => {
+                // Prefer pointerdown for Android/Telegram WebView reliability
+                if (e.button !== 0 && e.pointerType !== 'touch' && e.pointerType !== 'pen') return
+                e.preventDefault()
+                e.stopPropagation()
+                toggleMobile()
+              }}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
-                // If pointerdown capture already toggled, skip React click
-                try {
-                  const at = (window as unknown as { __navHamAt?: number }).__navHamAt || 0
-                  if (Date.now() - at < 450) return
-                } catch {
-                  /* ignore */
-                }
+                // Debounced inside toggleMobile — safe if pointerdown already fired
                 toggleMobile()
               }}
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
