@@ -72,7 +72,7 @@ const bootHeadScript = `
       document.documentElement.setAttribute('data-preloader', 'skip');
     }
   } catch (e) {}
-  /* Hard failsafe: never leave a blocking overlay more than 2s after parse */
+  /* Hard failsafe: allow typewriter (~3.5s) then force-hide */
   try {
     window.setTimeout(function(){
       try {
@@ -87,7 +87,7 @@ const bootHeadScript = `
         try { sessionStorage.setItem('plosorejo-preloader', '1'); } catch (e3) {}
         try { localStorage.setItem('plosorejo-preloader', '1'); } catch (e4) {}
       } catch (e5) {}
-    }, 2000);
+    }, 4500);
   } catch (e) {}
 })();`
 
