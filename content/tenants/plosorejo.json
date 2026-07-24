@@ -1,0 +1,27 @@
+{
+  "id": "plosorejo",
+  "nama": "Plosorejo",
+  "tagline": "Desa yang Hidup, Potensi yang Nyata",
+  "subtitle": "Padukuhan Digital · Cangkringan · Sleman",
+  "alamat": "Jl. Balong, Padukuhan Plosorejo, Umbulharjo, Cangkringan, Sleman 55583",
+  "whatsapp": "6287872680562",
+  "theme": {
+    "bg": "#080808",
+    "gold": "#d4af37",
+    "goldSoft": "#f0c040",
+    "accent": "#f0c040"
+  },
+  "highlights": [
+    "Sentra sapi perah Grade A",
+    "UMKM lokal & pariwisata Merapi",
+    "Peta RT + status Merapi live"
+  ],
+  "stats": [
+    { "label": "Jiwa", "value": "658" },
+    { "label": "Sapi perah", "value": "312" },
+    { "label": "UMKM", "value": "89" },
+    { "label": "RT", "value": "4" }
+  ],
+  "mapCenter": { "lat": -7.62428, "lng": 110.43829 },
+  "primaryHref": "/"
+}

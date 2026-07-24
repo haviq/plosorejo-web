@@ -10,8 +10,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/berita',
     '/layanan',
     '/layanan/ajukan',
+    '/layanan/status',
     '/agenda',
     '/darurat',
+    '/admin',
+    '/demo',
+    '/demo/plosorejo',
+    '/demo/sumberejo',
+    '/proposal',
     '/galeri',
     '/kontak',
     '/peta',
@@ -28,7 +34,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${base}${path}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
-    priority: path === '' ? 1 : path === '/darurat' || path === '/layanan/ajukan' ? 0.85 : 0.7,
+    priority:
+      path === ''
+        ? 1
+        : path === '/darurat' || path === '/layanan/ajukan' || path === '/proposal'
+          ? 0.85
+          : 0.7,
   }))
 
   const beritaRoutes = beritaData.map((b) => ({

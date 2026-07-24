@@ -339,6 +339,9 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
             <Link href="/layanan/ajukan" onClick={closeMenus} className="btn-primary">
               Ajukan Surat
             </Link>
+            <Link href="/layanan/status" onClick={closeMenus} className="btn-ghost">
+              Cek Status
+            </Link>
             <Link href="/darurat" onClick={closeMenus} className="btn-ghost">
               Info Darurat
             </Link>

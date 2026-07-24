@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Link from 'next/link'
 import type { LayananItem } from '@/lib/types'
 import { waLink } from '@/lib/site'
 import Icon from '@/components/Icon'
@@ -8,7 +9,6 @@ import Icon from '@/components/Icon'
 interface PengajuanSuratFormProps {
   layanan: LayananItem[]
   whatsapp?: string
-  /** Pre-select layanan by id from query ?layanan= */
   defaultLayananId?: string
 }
 
@@ -17,9 +17,10 @@ export default function PengajuanSuratForm({
   whatsapp,
   defaultLayananId,
 }: PengajuanSuratFormProps) {
-  const firstId = defaultLayananId && layanan.some((l) => l.id === defaultLayananId)
-    ? defaultLayananId
-    : layanan[0]?.id || ''
+  const firstId =
+    defaultLayananId && layanan.some((l) => l.id === defaultLayananId)
+      ? defaultLayananId
+      : layanan[0]?.id || ''
 
   const [layananId, setLayananId] = useState(firstId)
   const [nama, setNama] = useState('')
@@ -28,6 +29,9 @@ export default function PengajuanSuratForm({
   const [telepon, setTelepon] = useState('')
   const [keperluan, setKeperluan] = useState('')
   const [catatan, setCatatan] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [resultKode, setResultKode] = useState<string | null>(null)
+  const [formError, setFormError] = useState('')
 
   const selected = useMemo(
     () => layanan.find((l) => l.id === layananId) || layanan[0],
@@ -36,50 +40,117 @@ export default function PengajuanSuratForm({
 
   const nikOk = /^\d{16}$/.test(nik.trim())
   const isValid =
-    nama.trim().length >= 3 &&
-    nikOk &&
-    keperluan.trim().length >= 5 &&
-    Boolean(selected)
+    nama.trim().length >= 3 && nikOk && keperluan.trim().length >= 5 && Boolean(selected)
 
   const waReady = waLink(whatsapp || '', 'x') !== '#'
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!isValid || !waReady || !selected) return
+    if (!isValid || !selected || submitting) return
+    setSubmitting(true)
+    setFormError('')
+    setResultKode(null)
 
-    const kode = `PLJ-${Date.now().toString(36).toUpperCase().slice(-6)}`
-    const text = [
-      `*Pengajuan Layanan Padukuhan Plosorejo*`,
-      `Kode: ${kode}`,
-      ``,
-      `Layanan: ${selected.nama}`,
-      `Kategori: ${selected.kategori}`,
-      `Estimasi: ${selected.waktu}`,
-      `Biaya: ${selected.biaya}`,
-      ``,
-      `Nama: ${nama.trim()}`,
-      `NIK: ${nik.trim()}`,
-      `RT: ${rt}`,
-      telepon.trim() ? `No. HP: ${telepon.trim()}` : null,
-      ``,
-      `Keperluan:`,
-      keperluan.trim(),
-      catatan.trim() ? `\nCatatan:\n${catatan.trim()}` : null,
-      ``,
-      `_Dikirim dari portal plosorejo-web_`,
-    ]
-      .filter((line) => line !== null)
-      .join('\n')
+    try {
+      const res = await fetch('/api/pengajuan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          layananId: selected.id,
+          layananNama: selected.nama,
+          nama: nama.trim(),
+          nik: nik.trim(),
+          rt,
+          telepon: telepon.trim() || undefined,
+          keperluan: keperluan.trim(),
+          catatan: catatan.trim() || undefined,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) {
+        setFormError('Gagal menyimpan pengajuan. Coba lagi.')
+        return
+      }
 
-    const url = waLink(whatsapp || '', text)
-    if (url === '#') return
-    window.open(url, '_blank', 'noopener,noreferrer')
+      const kode = data.item?.kode as string
+      setResultKode(kode)
+
+      if (waReady) {
+        const text = [
+          `*Pengajuan Layanan Padukuhan Plosorejo*`,
+          `Kode: ${kode}`,
+          `Cek status: https://plosorejo-web.vercel.app/layanan/status?kode=${kode}`,
+          ``,
+          `Layanan: ${selected.nama}`,
+          `Kategori: ${selected.kategori}`,
+          `Estimasi: ${selected.waktu}`,
+          `Biaya: ${selected.biaya}`,
+          ``,
+          `Nama: ${nama.trim()}`,
+          `NIK: ${nik.trim()}`,
+          `RT: ${rt}`,
+          telepon.trim() ? `No. HP: ${telepon.trim()}` : null,
+          ``,
+          `Keperluan:`,
+          keperluan.trim(),
+          catatan.trim() ? `\nCatatan:\n${catatan.trim()}` : null,
+          ``,
+          `_Dikirim dari portal plosorejo-web_`,
+        ]
+          .filter((line) => line !== null)
+          .join('\n')
+
+        const url = waLink(whatsapp || '', text)
+        if (url !== '#') window.open(url, '_blank', 'noopener,noreferrer')
+      }
+    } catch {
+      setFormError('Jaringan bermasalah. Coba lagi.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const inputStyle: React.CSSProperties = {
     backgroundColor: 'var(--s2)',
     borderColor: 'var(--border)',
     color: 'var(--text)',
+  }
+
+  if (resultKode) {
+    return (
+      <div className="card-surface p-6 space-y-4 text-center">
+        <p className="text-xs uppercase tracking-wider font-bold" style={{ color: 'var(--gold)' }}>
+          Pengajuan tercatat
+        </p>
+        <p className="font-mono text-2xl font-black" style={{ color: 'var(--gold)' }}>
+          {resultKode}
+        </p>
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+          Simpan kode ini. Cek status kapan saja, dan lanjutkan chat WA jika sudah terbuka.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Link
+            href={`/layanan/status?kode=${encodeURIComponent(resultKode)}`}
+            className="btn-primary"
+          >
+            Cek status surat
+          </Link>
+          <button
+            type="button"
+            className="btn-ghost"
+            onClick={() => {
+              setResultKode(null)
+              setNama('')
+              setNik('')
+              setKeperluan('')
+              setCatatan('')
+            }}
+          >
+            Ajukan lagi
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -97,7 +168,7 @@ export default function PengajuanSuratForm({
               Form pengajuan online
             </h2>
             <p className="text-sm mt-0.5" style={{ color: 'var(--muted)' }}>
-              Isi data → kirim via WhatsApp ke petugas. Surat tetap diambil/diambil sesuai alur balai.
+              Data disimpan untuk pelacakan status, lalu dibuka WhatsApp ke petugas (jika nomor tersedia).
             </p>
           </div>
         </div>
@@ -251,15 +322,25 @@ export default function PengajuanSuratForm({
         </div>
       </div>
 
+      {formError && (
+        <p className="text-sm text-center" style={{ color: '#e57373' }}>
+          {formError}
+        </p>
+      )}
+
       <button
         type="submit"
-        disabled={!isValid || !waReady}
+        disabled={!isValid || submitting}
         className="btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation min-h-[48px]"
       >
-        {waReady ? 'Kirim pengajuan via WhatsApp →' : 'Nomor WA admin belum diisi'}
+        {submitting
+          ? 'Menyimpan…'
+          : waReady
+            ? 'Simpan & kirim via WhatsApp →'
+            : 'Simpan pengajuan (WA admin belum diisi)'}
       </button>
       <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
-        Data dikirim ke WhatsApp petugas — bukan disimpan di server. Siapkan fotokopi syarat saat ambil surat.
+        Setelah submit Anda dapat kode pelacakan. NIK tidak ditampilkan penuh di status publik.
       </p>
     </form>
   )

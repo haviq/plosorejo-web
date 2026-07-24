@@ -1,0 +1,28 @@
+{
+  "id": "sumberejo",
+  "nama": "Sumberejo",
+  "tagline": "Harmoni Lereng, Mandiri Bersama",
+  "subtitle": "Demo White-Label · Kalurahan Digital",
+  "alamat": "Contoh Padukuhan Sumberejo (demo multi-desa) — branding & data terpisah",
+  "whatsapp": "6287872680562",
+  "theme": {
+    "bg": "#0b1220",
+    "gold": "#5eead4",
+    "goldSoft": "#99f6e4",
+    "accent": "#2dd4bf"
+  },
+  "highlights": [
+    "Template multi-tenant (1 codebase)",
+    "CMS & branding per desa",
+    "Modul surat · UMKM · darurat · agenda"
+  ],
+  "stats": [
+    { "label": "Jiwa", "value": "920" },
+    { "label": "Pokdarwis", "value": "2" },
+    { "label": "UMKM", "value": "54" },
+    { "label": "Dusun", "value": "5" }
+  ],
+  "mapCenter": { "lat": -7.61, "lng": 110.43 },
+  "primaryHref": "/demo/sumberejo",
+  "isDemo": true
+}
