@@ -2,20 +2,20 @@
   "title": "Plosorejo — Padukuhan Digital",
   "tagline": "Desa yang Hidup, Potensi yang Nyata",
   "alamat": "Jl. Balong, Padukuhan Plosorejo, Kalurahan Umbulharjo, Kapanewon Cangkringan, Kabupaten Sleman, DIY 55583",
-  "telepon": "",
-  "whatsapp": "",
+  "telepon": "+62 878-7268-0562",
+  "whatsapp": "6287872680562",
   "email": "padukuhan.plosorejo@gmail.com",
   "jamLayanan": "Senin – Jumat: 08.00 – 14.00 WIB",
   "mapsUrl": "https://maps.google.com/?q=-7.62428,110.43829",
   "instagram": "",
   "facebook": "",
   "youtube": "",
-  "notes": "WAJIB: isi whatsapp + telepon real di /studio → Pengaturan Situs (jangan commit nomor palsu).",
+  "notes": "Kontak utama padukuhan. Update lewat /studio → Pengaturan Situs jika berubah.",
   "perangkat": [
     {
       "nama": "Slamet Widodo",
       "jabatan": "Dukuh / Kepala Padukuhan",
-      "whatsapp": "",
+      "whatsapp": "6287872680562",
       "icon": "people"
     },
     {
