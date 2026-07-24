@@ -34,11 +34,25 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
   const waHref = waLink(wa, 'Halo Padukuhan Plosorejo')
   const waReady = waHref !== '#'
   const [scrolled, setScrolled] = useState(false)
+  // Sync with boot script attribute so early taps aren't lost after hydrate
   const [mobileOpen, setMobileOpen] = useState(false)
   const [sektorOpen, setSektorOpen] = useState(false)
   const sektorRef = useRef<HTMLLIElement>(null)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const lastPath = useRef(pathname)
+  const hydrated = useRef(false)
+
+  // Mark React ready + adopt any boot-opened menu
+  useEffect(() => {
+    hydrated.current = true
+    document.documentElement.setAttribute('data-react-nav', '1')
+    if (document.documentElement.getAttribute('data-mobile-nav') === 'open') {
+      setMobileOpen(true)
+    }
+    return () => {
+      document.documentElement.removeAttribute('data-react-nav')
+    }
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -75,12 +89,14 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     } else {
       document.body.style.removeProperty('overflow')
       document.documentElement.style.removeProperty('overflow')
-      document.documentElement.removeAttribute('data-mobile-nav')
+      // Only clear if React owns the state (avoid fighting boot open pre-hydrate)
+      if (hydrated.current) {
+        document.documentElement.removeAttribute('data-mobile-nav')
+      }
     }
     return () => {
       document.body.style.removeProperty('overflow')
       document.documentElement.style.removeProperty('overflow')
-      document.documentElement.removeAttribute('data-mobile-nav')
     }
   }, [mobileOpen])
 
@@ -109,12 +125,10 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
         document.body.style.pointerEvents = 'auto'
         document.documentElement.style.pointerEvents = 'auto'
       }
-      if (pre !== 'active') {
-        const header = document.querySelector<HTMLElement>('.site-header')
-        if (header) {
-          header.style.pointerEvents = 'auto'
-          header.style.zIndex = '22000'
-        }
+      const header = document.querySelector<HTMLElement>('.site-header')
+      if (header) {
+        header.style.pointerEvents = 'auto'
+        header.style.zIndex = '22000'
       }
     }
     unlock()
@@ -131,8 +145,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     setSektorOpen(false)
   }
 
-  // ONE activation gate for open+close. Previous open/close split debounce
-  // let pointerup open then click immediately close (menu "flash").
+  // ONE activation gate for open+close — prevents double-fire flash close
   const lastHamAt = useRef(0)
   const toggleMobile = () => {
     const now = Date.now()
@@ -148,7 +161,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
     <>
       <header
         className="site-header"
-        data-nav-build="header-inline-v11"
+        data-nav-build="header-inline-v12"
         role="banner"
         data-scrolled={scrolled || mobileOpen ? '1' : '0'}
         data-mobile-open={mobileOpen ? '1' : '0'}
@@ -278,71 +291,70 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
         </div>
       </header>
 
-      {/* Fixed sibling (not portaled) — always available the same frame as open */}
-      {mobileOpen ? (
-        <div
-          id="mobile-nav-panel"
-          className="site-mobile-panel"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Menu navigasi"
-        >
-          <div className="site-mobile-panel__inner">
-            <nav aria-label="Menu mobile">
-              {navLinks.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={closeMenus}
-                  className="site-mobile-panel__link"
-                  style={{ color: isActive(href) ? '#f0c040' : '#f5f0e4' }}
-                  aria-current={isActive(href) ? 'page' : undefined}
-                >
-                  {label}
-                </Link>
-              ))}
-            </nav>
-
-            <p className="site-mobile-panel__section-label">Sektor</p>
-            <div className="grid grid-cols-2 gap-2">
-              {sektorLinks.map(({ href, label, icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={closeMenus}
-                  className="site-mobile-panel__chip"
-                  style={{
-                    color: pathname.startsWith(href) ? '#f0c040' : '#d2c9b4',
-                  }}
-                >
-                  <Icon name={icon} size={14} />
-                  {label}
-                </Link>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
-                Direktori UMKM
+      {/* Always mounted so boot script can open via html[data-mobile-nav=open] before hydrate */}
+      <div
+        id="mobile-nav-panel"
+        className="site-mobile-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu navigasi"
+        aria-hidden={mobileOpen ? 'false' : 'true'}
+      >
+        <div className="site-mobile-panel__inner">
+          <nav aria-label="Menu mobile">
+            {navLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={closeMenus}
+                className="site-mobile-panel__link"
+                style={{ color: isActive(href) ? '#f0c040' : '#f5f0e4' }}
+                aria-current={isActive(href) ? 'page' : undefined}
+              >
+                {label}
               </Link>
-              {waReady ? (
-                <a
-                  href={waHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={closeMenus}
-                  className="btn-ghost"
-                >
-                  WhatsApp
-                </a>
-              ) : null}
-              <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
-                Kontak
+            ))}
+          </nav>
+
+          <p className="site-mobile-panel__section-label">Sektor</p>
+          <div className="grid grid-cols-2 gap-2">
+            {sektorLinks.map(({ href, label, icon }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={closeMenus}
+                className="site-mobile-panel__chip"
+                style={{
+                  color: pathname.startsWith(href) ? '#f0c040' : '#d2c9b4',
+                }}
+              >
+                <Icon name={icon} size={14} />
+                {label}
               </Link>
-            </div>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-primary">
+              Direktori UMKM
+            </Link>
+            {waReady ? (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMenus}
+                className="btn-ghost"
+              >
+                WhatsApp
+              </a>
+            ) : null}
+            <Link href="/kontak" onClick={closeMenus} className="btn-ghost">
+              Kontak
+            </Link>
           </div>
         </div>
-      ) : null}
+      </div>
     </>
   )
 }

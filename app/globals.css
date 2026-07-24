@@ -442,18 +442,23 @@ html[data-preloader='active'] .site-header {
   }
 }
 
-/* Mobile full-screen menu — sibling of header, not trapped under content */
+/* Mobile full-screen menu — always in DOM; shown via html[data-mobile-nav=open]
+   so boot script can open it before React hydrates */
 .site-mobile-panel {
   position: fixed;
   inset: 0;
   z-index: 21900; /* under header (22000), above page content */
-  display: flex;
+  display: none;
   flex-direction: column;
   /* Always solid dark so links never vanish in light/dark mix-ups */
   background: #080808;
   color: #f5f0e4;
   pointer-events: auto !important;
   overscroll-behavior: contain;
+}
+
+html[data-mobile-nav='open'] .site-mobile-panel {
+  display: flex !important;
 }
 
 .site-mobile-panel__inner {
@@ -1302,8 +1307,9 @@ html[data-preloader='skip'] .site-preloader {
   display: grid;
   place-items: center;
   overflow: hidden;
-  pointer-events: auto;
-  touch-action: manipulation;
+  /* NEVER block taps — intro is visual only */
+  pointer-events: none !important;
+  touch-action: none;
   cursor: default;
   background: #080808;
   -webkit-user-select: none;

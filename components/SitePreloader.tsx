@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useState } from 'react'
 
 const KEY = 'plosorejo-preloader'
-const CURTAIN_IN_MS = 600
-const TYPE_CHAR_MS = 55
-const HOLD_AFTER_TYPE_MS = 700
-const EXIT_MS = 520
-const FAILSAFE_MS = 4200
+// Keep intro short so header controls are usable almost immediately
+const CURTAIN_IN_MS = 280
+const TYPE_CHAR_MS = 28
+const HOLD_AFTER_TYPE_MS = 280
+const EXIT_MS = 360
+const FAILSAFE_MS = 1600
 
 const EYEBROW = 'Portal Digital · Cangkringan'
 const LINE1 = 'PADUKUHAN'
@@ -85,7 +86,6 @@ function TypeLine({
         ))}
         {showCaret ? <span className="site-preloader__caret" aria-hidden="true" /> : null}
       </span>
-      {/* Reserve full line width so layout doesn't jump while typing */}
       <span className="site-preloader__line-placeholder" aria-hidden="true">
         {text}
       </span>
@@ -94,14 +94,23 @@ function TypeLine({
 }
 
 /**
- * First-visit auto curtain:
- * 1) slide top → bottom
- * 2) type title letter-by-letter
- * 3) slide bottom → top (exit upward)
- * React owns the node (no native removeChild) so hydration cannot resurrect it.
+ * First-visit auto curtain (visual only — never blocks header taps).
+ * pointer-events: none so ☰ / theme work during the intro.
  */
 export default function SitePreloader() {
-  const [phase, setPhase] = useState<'show' | 'exit' | 'gone'>('show')
+  // If boot script already marked skip, never paint a blocking overlay
+  const [phase, setPhase] = useState<'show' | 'exit' | 'gone'>(() => {
+    if (typeof document !== 'undefined') {
+      try {
+        if (document.documentElement.getAttribute('data-preloader') === 'skip') return 'gone'
+        if (sessionStorage.getItem(KEY) === '1') return 'gone'
+        if (localStorage.getItem(KEY) === '1') return 'gone'
+      } catch {
+        /* ignore */
+      }
+    }
+    return 'show'
+  })
   const [typed, setTyped] = useState(0)
   const [typingReady, setTypingReady] = useState(false)
 
@@ -113,7 +122,7 @@ export default function SitePreloader() {
   const caretOnLine2 = typingReady && !typingDone && typed >= LINE1.length
 
   useEffect(() => {
-    if (isSeen()) {
+    if (isSeen() || phase === 'gone') {
       markSeen()
       unlockScroll()
       setPhase('gone')
@@ -128,8 +137,8 @@ export default function SitePreloader() {
     }
 
     document.documentElement.setAttribute('data-preloader', 'active')
-    document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
+    // Do NOT lock body overflow — that can feel like a frozen UI on mobile WebView
+    // document.body.style.overflow = 'hidden'
 
     let finished = false
     const timers: number[] = []
@@ -153,20 +162,18 @@ export default function SitePreloader() {
       )
     }
 
-    // Failsafe: never block forever
     timers.push(window.setTimeout(() => finish(false), FAILSAFE_MS))
 
     if (reduced) {
       setTyped(totalChars)
       setTypingReady(true)
-      timers.push(window.setTimeout(() => finish(true), 280))
+      timers.push(window.setTimeout(() => finish(true), 120))
       return () => {
         timers.forEach((id) => window.clearTimeout(id))
         if (typeInterval) window.clearInterval(typeInterval)
       }
     }
 
-    // After curtain slides in, start typewriter
     timers.push(
       window.setTimeout(() => {
         setTypingReady(true)
@@ -183,19 +190,20 @@ export default function SitePreloader() {
       }, CURTAIN_IN_MS),
     )
 
-    // Manual skip: tap anywhere
-    const onSkip = () => finish(false)
-    const root = document.getElementById('site-preloader')
-    root?.addEventListener('click', onSkip)
-    root?.addEventListener('pointerdown', onSkip)
+    // Tap anywhere on page (except header) can skip — handled via capture on document
+    const onSkip = (e: Event) => {
+      const t = e.target as Element | null
+      if (t?.closest?.('.site-header, [data-theme-toggle], [data-nav-hamburger]')) return
+      finish(false)
+    }
+    document.addEventListener('pointerdown', onSkip, true)
 
     return () => {
       timers.forEach((id) => window.clearTimeout(id))
       if (typeInterval) window.clearInterval(typeInterval)
-      root?.removeEventListener('click', onSkip)
-      root?.removeEventListener('pointerdown', onSkip)
+      document.removeEventListener('pointerdown', onSkip, true)
     }
-  }, [totalChars])
+  }, [phase, totalChars])
 
   if (phase === 'gone') return null
 
@@ -207,13 +215,8 @@ export default function SitePreloader() {
       aria-live="polite"
       aria-label="Memuat Padukuhan Plosorejo"
       data-preloader-phase={phase}
-      onClick={() => {
-        // React path for skip (native listener also set in effect)
-        markSeen()
-        unlockScroll()
-        setPhase('exit')
-        window.setTimeout(() => setPhase('gone'), EXIT_MS + 40)
-      }}
+      // Never capture taps — header must stay interactive during intro
+      style={{ pointerEvents: 'none' }}
     >
       <div className="site-preloader__layer site-preloader__layer--black" aria-hidden="true" />
       <div className="site-preloader__layer site-preloader__layer--gold" aria-hidden="true" />

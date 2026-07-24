@@ -52,6 +52,7 @@ export const metadata: Metadata = {
  * Before first paint:
  * - apply saved theme
  * - mark preloader as skip if already seen (session OR localStorage)
+ * - wire early theme/hamburger handlers so buttons work BEFORE React hydrates
  * Never removeChild here — React owns the preloader node (avoids hydrate resurrection).
  */
 const bootHeadScript = `
@@ -72,22 +73,81 @@ const bootHeadScript = `
       document.documentElement.setAttribute('data-preloader', 'skip');
     }
   } catch (e) {}
-  /* Hard failsafe: allow typewriter (~3.5s) then force-hide */
+
+  /* Early interactions — work even before React hydrates.
+     When React is ready (data-react-nav=1), only help with theme;
+     hamburger is handled by React onClick to avoid double-toggle. */
+  try {
+    var lastHam = 0;
+    var lastTheme = 0;
+    document.addEventListener('click', function(ev){
+      var target = ev.target;
+      if (!target || !target.closest) return;
+      var reactReady = document.documentElement.getAttribute('data-react-nav') === '1';
+
+      var themeBtn = target.closest('[data-theme-toggle="1"]');
+      if (themeBtn) {
+        /* Theme works pre-hydrate; after hydrate React also handles — gate shared via time */
+        var nowT = Date.now();
+        if (nowT - lastTheme < 350) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          return;
+        }
+        lastTheme = nowT;
+        if (!reactReady) {
+          ev.preventDefault();
+          ev.stopPropagation();
+          var cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+          var next = cur === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          document.documentElement.style.colorScheme = next;
+          try { localStorage.setItem('plosorejo-theme', next); } catch (e3) {}
+          try { window.dispatchEvent(new CustomEvent('plosorejo-theme', { detail: next })); } catch (e4) {}
+        }
+        return;
+      }
+
+      var ham = target.closest('[data-nav-hamburger="1"]');
+      if (ham && !reactReady) {
+        /* Pre-hydrate only: open/close CSS panel via attribute */
+        ev.preventDefault();
+        ev.stopPropagation();
+        var nowH = Date.now();
+        if (nowH - lastHam < 400) return;
+        lastHam = nowH;
+        var open = document.documentElement.getAttribute('data-mobile-nav') === 'open';
+        if (open) {
+          document.documentElement.removeAttribute('data-mobile-nav');
+          ham.setAttribute('data-nav-open', '0');
+          ham.setAttribute('aria-expanded', 'false');
+          ham.innerHTML = '<span class="site-header__burger-line" style="background:#f0c040"></span><span class="site-header__burger-line" style="background:#f0c040"></span><span class="site-header__burger-line" style="background:#f0c040"></span>';
+        } else {
+          document.documentElement.setAttribute('data-mobile-nav', 'open');
+          ham.setAttribute('data-nav-open', '1');
+          ham.setAttribute('aria-expanded', 'true');
+          ham.innerHTML = '<span class="site-header__close-x" aria-hidden="true"><span class="site-header__close-x-line site-header__close-x-line--a"></span><span class="site-header__close-x-line site-header__close-x-line--b"></span></span>';
+        }
+      }
+    }, true);
+  } catch (e) {}
+
+  /* Hard failsafe: never leave intro longer than ~1.8s */
   try {
     window.setTimeout(function(){
       try {
         var el = document.getElementById('site-preloader');
-        if (!el) return;
-        if (document.documentElement.getAttribute('data-preloader') === 'skip') return;
         document.documentElement.setAttribute('data-preloader', 'skip');
-        el.style.pointerEvents = 'none';
-        el.style.display = 'none';
+        if (el) {
+          el.style.pointerEvents = 'none';
+          el.style.display = 'none';
+        }
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
         try { sessionStorage.setItem('plosorejo-preloader', '1'); } catch (e3) {}
         try { localStorage.setItem('plosorejo-preloader', '1'); } catch (e4) {}
       } catch (e5) {}
-    }, 4500);
+    }, 1800);
   } catch (e) {}
 })();`
 
