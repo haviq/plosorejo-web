@@ -1035,6 +1035,166 @@ td {
   color: var(--text);
 }
 
+/* ── Route transition curtain (every in-app page change) ─────── */
+.route-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 19000;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.route-curtain--cover,
+.route-curtain--hold {
+  pointer-events: auto;
+}
+
+.route-curtain__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  will-change: transform;
+  transform: translate3d(0, -105%, 0);
+}
+
+.route-curtain__panel--black {
+  z-index: 1;
+  background: #080808;
+}
+
+.route-curtain__panel--gold {
+  z-index: 2;
+  background:
+    radial-gradient(120% 80% at 50% 35%, #f3c84a 0%, #d4af37 42%, #7a5a14 78%, #1a1408 100%);
+}
+
+.route-curtain__panel--gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 45%),
+    repeating-linear-gradient(
+      -18deg,
+      rgba(255, 255, 255, 0.04) 0 1px,
+      transparent 1px 12px
+    );
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.route-curtain__mark {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-content: center;
+  gap: 0.35rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+.route-curtain__brand {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(1.35rem, 5vw, 2rem);
+  letter-spacing: 0.18em;
+  color: #1a1204;
+  text-shadow: 0 1px 0 rgba(255, 240, 180, 0.35);
+}
+
+.route-curtain__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(26, 18, 4, 0.62);
+}
+
+/* Cover: slide top → bottom */
+.route-curtain--cover .route-curtain__panel--black {
+  animation: route-curtain-down 0.42s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+.route-curtain--cover .route-curtain__panel--gold {
+  animation: route-curtain-down 0.48s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.04s;
+}
+.route-curtain--cover .route-curtain__mark {
+  animation: route-curtain-mark-in 0.28s ease both;
+  animation-delay: 0.18s;
+}
+
+/* Hold fully covered */
+.route-curtain--hold .route-curtain__panel {
+  transform: translate3d(0, 0, 0);
+}
+.route-curtain--hold .route-curtain__mark {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reveal: slide bottom → top (exit upward) */
+.route-curtain--reveal .route-curtain__panel--gold {
+  animation: route-curtain-up 0.48s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+.route-curtain--reveal .route-curtain__panel--black {
+  animation: route-curtain-up 0.42s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.05s;
+}
+.route-curtain--reveal .route-curtain__mark {
+  animation: route-curtain-mark-out 0.22s ease both;
+}
+
+@keyframes route-curtain-down {
+  from {
+    transform: translate3d(0, -105%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes route-curtain-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -105%, 0);
+  }
+}
+
+@keyframes route-curtain-mark-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes route-curtain-mark-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-curtain {
+    display: none !important;
+  }
+}
+
 /* ── Site preloader (gold + black, two-line title) ───────────── */
 /* Returning session: hide before paint (set by layout boot script) */
 html[data-preloader='skip'] .site-preloader {

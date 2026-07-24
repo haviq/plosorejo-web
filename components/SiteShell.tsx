@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import SiteBackground from '@/components/SiteBackground'
+import RouteCurtain from '@/components/RouteCurtain'
 
 export default function SiteShell({
   children,
@@ -25,6 +26,7 @@ export default function SiteShell({
       <a href="#main-content" className="skip-link">
         Langsung ke konten utama
       </a>
+      <RouteCurtain />
       {/* Nav MUST stay outside .site-content isolation so fixed header
           is never trapped under main/hero/map stacking contexts on mobile. */}
       <Nav whatsapp={whatsapp} />
