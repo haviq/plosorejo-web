@@ -5,10 +5,28 @@ import { usePathname } from 'next/navigation'
 
 type Phase = 'idle' | 'cover' | 'hold' | 'reveal'
 
-const COVER_MS = 420
-const HOLD_MS = 80
-const REVEAL_MS = 480
+const COVER_MS = 380
+const HOLD_MS = 120
+const REVEAL_MS = 420
 const TOTAL_MS = COVER_MS + HOLD_MS + REVEAL_MS
+
+const LABELS: Record<string, string> = {
+  berita: 'Berita',
+  profil: 'Profil',
+  layanan: 'Layanan',
+  galeri: 'Galeri',
+  peta: 'Peta',
+  kontak: 'Kontak',
+  kkn: 'KKN',
+  susu: 'Susu',
+  sektor: 'Sektor',
+}
+
+function labelFromPath(pathname: string) {
+  if (pathname === '/') return 'Beranda'
+  const slug = pathname.replace(/^\//, '').split('/')[0] || ''
+  return LABELS[slug] || slug.charAt(0).toUpperCase() + slug.slice(1)
+}
 
 /**
  * Smooth page-transition curtain on every in-app navigation.
@@ -24,6 +42,7 @@ export default function RouteCurtain() {
   const busy = useRef(false)
   const timers = useRef<number[]>([])
   const reduced = useRef(false)
+  const cycleId = useRef(0)
 
   const clearTimers = () => {
     timers.current.forEach((id) => window.clearTimeout(id))
@@ -43,37 +62,44 @@ export default function RouteCurtain() {
       finish()
       return
     }
-    if (busy.current) {
-      // Restart cleanly on rapid nav
-      clearTimers()
-    }
+
+    // Restart cleanly on rapid nav
+    clearTimers()
     busy.current = true
+    const id = ++cycleId.current
+
     setLabel(nextLabel || '')
     document.documentElement.setAttribute('data-route-curtain', 'active')
-    // Don't lock body scroll for long — only during cover
     document.body.style.overflow = 'hidden'
 
     setPhase('cover')
     timers.current.push(
       window.setTimeout(() => {
+        if (cycleId.current !== id) return
         setPhase('hold')
       }, COVER_MS),
     )
     timers.current.push(
       window.setTimeout(() => {
+        if (cycleId.current !== id) return
         setPhase('reveal')
         document.body.style.removeProperty('overflow')
       }, COVER_MS + HOLD_MS),
     )
     timers.current.push(
       window.setTimeout(() => {
+        if (cycleId.current !== id) return
         finish()
       }, TOTAL_MS),
     )
   }
 
-  // Pathname change → animate (skip first mount)
+  // Pathname change → animate (skip first mount / preloader session)
   useEffect(() => {
+    reduced.current =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
     if (firstPath.current) {
       firstPath.current = false
       lastPath.current = pathname
@@ -81,23 +107,9 @@ export default function RouteCurtain() {
     }
     if (pathname === lastPath.current) return
     lastPath.current = pathname
+    if (pathname.startsWith('/studio')) return
 
-    // Derive short label from path
-    const slug = pathname === '/' ? 'Beranda' : pathname.replace(/^\//, '').split('/')[0]
-    const pretty =
-      {
-        berita: 'Berita',
-        profil: 'Profil',
-        layanan: 'Layanan',
-        galeri: 'Galeri',
-        peta: 'Peta',
-        kontak: 'Kontak',
-        kkn: 'KKN',
-        susu: 'Susu',
-        sektor: 'Sektor',
-      }[slug] || slug.charAt(0).toUpperCase() + slug.slice(1)
-
-    runCycle(pretty)
+    runCycle(labelFromPath(pathname))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
@@ -114,8 +126,13 @@ export default function RouteCurtain() {
 
       const el = (e.target as Element | null)?.closest?.('a')
       if (!el) return
+
+      // Don't steal clicks from theme/hamburger buttons
+      if ((e.target as Element | null)?.closest?.('button')) return
+
       const href = el.getAttribute('href')
-      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:'))
+        return
       if (el.getAttribute('target') === '_blank') return
       if (el.hasAttribute('download')) return
 
@@ -127,13 +144,11 @@ export default function RouteCurtain() {
       }
       if (url.origin !== window.location.origin) return
       if (url.pathname.startsWith('/studio')) return
-      // same path + only hash
       if (url.pathname === window.location.pathname && url.search === window.location.search) return
 
-      // Kick cover early; pathname effect will keep/re-run as needed
+      // Kick cover early; pathname effect will re-sync label/finish
       if (!busy.current) {
-        const slug = url.pathname === '/' ? 'Beranda' : url.pathname.replace(/^\//, '').split('/')[0]
-        runCycle(slug)
+        runCycle(labelFromPath(url.pathname))
       }
     }
 

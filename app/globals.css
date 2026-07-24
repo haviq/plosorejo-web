@@ -226,6 +226,17 @@ body {
   right: 0;
   z-index: 10050;
   pointer-events: auto !important;
+  background-color: var(--nav-bg-top);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.site-header[data-scrolled='1'],
+.site-header[data-mobile-open='1'] {
+  background-color: var(--nav-bg);
+  box-shadow: var(--shadow-card);
 }
 
 .site-header__bar {
@@ -352,6 +363,11 @@ body {
   -webkit-tap-highlight-color: rgba(212, 175, 55, 0.35);
   position: relative;
   z-index: 10070;
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .site-header__burger-line {
@@ -399,15 +415,16 @@ body {
   }
 }
 
-/* Mobile full-screen menu — only mounted when open */
+/* Mobile full-screen menu — only mounted when open (portaled to body) */
 .site-mobile-panel {
   position: fixed;
   inset: 0;
-  z-index: 10040;
+  z-index: 10045; /* below header (10050) so hamburger stays clickable to close */
   display: flex;
   flex-direction: column;
   background: var(--overlay-scrim);
   pointer-events: auto !important;
+  overscroll-behavior: contain;
 }
 
 .site-mobile-panel__inner {
