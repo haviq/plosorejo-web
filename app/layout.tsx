@@ -57,6 +57,12 @@ const themeBootScript = `
     document.documentElement.setAttribute('data-theme', t);
     document.documentElement.style.colorScheme = t;
   } catch (e) {}
+  /* Preloader: mark skip BEFORE first paint so returning tabs never flash */
+  try {
+    if (sessionStorage.getItem('plosorejo-preloader') === '1') {
+      document.documentElement.setAttribute('data-preloader', 'skip');
+    }
+  } catch (e) {}
 })();`
 
 export default async function RootLayout({

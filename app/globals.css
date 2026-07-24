@@ -942,6 +942,11 @@ td {
 }
 
 /* ── Site preloader (gold + black curtains, typewriter) ──────── */
+/* Returning session: hide before paint (set by layout boot script) */
+html[data-preloader='skip'] .site-preloader {
+  display: none !important;
+}
+
 .site-preloader {
   position: fixed;
   inset: 0;
@@ -951,6 +956,8 @@ td {
   overflow: hidden;
   pointer-events: auto;
   touch-action: none;
+  /* Solid fallback so first paint is NEVER transparent on mobile */
+  background: #080808;
 }
 
 .site-preloader__layer {
@@ -959,6 +966,7 @@ td {
   right: 0;
   top: 0;
   height: 100%;
+  /* Visible by default — animation is enhancement, not required for cover */
   transform: translate3d(0, 0, 0);
   will-change: transform;
 }
@@ -1000,6 +1008,8 @@ td {
   text-align: center;
   padding: 1.5rem;
   max-width: 92vw;
+  /* Stay readable even if animation is delayed/disabled */
+  opacity: 1;
   animation: preloader-content-in 0.45s ease both;
   animation-delay: 0.2s;
 }

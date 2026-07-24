@@ -3,73 +3,76 @@
 import { useEffect, useState } from 'react'
 
 const TITLE = 'PADUKUHAN PLOSOREJO'
-const TYPE_MS = 55
-const HOLD_MS = 420
-const EXIT_MS = 900
+const TYPE_MS = 48
+const HOLD_MS = 700
+const EXIT_MS = 950
+const STORAGE_KEY = 'plosorejo-preloader'
+
+type Phase = 'boot' | 'typing' | 'exit' | 'done'
+
+function alreadySeen(): boolean {
+  if (typeof document === 'undefined') return false
+  if (document.documentElement.getAttribute('data-preloader') === 'skip') return true
+  try {
+    return window.sessionStorage.getItem(STORAGE_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function markSeen() {
+  try {
+    window.sessionStorage.setItem(STORAGE_KEY, '1')
+  } catch {
+    /* private mode / blocked storage */
+  }
+  document.documentElement.setAttribute('data-preloader', 'skip')
+}
 
 /**
- * Full-screen preloader:
- * - two curtains (gold + black) slide top → bottom
- * - letter-by-letter typing of PADUKUHAN PLOSOREJO
- * - then curtains slide away and unmount
- * Shown once per browser tab session.
+ * Full-screen preloader (gold + black curtains + typewriter).
+ * Markup is always in the first client paint so mobile never skips it.
+ * Returning tabs are skipped via inline boot script (data-preloader=skip).
  */
 export default function SitePreloader() {
-  const [visible, setVisible] = useState(false)
-  const [phase, setPhase] = useState<'boot' | 'typing' | 'exit' | 'done'>('boot')
+  // Always start as 'boot' so SSR HTML matches client hydrate (no mismatch).
+  // Returning tabs are hidden pre-paint via html[data-preloader=skip] + boot script.
+  const [phase, setPhase] = useState<Phase>('boot')
   const [typed, setTyped] = useState('')
   const [reduceMotion, setReduceMotion] = useState(false)
 
+  // Resolve once on mount — hide immediately if already seen this session
   useEffect(() => {
-    try {
-      if (window.sessionStorage.getItem('plosorejo-preloader') === '1') {
-        setPhase('done')
-        return
-      }
-    } catch {
-      // private mode — still show once this mount
+    if (alreadySeen()) {
+      setPhase('done')
+      return
     }
 
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     setReduceMotion(prefersReduce)
-    setVisible(true)
 
-    // lock scroll while preloader is up
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
+    document.documentElement.setAttribute('data-preloader', 'active')
 
     if (prefersReduce) {
       setTyped(TITLE)
       setPhase('typing')
-      const t = window.setTimeout(() => {
-        setPhase('exit')
-        window.setTimeout(() => {
-          setPhase('done')
-          setVisible(false)
-          try {
-            window.sessionStorage.setItem('plosorejo-preloader', '1')
-          } catch {
-            /* ignore */
-          }
-          document.body.style.overflow = prev
-        }, 350)
-      }, 500)
+      const t = window.setTimeout(() => setPhase('exit'), 650)
       return () => {
         window.clearTimeout(t)
         document.body.style.overflow = prev
       }
     }
 
-    // brief curtain settle, then type
-    const bootTimer = window.setTimeout(() => setPhase('typing'), 280)
-
+    const bootTimer = window.setTimeout(() => setPhase('typing'), 320)
     return () => {
       window.clearTimeout(bootTimer)
       document.body.style.overflow = prev
     }
   }, [])
 
-  // typing effect
+  // Typewriter
   useEffect(() => {
     if (phase !== 'typing' || reduceMotion) return
     if (typed.length >= TITLE.length) {
@@ -82,42 +85,41 @@ export default function SitePreloader() {
     return () => window.clearTimeout(t)
   }, [phase, typed, reduceMotion])
 
-  // exit → done
+  // Exit → done
   useEffect(() => {
     if (phase !== 'exit') return
     const t = window.setTimeout(() => {
       setPhase('done')
-      setVisible(false)
+      markSeen()
       document.body.style.overflow = ''
-      try {
-        window.sessionStorage.setItem('plosorejo-preloader', '1')
-      } catch {
-        /* ignore */
-      }
     }, EXIT_MS)
     return () => window.clearTimeout(t)
   }, [phase])
 
-  if (!visible || phase === 'done') return null
+  // Skip paint entirely when already seen
+  if (phase === 'done') return null
 
   const exiting = phase === 'exit'
+  // During SSR/boot show full title so first paint is never empty gold/black void
+  const display =
+    typed ||
+    (phase === 'boot' || phase === 'exit' || reduceMotion ? TITLE : '')
 
   return (
     <div
+      id="site-preloader"
       className={`site-preloader${exiting ? ' site-preloader--exit' : ''}`}
       role="status"
       aria-live="polite"
       aria-label="Memuat Padukuhan Plosorejo"
     >
-      {/* Layer 1 — black (back) */}
       <div className="site-preloader__layer site-preloader__layer--black" aria-hidden="true" />
-      {/* Layer 2 — gold (front curtain) */}
       <div className="site-preloader__layer site-preloader__layer--gold" aria-hidden="true" />
 
       <div className="site-preloader__content">
         <p className="site-preloader__eyebrow">Portal Digital · Cangkringan</p>
         <h1 className="site-preloader__title" aria-label={TITLE}>
-          {typed.split('').map((ch, i) => (
+          {display.split('').map((ch, i) => (
             <span
               key={`${ch}-${i}`}
               className={`site-preloader__char${ch === ' ' ? ' site-preloader__char--space' : ''}`}
