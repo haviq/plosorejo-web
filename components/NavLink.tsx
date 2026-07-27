@@ -1,15 +1,22 @@
 'use client'
 
 /**
- * NavLink — drop-in replacement for next/link that shows the route curtain
- * before navigating. Uses Next.js 16 onNavigate + preventDefault() which is
- * the ONLY reliable way to delay navigation in the App Router.
+ * NavLink — Next.js 16 aware link with curtain transition.
+ *
+ * Strategy: ALLOW React to navigate normally.
+ * Before navigation: show curtain + set data-nav-pending (hides <main> via CSS).
+ * After pathname changes: reveal curtain + remove data-nav-pending.
+ *
+ * This is the ONLY reliable approach in Next.js 16 App Router:
+ * - onNavigate preventDefault blocks nav permanently (no re-trigger)
+ * - window.location.assign loses React state
+ * - Curtain outside React tree means it survives React re-renders
  */
 
 import Link from 'next/link'
-import type { ComponentPropsWithoutRef } from 'react'
+import type { ComponentPropsWithoutRef, MouseEvent } from 'react'
 
-const COVER_MS = 480
+const PORTAL_ID = 'rc-curtain-portal'
 
 const LABELS: Record<string, string> = {
   beranda: 'Beranda', berita: 'Berita', profil: 'Profil',
@@ -24,15 +31,11 @@ function labelFromPath(p: string) {
   return LABELS[slug] || slug.charAt(0).toUpperCase() + slug.slice(1)
 }
 
-// ── Pure DOM curtain helpers — zero React involvement ──────────────────────
-const PORTAL_ID = 'rc-curtain-portal'
+// ── Pure DOM — zero React setState ──────────────────────────────────────────
+export function showCurtain(label: string) {
+  if (typeof document === 'undefined') return
 
-function getCurtain(): HTMLElement | null {
-  return document.getElementById(PORTAL_ID)
-}
-
-function showCurtain(label: string) {
-  let el = getCurtain()
+  let el = document.getElementById(PORTAL_ID)
   if (!el) {
     el = document.createElement('div')
     el.id = PORTAL_ID
@@ -47,22 +50,31 @@ function showCurtain(label: string) {
       </div>`
     document.body.appendChild(el)
   }
+
   const lbl = el.querySelector<HTMLElement>('.rc-lbl')
   if (lbl) lbl.textContent = label
-  // Force reflow so animation restarts cleanly
+
+  // Restart animation via reflow
   el.className = ''
   void el.offsetHeight
   el.className = 'rc-cover'
 }
 
 export function revealCurtain() {
-  const el = getCurtain()
-  if (!el) return
+  if (typeof document === 'undefined') return
+
+  const el = document.getElementById(PORTAL_ID)
+  if (!el) {
+    document.documentElement.removeAttribute('data-nav-pending')
+    return
+  }
+
   el.className = ''
   void el.offsetHeight
   el.className = 'rc-reveal'
+
   setTimeout(() => {
-    if (el) el.className = 'rc-idle'
+    el.className = 'rc-idle'
     document.documentElement.removeAttribute('data-nav-pending')
   }, 460)
 }
@@ -70,32 +82,40 @@ export function revealCurtain() {
 type LinkProps = ComponentPropsWithoutRef<typeof Link>
 
 export default function NavLink({ href, onClick, children, ...rest }: LinkProps) {
-  const hrefStr = typeof href === 'string' ? href : (href as { pathname?: string }).pathname || '/'
+  const hrefStr = typeof href === 'string'
+    ? href
+    : (href as { pathname?: string }).pathname || '/'
+
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    // Call original onClick first (e.g. closeMenus)
+    onClick?.(e)
+
+    if (e.defaultPrevented) return
+    if (typeof window === 'undefined') return
+
+    // Same page — no curtain
+    const currentPath = window.location.pathname
+    const targetPath = hrefStr.split('?')[0].split('#')[0]
+    if (currentPath === targetPath) return
+
+    // Skip if preloader still active
+    if (document.getElementById('site-preloader-v16')) return
+
+    // 1. Show curtain immediately (pure DOM — paint this frame)
+    showCurtain(labelFromPath(hrefStr))
+
+    // 2. Hide page content via CSS (prevents flash of new page content)
+    document.documentElement.setAttribute('data-nav-pending', '1')
+
+    // React will navigate normally — curtain is already covering the screen
+    // RouteCurtain component will call revealCurtain() when pathname changes
+  }
 
   return (
     <Link
       href={href}
       {...rest}
-      onNavigate={(e) => {
-        // Skip if same page
-        if (typeof window !== 'undefined' && window.location.pathname === hrefStr) return
-
-        // CRITICAL: prevent navigation now
-        e.preventDefault()
-
-        // Show curtain immediately (pure DOM — no React setState)
-        showCurtain(labelFromPath(hrefStr))
-        document.documentElement.setAttribute('data-nav-pending', '1')
-
-        // After curtain covers — allow navigation
-        setTimeout(() => {
-          // Re-click the link programmatically without onNavigate interference
-          window.location.assign(hrefStr)
-        }, COVER_MS)
-      }}
-      onClick={(ev) => {
-        onClick?.(ev)
-      }}
+      onClick={handleClick}
     >
       {children}
     </Link>

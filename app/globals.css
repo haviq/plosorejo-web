@@ -1692,5 +1692,18 @@ td {
   }
 }
 
+/* ══ Route transition — hide page content while curtain covers ══ */
+/* Set via NavLink before React navigates, removed after reveal */
+html[data-nav-pending] main,
+html[data-nav-pending] footer,
+html[data-nav-pending] .page-content {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #rc-curtain-portal { display: none !important; }
+}
+
 
 
