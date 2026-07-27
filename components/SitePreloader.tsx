@@ -1,163 +1,166 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
 
-// v13: NO useState, NO isSeen — preloader SELALU muncul setiap load
-// Render via static HTML di server (visible by default), GSAP animate on client
+/**
+ * v15 — NO useState, NO conditional render
+ * Server renders preloader VISIBLE (panels off-screen below via CSS)
+ * CSS @keyframes fire immediately on mount — zero hydration race
+ * body.overflow:hidden di-set lewat CSS selama animasi (no JS scroll lock race)
+ */
 export default function SitePreloader() {
-  const wrapRef    = useRef<HTMLDivElement>(null)
-  const blkRef     = useRef<HTMLDivElement>(null)
-  const goldRef    = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const charsRef   = useRef<HTMLSpanElement[]>([])
-  const doneRef    = useRef(false)
+  const doneRef = useRef(false)
 
   useEffect(() => {
-    const wrap = wrapRef.current
-    if (!wrap || doneRef.current) return
-
-    // Lock scroll
-    document.body.style.overflow = 'hidden'
-
-    const finish = () => {
-      if (doneRef.current) return
+    if (doneRef.current) return
+    // Total animasi = panel exit selesai pada ~4.45s + buffer
+    const t = setTimeout(() => {
       doneRef.current = true
-      document.body.style.removeProperty('overflow')
-      gsap.to(wrap, { autoAlpha: 0, duration: 0.2, onComplete: () => { wrap.style.display = 'none' } })
-    }
-
-    const failsafe = setTimeout(finish, 6000)
-
-    requestAnimationFrame(() => {
-      const chars = charsRef.current.filter(Boolean)
-      if (!blkRef.current || !goldRef.current || !contentRef.current) {
-        finish(); return
-      }
-
-      const tl = gsap.timeline({ onComplete: finish })
-
-      // 1. Panels masuk dari bawah
-      tl.fromTo(blkRef.current,
-        { yPercent: 105 },
-        { yPercent: 0, duration: 0.72, ease: 'power3.inOut' }, 0)
-      tl.fromTo(goldRef.current,
-        { yPercent: 105 },
-        { yPercent: 0, duration: 0.72, ease: 'power3.inOut' }, 0.08)
-
-      // 2. Content fade in
-      tl.fromTo(contentRef.current,
-        { opacity: 0, y: 14 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.82)
-
-      // 3. PLOSOREJO per-char wave
-      if (chars.length) {
-        tl.fromTo(chars,
-          { opacity: 0, y: 20, filter: 'blur(8px)' },
-          { opacity: 1, y: 0, filter: 'blur(0px)',
-            duration: 0.5, ease: 'back.out(1.4)', stagger: 0.06 }, 0.9)
-      }
-
-      // 4. Hold
-      tl.to({}, { duration: 1.0 }, '>')
-
-      // 5. Content fade out
-      tl.to(contentRef.current, { opacity: 0, y: -12, duration: 0.32, ease: 'power2.in' }, '>')
-
-      // 6. Panels exit ke atas
-      tl.to(goldRef.current, { yPercent: -105, duration: 0.78, ease: 'power3.inOut' }, '>')
-      tl.to(blkRef.current,  { yPercent: -105, duration: 0.78, ease: 'power3.inOut' }, '<0.08')
-    })
-
-    return () => {
-      clearTimeout(failsafe)
-      doneRef.current = true
-      document.body.style.removeProperty('overflow')
-    }
+      // Hapus dari DOM setelah animasi selesai
+      const el = document.getElementById('site-preloader-v15')
+      if (el) el.remove()
+    }, 4600)
+    return () => clearTimeout(t)
   }, [])
 
   const chars = 'PLOSOREJO'.split('')
 
-  // Server renders ini visible — user lihat preloader langsung sebelum JS hydrate
   return (
     <div
-      ref={wrapRef}
+      id="site-preloader-v15"
       aria-hidden="true"
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
         overflow: 'hidden',
-        pointerEvents: 'all',
-        // Container transparan — hanya panels yang cover layar
-        background: 'transparent',
+        // pointer-events: none selama animasi supaya user bisa tap setelah selesai
+        // tapi full visible dari server
       }}
     >
-      {/* Panel hitam */}
-      <div ref={blkRef} style={{
-        position: 'absolute', inset: 0, zIndex: 1,
-        background: '#08070a',
-        transform: 'translateY(105%)',
-        willChange: 'transform',
-      }} />
+      <style>{`
+        /* Lock scroll selama preloader aktif */
+        body:has(#site-preloader-v15) {
+          overflow: hidden !important;
+        }
 
-      {/* Panel gold */}
-      <div ref={goldRef} style={{
-        position: 'absolute', inset: 0, zIndex: 2,
-        background: [
-          'radial-gradient(ellipse 75% 55% at 50% 46%, rgba(212,175,55,0.26) 0%, transparent 68%)',
-          'linear-gradient(150deg, #0d0b07 0%, #110f0a 100%)',
-        ].join(','),
-        transform: 'translateY(105%)',
-        willChange: 'transform',
-      }} />
+        @keyframes pl-in {
+          from { transform: translateY(105%); }
+          to   { transform: translateY(0%); }
+        }
+        @keyframes pl-out {
+          from { transform: translateY(0%); }
+          to   { transform: translateY(-105%); }
+        }
+        @keyframes pl-content-in {
+          from { opacity: 0; transform: translateY(14px); }
+          to   { opacity: 1; transform: translateY(0px); }
+        }
+        @keyframes pl-content-out {
+          from { opacity: 1; transform: translateY(0px); }
+          to   { opacity: 0; transform: translateY(-12px); }
+        }
+        @keyframes pl-char {
+          from { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+          to   { opacity: 1; transform: translateY(0px);  filter: blur(0px); }
+        }
+        @keyframes pl-eyebrow {
+          from { opacity: 0; letter-spacing: 0.38em; }
+          to   { opacity: 1; letter-spacing: 0.22em; }
+        }
+        @keyframes pl-line {
+          from { opacity: 0; transform: scaleX(0); }
+          to   { opacity: 1; transform: scaleX(1); }
+        }
 
-      {/* Content */}
-      <div ref={contentRef} style={{
-        position: 'absolute', inset: 0, zIndex: 3,
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        textAlign: 'center', padding: '0 1.5rem',
-        gap: '0.5rem', opacity: 0,
-        pointerEvents: 'none',
-      }}>
-        <p style={{
-          fontSize: '0.62rem', fontWeight: 700,
-          letterSpacing: '0.22em', textTransform: 'uppercase',
-          color: '#d4af37', marginBottom: '0.5rem',
-        }}>
-          Padukuhan Plosorejo · Cangkringan
-        </p>
+        /* Panel hitam — masuk dari bawah (0s), keluar ke atas (3.65s) */
+        #site-preloader-v15 .pl-blk {
+          position: absolute; inset: 0; z-index: 1;
+          background: #08070a;
+          transform: translateY(105%);
+          will-change: transform;
+          animation:
+            pl-in  0.72s cubic-bezier(0.76,0,0.24,1) 0s    forwards,
+            pl-out 0.78s cubic-bezier(0.76,0,0.24,1) 3.65s forwards;
+        }
 
-        <h1 style={{
-          fontFamily: "'Moderniz', var(--font-syne, sans-serif)",
-          fontSize: 'clamp(2.8rem, 15vw, 4.2rem)',
-          fontWeight: 900, letterSpacing: '0.08em',
-          color: '#f0ebe0', lineHeight: 1, margin: 0,
-        }}>
+        /* Panel gold — masuk 90ms setelah hitam, keluar 90ms setelah hitam */
+        #site-preloader-v15 .pl-gld {
+          position: absolute; inset: 0; z-index: 2;
+          background:
+            radial-gradient(ellipse 75% 55% at 50% 46%, rgba(212,175,55,0.28) 0%, transparent 68%),
+            linear-gradient(150deg, #0d0b07 0%, #110f0a 100%);
+          transform: translateY(105%);
+          will-change: transform;
+          animation:
+            pl-in  0.72s cubic-bezier(0.76,0,0.24,1) 0.09s forwards,
+            pl-out 0.78s cubic-bezier(0.76,0,0.24,1) 3.74s forwards;
+        }
+
+        /* Content */
+        #site-preloader-v15 .pl-cnt {
+          position: absolute; inset: 0; z-index: 3;
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          text-align: center; padding: 0 1.5rem; gap: 0.5rem;
+          pointer-events: none; opacity: 0;
+          animation:
+            pl-content-in  0.45s ease-out 0.85s forwards,
+            pl-content-out 0.35s ease-in  3.1s  forwards;
+        }
+
+        #site-preloader-v15 .pl-eyebrow {
+          font-size: 0.62rem; font-weight: 700;
+          letter-spacing: 0.22em; text-transform: uppercase;
+          color: #d4af37; margin-bottom: 0.5rem;
+          opacity: 0;
+          animation: pl-eyebrow 0.6s ease-out 0.9s forwards;
+        }
+
+        #site-preloader-v15 .pl-title {
+          font-family: 'Moderniz', var(--font-syne, sans-serif);
+          font-size: clamp(2.8rem, 15vw, 4.2rem);
+          font-weight: 900; letter-spacing: 0.08em;
+          color: #f0ebe0; line-height: 1; margin: 0;
+        }
+
+        #site-preloader-v15 .pl-ch {
+          display: inline-block; opacity: 0;
+          animation: pl-char 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        }
+
+        #site-preloader-v15 .pl-div {
+          width: 2.5rem; height: 1px;
+          background: linear-gradient(90deg, transparent, #d4af37, transparent);
+          transform-origin: center; opacity: 0;
+          animation: pl-line 0.5s ease-out 1.72s forwards;
+        }
+
+        #site-preloader-v15 .pl-sub {
+          font-size: 0.6rem; font-weight: 600;
+          letter-spacing: 0.16em; text-transform: uppercase;
+          color: rgba(240,235,224,0.45); opacity: 0;
+          animation: pl-content-in 0.5s ease-out 1.8s forwards;
+        }
+      `}</style>
+
+      <div className="pl-blk" />
+      <div className="pl-gld" />
+      <div className="pl-cnt">
+        <p className="pl-eyebrow">Padukuhan Plosorejo · Cangkringan</p>
+        <h1 className="pl-title">
           {chars.map((ch, i) => (
             <span
               key={i}
-              ref={el => { if (el) charsRef.current[i] = el }}
-              style={{ display: 'inline-block', opacity: 0 }}
+              className="pl-ch"
+              style={{ animationDelay: `${0.95 + i * 0.06}s` }}
             >
               {ch}
             </span>
           ))}
         </h1>
-
-        <div style={{
-          width: '2.5rem', height: '1px', margin: '0.2rem auto',
-          background: 'linear-gradient(90deg, transparent, #d4af37, transparent)',
-        }} />
-
-        <p style={{
-          fontSize: '0.6rem', fontWeight: 600,
-          letterSpacing: '0.16em', textTransform: 'uppercase',
-          color: 'rgba(240,235,224,0.45)', marginTop: '0.1rem',
-        }}>
-          Umbulharjo · Sleman · Lereng Merapi
-        </p>
+        <div className="pl-div" />
+        <p className="pl-sub">Umbulharjo · Sleman · Lereng Merapi</p>
       </div>
     </div>
   )
