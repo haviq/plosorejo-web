@@ -85,7 +85,7 @@ export default function SitePreloader() {
           inset: 0;
           z-index: 99999;
           overflow: hidden;
-          pointer-events: all;
+          pointer-events: none;
         }
 
         /* ── Panel hitam (masuk dulu, keluar belakangan) ─────────── */
