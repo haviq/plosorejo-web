@@ -22,7 +22,7 @@ export default function BeritaCard({
     <div className="h-full">
       <Link
         href={`/berita/${slug}`}
-        className="card-surface group p-5 flex flex-col gap-3 h-full relative overflow-hidden"
+        className="card-surface berita-card-item shimmer-border group p-5 flex flex-col gap-3 h-full relative overflow-hidden"
         aria-label={`Baca berita: ${judul}`}
       >
         <div

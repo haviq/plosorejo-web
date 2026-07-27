@@ -20,10 +20,10 @@ export default function SektorCard({
   const color = 'var(--gold)'
 
   return (
-    <div className="h-full">
+    <div className="h-full reveal-item">
       <Link
         href={href}
-        className="card-surface group p-5 flex flex-col gap-4 h-full relative overflow-hidden"
+        className="card-surface shimmer-border group p-5 flex flex-col gap-4 h-full relative overflow-hidden"
         aria-label={`Lihat sektor ${nama}`}
       >
         <div

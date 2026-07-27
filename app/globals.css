@@ -18,13 +18,14 @@
   --color-muted: var(--muted);
   --font-sans: var(--font-inter);
   --font-display: var(--font-playfair);
+  --font-syne: var(--font-syne);
 }
 
 :root,
 [data-theme='dark'] {
-  --bg: #080808;
-  --s1: #111111;
-  --s2: #1a1a1a;
+  --bg: #0c0a06;
+  --s1: #131108;
+  --s2: #1c1a12;
   --s3: #222222;
   --border: rgba(212, 175, 55, 0.18);
   --border-strong: rgba(212, 175, 55, 0.32);
@@ -271,10 +272,10 @@ html[data-preloader='active'] .site-header {
 }
 
 .site-header__brand-title {
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 900;
+  font-family: var(--font-syne), Georgia, serif;
+  font-weight: 800;
   font-size: 1.25rem;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--gold);
 }
@@ -769,8 +770,8 @@ section[aria-label*='Hero'] .scroll-indicator {
 }
 
 .section-heading {
-  font-family: var(--font-playfair), Georgia, serif;
-  font-weight: 700;
+  font-family: var(--font-syne), var(--font-playfair), Georgia, serif;
+  font-weight: 800;
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   line-height: 1.15;
   color: var(--text);
@@ -826,6 +827,75 @@ section[aria-label*='Hero'] .scroll-indicator {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Intersection-based scroll reveal */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-item--delay-1 { transition-delay: 0.1s; }
+.reveal-item--delay-2 { transition-delay: 0.2s; }
+.reveal-item--delay-3 { transition-delay: 0.3s; }
+.reveal-item--delay-4 { transition-delay: 0.4s; }
+.reveal-item--delay-5 { transition-delay: 0.55s; }
+
+/* Hero line decorators */
+.hero-line-deco {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(212,175,55,0.22) 30%, rgba(212,175,55,0.08) 70%, transparent);
+  pointer-events: none;
+}
+
+/* Bento grid */
+.bento-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+.bento-cell {
+  background: var(--s1);
+  padding: 1.5rem;
+}
+
+/* Section divider with dot */
+.section-sep {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3rem 0 2rem;
+}
+.section-sep__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+.section-sep__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px var(--gold);
+}
+
+/* Number accent for stats */
+.stat-accent {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--gold);
 }
 
 @keyframes float-soft {

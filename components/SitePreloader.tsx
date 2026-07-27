@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
-const KEY = 'plosorejo-preloader'
+const KEY = 'plosorejo-preloader-v2'
 // Keep intro short so header controls are usable almost immediately
 const CURTAIN_IN_MS = 280
 const TYPE_CHAR_MS = 28
@@ -10,7 +10,7 @@ const HOLD_AFTER_TYPE_MS = 280
 const EXIT_MS = 360
 const FAILSAFE_MS = 1600
 
-const EYEBROW = 'Portal Digital · Cangkringan'
+const EYEBROW = 'Padukuhan Plosorejo · Cangkringan'
 const LINE1 = 'PADUKUHAN'
 const LINE2 = 'PLOSOREJO'
 const SUB = 'Umbulharjo · Sleman · Lereng Merapi'
@@ -221,6 +221,7 @@ export default function SitePreloader() {
       <div className="site-preloader__layer site-preloader__layer--black" aria-hidden="true" />
       <div className="site-preloader__layer site-preloader__layer--gold" aria-hidden="true" />
       <div className="site-preloader__content">
+        <div style={{ width: '2rem', height: '2px', background: 'linear-gradient(90deg, transparent, #d4af37, transparent)', margin: '0 auto 1rem' }} aria-hidden="true" />
         <p className="site-preloader__eyebrow">{EYEBROW}</p>
         <h1 className="site-preloader__title" aria-label={`${LINE1} ${LINE2}`}>
           <TypeLine text={LINE1} visibleCount={line1Count} showCaret={caretOnLine1} />
@@ -229,6 +230,9 @@ export default function SitePreloader() {
         <div className="site-preloader__rule" aria-hidden="true" />
         <p className="site-preloader__sub">{SUB}</p>
         <p className="site-preloader__hint">{HINT}</p>
+        <div style={{ display:'flex', gap:'6px', justifyContent:'center', marginTop:'1.25rem' }} aria-hidden="true">
+          {[0,1,2].map(i => <span key={i} style={{ width:'4px', height:'4px', borderRadius:'50%', background: i===1 ? '#d4af37' : 'rgba(212,175,55,0.3)' }} />)}
+        </div>
       </div>
     </div>
   )

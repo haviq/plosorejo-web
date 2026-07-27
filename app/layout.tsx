@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Playfair_Display, Syne } from 'next/font/google'
 import './globals.css'
 import SiteShell from '@/components/SiteShell'
 import SitePreloader from '@/components/SitePreloader'
@@ -14,6 +14,12 @@ const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
   weight: ['400', '700', '900'],
+})
+
+const syne = Syne({
+  subsets: ['latin'],
+  variable: '--font-syne',
+  weight: ['400', '600', '700', '800'],
 })
 
 export const metadata: Metadata = {
@@ -171,7 +177,7 @@ export default async function RootLayout({
   const [site, merapi] = await Promise.all([getSiteSettings(), getMerapiStatus()])
 
   return (
-    <html lang="id" className={`${inter.variable} ${playfair.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="id" className={`${inter.variable} ${playfair.variable} ${syne.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootHeadScript }} />
         <meta name="theme-color" content="#0a0a0a" />
