@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
-const KEY = 'plosorejo-preloader-v6'
+const KEY = 'plosorejo-preloader-v7'
 const FAILSAFE_MS = 5000
 
 function isSeen(): boolean {

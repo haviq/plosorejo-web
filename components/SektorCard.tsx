@@ -10,6 +10,7 @@ interface SektorCardProps {
   accent?: 'amber' | 'green' | 'indigo'
 }
 
+// iOS-style app tile card
 export default function SektorCard({
   href,
   icon,
@@ -18,62 +19,51 @@ export default function SektorCard({
   stats,
 }: SektorCardProps) {
   const color = 'var(--gold)'
+  const colorHex = '#d4af37'
 
   return (
-    <div className="h-full reveal-item">
-      <Link
-        href={href}
-        className="card-surface shimmer-border group p-5 flex flex-col gap-4 h-full relative overflow-hidden"
-        aria-label={`Lihat sektor ${nama}`}
+    <Link
+      href={href}
+      className="reveal-item flex flex-col items-center gap-2.5 p-4 rounded-2xl active:scale-95 transition-all duration-150 group"
+      style={{
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
+        textDecoration: 'none',
+      }}
+      aria-label={`Sektor ${nama}`}
+    >
+      {/* iOS icon tile */}
+      <div
+        className="w-16 h-16 rounded-[18px] flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-200"
+        style={{
+          background: `linear-gradient(135deg, ${colorHex}28 0%, ${colorHex}10 100%)`,
+          border: `1.5px solid ${colorHex}35`,
+        }}
+        aria-hidden="true"
       >
-        <div
-          className="absolute -top-10 -right-10 w-28 h-28 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{ background: color }}
-          aria-hidden="true"
-        />
+        <Icon name={icon || nama} size={28} />
+      </div>
 
-        <div className="relative flex items-center gap-3">
-          <span
-            className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-            style={{ backgroundColor: `${color}18`, color }}
-            aria-hidden="true"
-          >
-            <Icon name={icon || nama} size={20} />
-          </span>
-          <h3
-            className="font-bold group-hover:underline underline-offset-2"
-            style={{ color: 'var(--text)' }}
-          >
-            {nama}
-          </h3>
-        </div>
+      {/* Name */}
+      <p
+        className="text-[13px] font-bold text-center leading-tight"
+        style={{ color: 'var(--text)' }}
+      >
+        {nama}
+      </p>
 
-        <p className="relative text-sm leading-relaxed line-clamp-2" style={{ color: 'var(--muted)' }}>
-          {deskripsi}
-        </p>
-
-        {stats.length > 0 && (
-          <div
-            className="relative grid grid-cols-2 gap-2 mt-auto pt-3 border-t"
-            style={{ borderColor: 'var(--border)' }}
-          >
-            {stats.slice(0, 2).map(({ label, value }) => (
-              <div key={label}>
-                <p className="text-sm font-bold tabular-nums" style={{ color }}>
-                  {value}
-                </p>
-                <p className="text-xs" style={{ color: 'var(--muted)' }}>
-                  {label}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <span className="relative text-xs font-semibold" style={{ color }}>
-          Jelajahi sektor →
+      {/* Stat pill */}
+      {stats?.[0] && (
+        <span
+          className="text-[10px] font-bold px-2.5 py-0.5 rounded-full"
+          style={{
+            background: `${colorHex}15`,
+            color,
+          }}
+        >
+          {stats[0].value}
         </span>
-      </Link>
-    </div>
+      )}
+    </Link>
   )
 }
