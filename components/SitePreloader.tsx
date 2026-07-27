@@ -18,13 +18,27 @@ export default function SitePreloader() {
 
   useEffect(() => {
     if (doneRef.current) return
-    // Hapus dari DOM setelah semua animasi selesai (~5s)
-    const t = setTimeout(() => {
+
+    // Lock scroll via JS (lebih reliable dari CSS :has)
+    document.body.style.overflow = 'hidden'
+
+    // Unlock scroll saat panels mulai exit (~3.8s)
+    const unlockTimer = setTimeout(() => {
+      document.body.style.removeProperty('overflow')
+    }, 3800)
+
+    // Remove element dari DOM setelah semua animasi selesai
+    const removeTimer = setTimeout(() => {
       doneRef.current = true
       const el = document.getElementById('site-preloader-v16')
       if (el) el.remove()
-    }, 5200)
-    return () => clearTimeout(t)
+    }, 5000)
+
+    return () => {
+      clearTimeout(unlockTimer)
+      clearTimeout(removeTimer)
+      document.body.style.removeProperty('overflow')
+    }
   }, [])
 
   const chars = 'PLOSOREJO'.split('')
