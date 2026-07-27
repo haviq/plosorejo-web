@@ -89,7 +89,8 @@ export default function SitePreloader() {
         zIndex: 99999,
         overflow: 'hidden',
         pointerEvents: 'all',
-        // Visible dari awal — tidak perlu JS untuk show
+        // Container transparan — hanya panels yang cover layar
+        background: 'transparent',
       }}
     >
       {/* Panel hitam */}
