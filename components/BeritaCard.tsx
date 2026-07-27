@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ChevronRightIcon, NewspaperIcon } from '@heroicons/react/24/outline'
 import { formatTanggal } from '@/lib/utils'
 
 interface BeritaCardProps {
@@ -14,57 +15,63 @@ export default function BeritaCard({
   judul,
   tanggal,
   kategori,
-  ringkasan,
+  ringkasan: _ringkasan,
 }: BeritaCardProps) {
-  const color = 'var(--gold)'
-
   return (
-    <div className="h-full">
-      <Link
-        href={`/berita/${slug}`}
-        className="card-surface berita-card-item shimmer-border group p-5 flex flex-col gap-3 h-full relative overflow-hidden"
-        aria-label={`Baca berita: ${judul}`}
+    <Link
+      href={`/berita/${slug}`}
+      className="flex items-center gap-3 p-3.5 rounded-2xl border transition-transform active:scale-[0.98]"
+      style={{
+        backgroundColor: 'var(--s1)',
+        borderColor: 'var(--border)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
+      }}
+      aria-label={`Baca berita: ${judul}`}
+    >
+      {/* Icon tile */}
+      <span
+        className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+        style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
+        aria-hidden="true"
       >
-        <div
-          className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
-          style={{
-            background: `linear-gradient(90deg, transparent, ${color}, transparent)`,
-          }}
-          aria-hidden="true"
-        />
+        <NewspaperIcon width={20} height={20} />
+      </span>
 
-        <div className="flex items-center justify-between gap-2 flex-wrap">
-          <span className="badge" style={{ color, backgroundColor: `${color}18` }}>
+      {/* Content */}
+      <div className="min-w-0 flex-1">
+        {/* Category + date row */}
+        <div className="flex items-center gap-2 mb-1">
+          <span
+            className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[10px] font-semibold leading-none"
+            style={{
+              color: 'var(--gold)',
+              backgroundColor: 'var(--gold-glow)',
+            }}
+          >
             {kategori}
           </span>
-          <span className="text-xs" style={{ color: 'var(--muted)' }}>
+          <span className="text-[11px] leading-none" style={{ color: 'var(--muted2)' }}>
             {formatTanggal(tanggal)}
           </span>
         </div>
 
-        <h3
-          className="font-bold leading-snug line-clamp-2 group-hover:underline underline-offset-2"
-          style={{
-            color: 'var(--text)',
-            fontFamily: 'var(--font-playfair), Georgia, serif',
-            fontSize: '1.05rem',
-          }}
+        {/* Title */}
+        <p
+          className="font-bold leading-snug line-clamp-2 text-sm"
+          style={{ color: 'var(--text)' }}
         >
           {judul}
-        </h3>
-
-        <p className="text-sm leading-relaxed line-clamp-3" style={{ color: 'var(--muted)' }}>
-          {ringkasan}
         </p>
+      </div>
 
-        <span
-          className="text-xs mt-auto font-semibold inline-flex items-center gap-1 transition-transform duration-300 group-hover:translate-x-1"
-          style={{ color: 'var(--gold)' }}
-        >
-          Baca selengkapnya
-          <span aria-hidden="true">→</span>
-        </span>
-      </Link>
-    </div>
+      {/* Chevron */}
+      <ChevronRightIcon
+        width={16}
+        height={16}
+        className="flex-shrink-0"
+        style={{ color: 'var(--muted2)' }}
+        aria-hidden="true"
+      />
+    </Link>
   )
 }

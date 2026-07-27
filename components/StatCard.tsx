@@ -1,5 +1,3 @@
-import { clsx } from 'clsx'
-
 interface StatCardProps {
   label: string
   value: string
@@ -16,36 +14,53 @@ export default function StatCard({
   accent = 'neutral',
   icon,
 }: StatCardProps) {
-  const accentColor = accent === 'neutral' ? 'var(--muted)' : 'var(--gold)'
+  const isAccented = accent !== 'neutral'
 
   return (
     <div
-      className="rounded-xl p-5 border flex flex-col gap-3"
-      style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
+      className="rounded-2xl p-4 border flex flex-col gap-2 relative overflow-hidden"
+      style={{
+        backgroundColor: 'var(--s1)',
+        borderColor: 'var(--border)',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.18)',
+        background: isAccented
+          ? 'var(--gradient-soft), var(--s1)'
+          : 'var(--s1)',
+      }}
     >
-      <div className="flex items-start justify-between">
-        <span className="text-xs font-medium uppercase tracking-widest text-[var(--muted)]">
-          {label}
+      {/* Icon tile — top-right */}
+      {icon && (
+        <span
+          className="absolute top-3.5 right-3.5 w-9 h-9 rounded-xl flex items-center justify-center"
+          style={{ background: 'var(--gradient)', color: 'var(--btn-primary-fg)' }}
+          aria-hidden="true"
+        >
+          {icon}
         </span>
-        {icon && (
-          <span
-            className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: 'var(--gold-glow)', color: 'var(--gold)' }}
-            aria-hidden="true"
-          >
-            {icon}
-          </span>
-        )}
-      </div>
+      )}
 
+      {/* Label */}
+      <span
+        className="text-[10px] font-semibold uppercase tracking-widest leading-none"
+        style={{ color: 'var(--muted)' }}
+      >
+        {label}
+      </span>
+
+      {/* Value */}
       <p
-        className={clsx('text-3xl font-bold tabular-nums leading-none')}
-        style={{ color: accent === 'neutral' ? 'var(--text)' : accentColor }}
+        className="text-3xl font-bold tabular-nums leading-none"
+        style={{ color: isAccented ? 'var(--gold)' : 'var(--text)' }}
       >
         {value}
       </p>
 
-      {sub && <p className="text-xs text-[var(--muted)]">{sub}</p>}
+      {/* Sub */}
+      {sub && (
+        <p className="text-xs leading-none" style={{ color: 'var(--muted2)' }}>
+          {sub}
+        </p>
+      )}
     </div>
   )
 }

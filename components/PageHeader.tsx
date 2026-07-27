@@ -1,54 +1,80 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import Link from 'next/link'
 
 interface PageHeaderProps {
   eyebrow?: string
   title: string
   highlight?: string
   description?: string
+  backHref?: string
+  backLabel?: string
   children?: ReactNode
 }
 
-/** Static header — no opacity animation (mobile reliability). */
+/** iOS-style compact page header — no noise blob, back button row, pill eyebrow. */
 export default function PageHeader({
   eyebrow,
   title,
   highlight,
   description,
+  backHref = '/sektor',
+  backLabel = 'Sektor',
   children,
 }: PageHeaderProps) {
   return (
-    <section className="space-y-4 relative">
-      <div
-        className="absolute -top-8 -left-8 w-40 h-40 rounded-full blur-3xl opacity-30 pointer-events-none"
-        style={{ background: 'radial-gradient(circle, rgba(212,175,55,0.35), transparent 70%)' }}
-        aria-hidden="true"
-      />
+    <section className="space-y-3">
+      {/* Back button row */}
+      <Link
+        href={backHref}
+        className="inline-flex items-center gap-1.5 text-sm font-medium"
+        style={{ color: 'var(--gold)' }}
+        aria-label={`Kembali ke ${backLabel}`}
+      >
+        <svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true">
+          <path d="M6 1L1 6l5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+        {backLabel}
+      </Link>
 
-      {eyebrow && <p className="section-label relative">{eyebrow}</p>}
+      {/* Eyebrow pill badge */}
+      {eyebrow && (
+        <p
+          className="inline-block text-[10px] font-bold uppercase tracking-[0.16em] px-2.5 py-1 rounded-full"
+          style={{
+            color: 'var(--gold)',
+            backgroundColor: 'rgba(212,175,55,0.12)',
+            border: '1px solid rgba(212,175,55,0.25)',
+          }}
+        >
+          {eyebrow}
+        </p>
+      )}
 
+      {/* Title */}
       <h1
-        className="font-black leading-tight relative"
+        className="font-black leading-tight"
         style={{
           fontFamily: 'var(--font-playfair), Georgia, serif',
-          fontSize: 'clamp(2rem, 5vw, 3.1rem)',
+          fontSize: 'clamp(1.75rem, 5vw, 2.6rem)',
           color: 'var(--text)',
         }}
       >
-        {title} {highlight && <span className="gold-text">{highlight}</span>}
+        {title}{highlight && <> <span style={{ color: 'var(--gold)' }}>{highlight}</span></>}
       </h1>
 
+      {/* Description */}
       {description && (
         <p
-          className="text-sm md:text-base max-w-2xl leading-relaxed relative"
+          className="text-sm leading-relaxed max-w-xl"
           style={{ color: 'var(--muted)' }}
         >
           {description}
         </p>
       )}
 
-      {children && <div className="relative pt-1">{children}</div>}
+      {children && <div className="pt-1">{children}</div>}
     </section>
   )
 }
