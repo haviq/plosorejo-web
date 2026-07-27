@@ -1214,7 +1214,7 @@ td {
   overflow: hidden;
 }
 
-/* rc-* are the new direct-DOM class names — synchronous, no React setState */
+/* ── rc-* direct-DOM classes (synchronous, no React setState) ── */
 .route-curtain.rc-cover {
   pointer-events: auto;
 }
@@ -1224,11 +1224,93 @@ td {
   pointer-events: none;
 }
 
-/* Legacy BEM phase classes — keep for backwards compat */
-.route-curtain--cover {
-  pointer-events: auto;
+/* ══ Portal curtain — outside React tree, injected into <body> ══ */
+#rc-curtain-portal {
+  position: fixed;
+  inset: 0;
+  z-index: 19000;
+  pointer-events: none;
+  overflow: hidden;
 }
-.route-curtain--hold,
+#rc-curtain-portal.rc-cover { pointer-events: auto; }
+#rc-curtain-portal.rc-idle  { pointer-events: none; }
+#rc-curtain-portal.rc-reveal{ pointer-events: none; }
+
+#rc-curtain-portal .rc-panel {
+  position: absolute;
+  left: 0; right: 0; top: 0; height: 100%;
+  will-change: transform;
+  transform: translate3d(0,-105%,0);
+}
+#rc-curtain-portal .rc-panel-black { z-index:1; background:#080808; }
+#rc-curtain-portal .rc-panel-gold  {
+  z-index:2;
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 46%,rgba(212,175,55,.22) 0%,transparent 68%),
+    linear-gradient(160deg,#0d0b07 0%,#110f0a 100%);
+}
+#rc-curtain-portal .rc-mark {
+  position:absolute; inset:0; z-index:3;
+  display:grid; place-content:center; gap:.35rem; text-align:center;
+  opacity:0; transform:translateY(8px); pointer-events:none;
+}
+#rc-curtain-portal .rc-brand {
+  font-family: var(--font-playfair),Georgia,serif;
+  font-weight:900; font-size:clamp(1.35rem,5vw,2rem);
+  letter-spacing:.18em; color:#d4af37;
+  text-shadow:0 1px 0 rgba(255,240,180,.35);
+}
+#rc-curtain-portal .rc-lbl {
+  font-size:.68rem; letter-spacing:.22em; text-transform:uppercase;
+  font-weight:700; color:rgba(212,175,55,.62);
+}
+
+/* cover: panels slide DOWN into view */
+#rc-curtain-portal.rc-cover .rc-panel-black {
+  animation: rc-down .45s cubic-bezier(.77,0,.18,1) both;
+}
+#rc-curtain-portal.rc-cover .rc-panel-gold {
+  animation: rc-down .50s cubic-bezier(.77,0,.18,1) both;
+  animation-delay:.04s;
+}
+#rc-curtain-portal.rc-cover .rc-mark {
+  animation: rc-mark-in .28s ease both;
+  animation-delay:.22s;
+}
+/* reveal: panels slide UP out of view */
+#rc-curtain-portal.rc-reveal .rc-panel-gold {
+  animation: rc-up .45s cubic-bezier(.77,0,.18,1) both;
+}
+#rc-curtain-portal.rc-reveal .rc-panel-black {
+  animation: rc-up .40s cubic-bezier(.77,0,.18,1) both;
+  animation-delay:.06s;
+}
+#rc-curtain-portal.rc-reveal .rc-mark {
+  animation: rc-mark-out .22s ease both;
+}
+
+@keyframes rc-down {
+  from { transform:translate3d(0,-105%,0); }
+  to   { transform:translate3d(0,0,0); }
+}
+@keyframes rc-up {
+  from { transform:translate3d(0,0,0); }
+  to   { transform:translate3d(0,-105%,0); }
+}
+@keyframes rc-mark-in {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes rc-mark-out {
+  from { opacity:1; transform:translateY(0); }
+  to   { opacity:0; transform:translateY(-8px); }
+}
+
+/* ── Legacy BEM classes — keep for backwards compat ── */
+/* Cover: slide top → bottom */
+.route-curtain--cover .route-curtain__panel--black {
+  animation: route-curtain-down 0.42s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
 .route-curtain--reveal,
 .route-curtain--idle {
   pointer-events: none !important;
