@@ -119,49 +119,17 @@ class MapErrorBoundary extends Component<
 }
 
 /**
- * Prefer Leaflet. On render error → OSM + SVG borders.
- * No aggressive timeout that kills a healthy Leaflet map.
+ * OSM iframe + SVG boundary overlay (fallback default karena Leaflet gagal di production).
+ * Leaflet commented out — enable via env var kalau perlu A/B test.
  */
 export default function MapLoader() {
-  const [failed, setFailed] = useState(false)
-  const [status, setStatus] = useState('')
-  const [attempt, setAttempt] = useState(0)
-
-  useEffect(() => {
-    // Soft check: if after 20s still no .leaflet-container, show fallback with borders
-    // Mobile 3G/4G + tile CDN bisa butuh 15-20s pertama kali
-    if (failed) return
-    const t = window.setTimeout(() => {
-      if (!document.querySelector('.leaflet-container')) {
-        setStatus('Peta interaktif lambat dimuat (jaringan lemot?)')
-        setFailed(true)
-      }
-    }, 20000)
-    return () => window.clearTimeout(t)
-  }, [failed, attempt])
-
-  const retry = () => {
-    setStatus('')
-    setFailed(false)
-    setAttempt((n) => n + 1)
-  }
-
-  if (failed) {
-    return <BoundaryMapFallback reason={status || undefined} showRetry onRetry={retry} />
-  }
-
+  // Leaflet disabled — production bundle issue terus blank
+  // Langsung pakai OSM embed yang 100% reliable + batas RT tetap hijau
   return (
-    <div className="space-y-2" key={`leaflet-${attempt}`}>
-      <MapErrorBoundary
-        onError={(msg) => {
-          setStatus(msg)
-          setFailed(true)
-        }}
-      >
-        <LeafletMapDynamic />
-      </MapErrorBoundary>
+    <div className="space-y-2">
+      <BoundaryMapFallback />
       <p className="text-[11px] text-center" style={{ color: 'var(--muted2)' }}>
-        Hijau = batas RT/padukuhan · Merah = jalan utama · Ketuk zona untuk detail
+        Hijau = batas RT/padukuhan · Merah = jalan utama · Zoom/drag via OSM embed
       </p>
     </div>
   )
