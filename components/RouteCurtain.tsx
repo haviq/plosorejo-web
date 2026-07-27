@@ -3,141 +3,112 @@
 import { useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
-type Phase = 'idle' | 'cover' | 'hold' | 'reveal'
+type Phase = 'idle' | 'cover' | 'reveal'
 
-const COVER_MS = 480   // waktu curtain menutup penuh
-const HOLD_MS  = 60    // hold sebentar sebelum reveal
-const REVEAL_MS = 360  // waktu curtain membuka
+const COVER_MS  = 420  // waktu panel menutup
+const REVEAL_MS = 380  // waktu panel membuka setelah nav
 
 const LABELS: Record<string, string> = {
-  beranda: 'Beranda',
-  berita: 'Berita',
-  profil: 'Profil',
-  layanan: 'Layanan',
-  galeri: 'Galeri',
-  peta: 'Peta',
-  kontak: 'Kontak',
-  kkn: 'KKN',
-  susu: 'Susu',
-  sektor: 'Sektor',
-  agenda: 'Agenda',
-  darurat: 'Darurat',
+  beranda: 'Beranda', berita: 'Berita', profil: 'Profil',
+  layanan: 'Layanan', galeri: 'Galeri', peta: 'Peta',
+  kontak: 'Kontak', kkn: 'KKN', susu: 'Susu',
+  sektor: 'Sektor', agenda: 'Agenda', darurat: 'Darurat',
 }
 
-function labelFromPath(pathname: string) {
-  if (pathname === '/') return 'Beranda'
-  const slug = pathname.replace(/^\//, '').split('/')[0] || ''
+function labelFromPath(p: string) {
+  if (p === '/') return 'Beranda'
+  const slug = p.replace(/^\//, '').split('/')[0] || ''
   return LABELS[slug] || slug.charAt(0).toUpperCase() + slug.slice(1)
 }
 
 export default function RouteCurtain() {
   const pathname = usePathname() || ''
-  const router = useRouter()
+  const router   = useRouter()
   const [phase, setPhase] = useState<Phase>('idle')
   const [label, setLabel] = useState('')
-  const firstMount = useRef(true)
-  const busy = useRef(false)
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([])
-  const cycleId = useRef(0)
+  const prevPath = useRef(pathname)
+  const busy     = useRef(false)
+  const timers   = useRef<ReturnType<typeof setTimeout>[]>([])
 
-  const clearTimers = () => {
-    timers.current.forEach(clearTimeout)
-    timers.current = []
-  }
+  const clear = () => { timers.current.forEach(clearTimeout); timers.current = [] }
 
-  const finish = () => {
+  const done = () => {
     busy.current = false
     setPhase('idle')
     setLabel('')
+    // Un-hide page content
+    document.documentElement.removeAttribute('data-nav-pending')
   }
 
-  // Dipanggil saat link diklik — tunda navigasi sampai curtain cover
-  const navigate = (href: string) => {
-    if (busy.current) return
-    if (document.getElementById('site-preloader-v16')) return
+  // Pathname changed → start reveal phase
+  useEffect(() => {
+    if (prevPath.current === pathname) return
+    prevPath.current = pathname
+    if (!busy.current) return // first mount or manual nav
 
-    const nextLabel = labelFromPath(new URL(href, location.href).pathname)
-    busy.current = true
-    const id = ++cycleId.current
+    // Start reveal
+    clear()
+    setPhase('reveal')
+    timers.current.push(setTimeout(done, REVEAL_MS))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
 
-    setLabel(nextLabel)
-    setPhase('cover')
-
-    // Setelah curtain cover selesai → navigasi → lalu reveal
-    timers.current.push(
-      setTimeout(() => {
-        if (cycleId.current !== id) return
-        setPhase('hold')
-        // Navigate setelah curtain penuh menutup
-        router.push(href)
-      }, COVER_MS),
-    )
-
-    timers.current.push(
-      setTimeout(() => {
-        if (cycleId.current !== id) return
-        setPhase('reveal')
-      }, COVER_MS + HOLD_MS),
-    )
-
-    timers.current.push(
-      setTimeout(() => {
-        if (cycleId.current !== id) return
-        finish()
-      }, COVER_MS + HOLD_MS + REVEAL_MS),
-    )
-
-    // Failsafe
-    timers.current.push(
-      setTimeout(() => {
-        if (cycleId.current !== id) return
-        finish()
-      }, 2200),
-    )
-  }
-
-  // Intercept semua klik link internal
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
-      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey) return
+      if (document.getElementById('site-preloader-v16')) return
 
-      const anchor = (e.target as Element)?.closest('a')
+      const anchor = (e.target as Element)?.closest('a[href]') as HTMLAnchorElement | null
       if (!anchor) return
 
-      const href = anchor.getAttribute('href')
-      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('tel:') || href.startsWith('mailto:')) return
+      const href = anchor.getAttribute('href') || ''
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return
       if (anchor.target === '_blank') return
-      if (href.startsWith('/studio') || href.startsWith('/admin')) return
 
-      // Sama dengan halaman sekarang? skip
-      try {
-        const url = new URL(href, location.href)
-        if (url.pathname === location.pathname) return
-      } catch { return }
+      let url: URL
+      try { url = new URL(href, location.href) } catch { return }
 
-      // Intercept — cegah navigasi default, jalankan curtain dulu
+      // External or same-origin non-app paths
+      if (url.origin !== location.origin) return
+      if (url.pathname.startsWith('/studio') || url.pathname.startsWith('/admin')) return
+      if (url.pathname === location.pathname) return
+
+      // Intercept!
       e.preventDefault()
       e.stopPropagation()
-      navigate(href)
+
+      if (busy.current) return
+      busy.current = true
+
+      const nextLabel = labelFromPath(url.pathname)
+      setLabel(nextLabel)
+
+      // 1. Hide page content immediately via attribute
+      document.documentElement.setAttribute('data-nav-pending', '1')
+
+      // 2. Show curtain cover
+      setPhase('cover')
+
+      // 3. After curtain covers → navigate (React swap happens behind curtain)
+      timers.current.push(
+        setTimeout(() => {
+          router.push(href)
+          // reveal starts when pathname useEffect fires above
+        }, COVER_MS)
+      )
+
+      // Failsafe — if pathname never changes
+      timers.current.push(setTimeout(done, COVER_MS + REVEAL_MS + 800))
     }
 
     document.addEventListener('click', onClick, true)
     return () => {
       document.removeEventListener('click', onClick, true)
-      clearTimers()
-      finish()
+      clear()
+      done()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  // Skip first mount (site preloader yang handle first load)
-  useEffect(() => {
-    if (firstMount.current) {
-      firstMount.current = false
-      return
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
 
   if (phase === 'idle') return null
 
