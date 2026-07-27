@@ -2,42 +2,35 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-// v11: hanya cek sessionStorage (bukan localStorage)
-// → preloader muncul tiap kali buka browser baru / tab baru
-// → TIDAK muncul saat navigate antar halaman (route curtain yang handle itu)
-const KEY = 'plosorejo-seen-v11'
-
-function isSeen() {
-  try { return sessionStorage.getItem(KEY) === '1' } catch { return false }
-}
-function markSeen() {
-  try { sessionStorage.setItem(KEY, '1') } catch {}
-}
-
+// v12: preloader SELALU muncul setiap kali halaman dibuka
+// Tidak ada isSeen/markSeen — setiap load = animasi jalan
 export default function SitePreloader() {
-  const [phase, setPhase] = useState<'pending' | 'active' | 'done'>('pending')
+  const [active, setActive] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    if (isSeen()) { setPhase('done'); return }
-
+    // Lock scroll
     document.body.style.overflow = 'hidden'
-    setPhase('active')
 
-    // Total: panels in 0.7s → hold text 1.5s → text out 0.35s → panels out 0.85s = ~4.4s
-    timerRef.current = setTimeout(() => {
-      markSeen()
-      setPhase('done')
-      document.body.style.removeProperty('overflow')
-    }, 4500)
+    // Tunggu 1 frame biar DOM paint dulu, baru aktifkan
+    const raf = requestAnimationFrame(() => {
+      setActive(true)
+
+      // Total animasi 4.5s lalu hilang
+      timerRef.current = setTimeout(() => {
+        setActive(false)
+        document.body.style.removeProperty('overflow')
+      }, 4500)
+    })
 
     return () => {
+      cancelAnimationFrame(raf)
       if (timerRef.current) clearTimeout(timerRef.current)
       document.body.style.removeProperty('overflow')
     }
   }, [])
 
-  if (phase === 'done' || phase === 'pending') return null
+  if (!active) return null
 
   const chars = 'PLOSOREJO'.split('')
 
@@ -65,8 +58,12 @@ export default function SitePreloader() {
           100% { opacity: 1; transform: translateY(0px);  filter: blur(0px); }
         }
         @keyframes pl-eyebrow-in {
-          0%   { opacity: 0; letter-spacing: 0.35em; }
+          0%   { opacity: 0; letter-spacing: 0.38em; }
           100% { opacity: 1; letter-spacing: 0.22em; }
+        }
+        @keyframes pl-line-in {
+          0%   { opacity: 0; width: 0; }
+          100% { opacity: 1; width: 2.5rem; }
         }
 
         .pl-wrap {
@@ -77,7 +74,7 @@ export default function SitePreloader() {
           pointer-events: all;
         }
 
-        /* Panel black — enters first from below */
+        /* Panel black — masuk dari bawah, keluar ke atas */
         .pl-panel-black {
           position: absolute;
           inset: 0;
@@ -88,20 +85,20 @@ export default function SitePreloader() {
             pl-slide-out 0.82s cubic-bezier(0.76,0,0.24,1) 3.55s both;
         }
 
-        /* Panel gold — enters 90ms after black, exits 90ms after black */
+        /* Panel gold — masuk 90ms setelah black, keluar 90ms setelah black */
         .pl-panel-gold {
           position: absolute;
           inset: 0;
           z-index: 2;
           background:
-            radial-gradient(ellipse 75% 55% at 50% 46%, rgba(212,175,55,0.24) 0%, transparent 68%),
+            radial-gradient(ellipse 75% 55% at 50% 46%, rgba(212,175,55,0.26) 0%, transparent 68%),
             linear-gradient(150deg, #0d0b07 0%, #110f0a 100%);
           animation:
             pl-slide-in  0.72s cubic-bezier(0.76,0,0.24,1) 0.09s both,
             pl-slide-out 0.82s cubic-bezier(0.76,0,0.24,1) 3.64s both;
         }
 
-        /* Content layer */
+        /* Content */
         .pl-content {
           position: absolute;
           inset: 0;
@@ -124,7 +121,7 @@ export default function SitePreloader() {
           letter-spacing: 0.22em;
           text-transform: uppercase;
           color: #d4af37;
-          margin-bottom: 0.6rem;
+          margin-bottom: 0.5rem;
           animation: pl-eyebrow-in 0.6s ease-out 0.9s both;
         }
 
@@ -145,12 +142,11 @@ export default function SitePreloader() {
         }
 
         .pl-divider {
-          width: 2.5rem;
           height: 1px;
+          width: 0;
           background: linear-gradient(90deg, transparent, #d4af37, transparent);
-          margin: 0.3rem auto;
-          opacity: 0;
-          animation: pl-fade-in 0.5s ease-out 1.6s both;
+          margin: 0.2rem auto;
+          animation: pl-line-in 0.6s ease-out 1.65s both;
         }
 
         .pl-sub {
@@ -159,7 +155,8 @@ export default function SitePreloader() {
           letter-spacing: 0.16em;
           text-transform: uppercase;
           color: rgba(240,235,224,0.45);
-          margin-top: 0.2rem;
+          margin-top: 0.1rem;
+          animation: pl-fade-in 0.5s ease-out 1.7s both;
         }
       `}</style>
 
