@@ -5,9 +5,9 @@ import { usePathname } from 'next/navigation'
 
 type Phase = 'idle' | 'cover' | 'hold' | 'reveal'
 
-const COVER_MS = 380
-const HOLD_MS = 120
-const REVEAL_MS = 420
+const COVER_MS = 520
+const HOLD_MS = 80
+const REVEAL_MS = 380
 const TOTAL_MS = COVER_MS + HOLD_MS + REVEAL_MS
 const FAILSAFE_MS = 1400
 
