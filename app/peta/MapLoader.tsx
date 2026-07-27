@@ -128,14 +128,15 @@ export default function MapLoader() {
   const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
-    // Soft check: if after 12s still no .leaflet-container, show fallback with borders
+    // Soft check: if after 20s still no .leaflet-container, show fallback with borders
+    // Mobile 3G/4G + tile CDN bisa butuh 15-20s pertama kali
     if (failed) return
     const t = window.setTimeout(() => {
       if (!document.querySelector('.leaflet-container')) {
-        setStatus('Peta interaktif lambat dimuat')
+        setStatus('Peta interaktif lambat dimuat (jaringan lemot?)')
         setFailed(true)
       }
-    }, 12000)
+    }, 20000)
     return () => window.clearTimeout(t)
   }, [failed, attempt])
 

@@ -172,10 +172,11 @@ export default function LeafletMap() {
       >
         <MapResizeFix />
         <TileLayer
-          // Carto Voyager — often more reliable than OSM tile CDN on mobile networks
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          // OSM default — paling reliable untuk mobile Indonesia
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
-          subdomains="abcd"
+          subdomains="abc"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         <ZoomControl position="bottomright" />
 
