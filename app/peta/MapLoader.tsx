@@ -1,135 +1,146 @@
 'use client'
 
-import {
-  Component,
-  useEffect,
-  useState,
-  type ErrorInfo,
-  type ReactNode,
-} from 'react'
+import { Component, type ErrorInfo, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import MapBoundarySvg from '@/components/MapBoundarySvg'
 import { MAP_BBOX, MAP_CENTER } from '@/lib/map-geometry'
 
-const LeafletMapDynamic = dynamic(() => import('./LeafletMap'), {
-  ssr: false,
-  loading: () => (
-    <div
-      className="w-full rounded-xl animate-pulse"
-      style={{ height: 500, backgroundColor: 'var(--s2)', border: '1px solid var(--border)' }}
-      aria-hidden="true"
-    />
-  ),
-})
+// ─── Leaflet (kept for future use, currently disabled) ────────────────────────
+const _LeafletMapDynamic = dynamic(() => import('./LeafletMap'), { ssr: false })
 
-function BoundaryMapFallback({
-  reason,
-  showRetry,
-  onRetry,
-}: {
-  reason?: string
-  showRetry?: boolean
-  onRetry?: () => void
-}) {
-  const { west, south, east, north } = MAP_BBOX
-  const bbox = `${west},${south},${east},${north}`
-  const marker = `${MAP_CENTER[0]},${MAP_CENTER[1]}`
-  const src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${marker}`
+class _MapErrorBoundary extends Component<
+  { children: ReactNode; onError: (msg: string) => void },
+  { hasError: boolean }
+> {
+  state = { hasError: false }
+  static getDerivedStateFromError() { return { hasError: true } }
+  componentDidCatch(error: Error, _info: ErrorInfo) { this.props.onError(error.message) }
+  render() { return this.state.hasError ? null : this.props.children }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Convert lat/lng to OSM tile coordinates at zoom level z.
+ */
+function latLngToTile(lat: number, lng: number, z: number) {
+  const n = Math.pow(2, z)
+  const x = Math.floor(((lng + 180) / 360) * n)
+  const latRad = (lat * Math.PI) / 180
+  const y = Math.floor(((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n)
+  return { x, y }
+}
+
+/**
+ * Static tile grid map: renders OSM tiles as <img> tags in a grid.
+ * Zero JS dependency, zero CSP issues, works everywhere.
+ */
+function StaticTileMap() {
+  const z = 16
+  const [clat, clng] = MAP_CENTER
+  const center = latLngToTile(clat, clng, z)
+
+  // 3×3 grid of tiles centered on map center
+  const cols = 3
+  const rows = 4
+  const offsetX = Math.floor(cols / 2)
+  const offsetY = Math.floor(rows / 2)
+
+  const tiles: { x: number; y: number; col: number; row: number }[] = []
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      tiles.push({
+        x: center.x - offsetX + col,
+        y: center.y - offsetY + row,
+        col,
+        row,
+      })
+    }
+  }
+
+  const tileSize = 256
+  const mapW = cols * tileSize
+  const mapH = rows * tileSize
 
   return (
-    <div className="w-full space-y-3">
+    <div
+      className="relative w-full overflow-hidden rounded-xl"
+      style={{
+        height: 480,
+        border: '1px solid var(--border)',
+        backgroundColor: '#e8e0d0',
+      }}
+      aria-label="Peta Padukuhan Plosorejo"
+    >
+      {/* Tile grid container — centered on map */}
       <div
-        className="relative w-full overflow-hidden rounded-xl"
         style={{
-          height: 500,
-          border: '1px solid var(--border)',
-          backgroundColor: 'var(--s2)',
+          position: 'absolute',
+          width: mapW,
+          height: mapH,
+          // Center the tile grid in the container
+          top: '50%',
+          left: '50%',
+          transform: `translate(-50%, -50%)`,
         }}
       >
-        <iframe
-          title="Peta Padukuhan Plosorejo (OpenStreetMap)"
-          src={src}
-          className="absolute inset-0 w-full h-full border-0"
-          loading="eager"
-          referrerPolicy="no-referrer-when-downgrade"
-          allowFullScreen
-          style={{ zIndex: 0 }}
-        />
-        <MapBoundarySvg />
-        <div
-          className="absolute left-2 bottom-2 rounded-lg px-2 py-1 text-[10px] font-semibold"
-          style={{
-            zIndex: 3,
-            background: 'rgba(8,8,8,0.78)',
-            color: '#ecfdf5',
-            border: '1px solid rgba(74,222,128,0.55)',
-            pointerEvents: 'none',
-          }}
-        >
-          Hijau = batas RT · Merah = jalan
-        </div>
+        {tiles.map(({ x, y, col, row }) => {
+          const subdomain = ['a', 'b', 'c'][(x + y) % 3]
+          const src = `https://${subdomain}.tile.openstreetmap.org/${z}/${x}/${y}.png`
+          return (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={`${x}-${y}`}
+              src={src}
+              alt=""
+              width={tileSize}
+              height={tileSize}
+              style={{
+                position: 'absolute',
+                left: col * tileSize,
+                top: row * tileSize,
+                display: 'block',
+              }}
+              loading="eager"
+              draggable={false}
+            />
+          )
+        })}
       </div>
 
+      {/* SVG batas padukuhan + RT overlay */}
+      <MapBoundarySvg />
+
+      {/* Legend */}
       <div
-        className="flex flex-wrap items-center justify-between gap-3 rounded-xl px-3 py-2 text-xs"
+        className="absolute left-2 bottom-2 rounded-lg px-2 py-1 text-[10px] font-semibold"
         style={{
-          backgroundColor: 'var(--s1)',
-          border: '1px solid var(--border)',
-          color: 'var(--muted)',
+          zIndex: 3,
+          background: 'rgba(8,8,8,0.82)',
+          color: '#ecfdf5',
+          border: '1px solid rgba(74,222,128,0.55)',
+          pointerEvents: 'none',
         }}
-        role="status"
       >
-        <span>
-          <strong style={{ color: 'var(--gold)' }}>Batas RT tetap ditampilkan.</strong>
-          {reason ? ` ${reason}` : ' Mode cadangan (OSM + overlay).'}
-        </span>
-        {showRetry && onRetry ? (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="shrink-0 px-3 py-2 rounded-lg font-semibold touch-manipulation"
-            style={{ color: 'var(--gold)', border: '1px solid var(--border)', minHeight: 40 }}
-          >
-            Coba interaktif
-          </button>
-        ) : null}
+        Hijau = batas RT · Merah = jalan
+      </div>
+
+      {/* Attribution */}
+      <div
+        className="absolute right-1 bottom-1 text-[9px]"
+        style={{ zIndex: 3, color: 'rgba(0,0,0,0.55)', pointerEvents: 'none' }}
+      >
+        © OpenStreetMap
       </div>
     </div>
   )
 }
 
-class MapErrorBoundary extends Component<
-  { children: ReactNode; onError: (msg: string) => void },
-  { hasError: boolean }
-> {
-  state = { hasError: false }
-
-  static getDerivedStateFromError() {
-    return { hasError: true }
-  }
-
-  componentDidCatch(error: Error, _info: ErrorInfo) {
-    this.props.onError(error.message || 'Render peta gagal')
-  }
-
-  render() {
-    if (this.state.hasError) return null
-    return this.props.children
-  }
-}
-
-/**
- * OSM iframe + SVG boundary overlay (fallback default karena Leaflet gagal di production).
- * Leaflet commented out — enable via env var kalau perlu A/B test.
- */
 export default function MapLoader() {
-  // Leaflet disabled — production bundle issue terus blank
-  // Langsung pakai OSM embed yang 100% reliable + batas RT tetap hijau
   return (
     <div className="space-y-2">
-      <BoundaryMapFallback />
+      <StaticTileMap />
       <p className="text-[11px] text-center" style={{ color: 'var(--muted2)' }}>
-        Hijau = batas RT/padukuhan · Merah = jalan utama · Zoom/drag via OSM embed
+        Hijau = batas RT/padukuhan · Merah = jalan utama · Batas wilayah Plosorejo
       </p>
     </div>
   )
