@@ -141,7 +141,7 @@ export default function SitePreloader() {
         }
 
         .pl-title {
-          font-family: var(--font-syne, sans-serif);
+          font-family: 'Moderniz', var(--font-syne, sans-serif);
           font-size: clamp(2.6rem, 14vw, 3.8rem);
           font-weight: 900;
           letter-spacing: 0.08em;

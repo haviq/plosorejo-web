@@ -1,6 +1,15 @@
 @import 'tailwindcss';
 @import 'leaflet/dist/leaflet.css';
 
+/* ── Custom font: Moderniz ─────────────────────────────────────────────── */
+@font-face {
+  font-family: 'Moderniz';
+  src: url('/fonts/Moderniz.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /*
  * Theme tokens live on :root / [data-theme].
  * @theme maps Tailwind color utilities to those live vars so
