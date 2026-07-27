@@ -3,12 +3,11 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 
-const KEY = 'plosorejo-preloader-v3'
-const FAILSAFE_MS = 3200
+const KEY = 'plosorejo-preloader-v4'
+const FAILSAFE_MS = 4000
 
 function isSeen(): boolean {
   try {
-    if (typeof window === 'undefined') return true
     if (document.documentElement.getAttribute('data-preloader') === 'skip') return true
     if (sessionStorage.getItem(KEY) === '1') return true
     if (localStorage.getItem(KEY) === '1') return true
@@ -25,165 +24,147 @@ function markSeen() {
 }
 
 /**
- * GSAP-powered preloader: dual curtain (top+bottom) → typewriter PLOSOREJO → exit upward.
- * Much smoother than CSS-only — GSAP handles stagger, ease, and sequencing.
+ * GSAP-powered preloader.
+ * SSR: renders nothing (mounted=false).
+ * Client: checks isSeen() — if already seen, skip entirely.
+ * Otherwise: dual curtain slide down → typewriter PLOSOREJO → curtain slide up.
  */
 export default function SitePreloader() {
-  const [phase, setPhase] = useState<'idle' | 'animating' | 'done'>('done')
+  // Start hidden (SSR safe) — useEffect decides whether to run or skip
+  const [show, setShow] = useState(false)
+  const [done, setDone] = useState(false)
   const doneRef = useRef(false)
-  const rootRef = useRef<HTMLDivElement>(null)
+
   const topRef = useRef<HTMLDivElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const charsRef = useRef<HTMLSpanElement[]>([])
 
   useEffect(() => {
-    if (isSeen()) {
-      setPhase('done')
-      return
-    }
+    // Skip if already seen this session
+    if (isSeen()) return
 
-    // Lock scroll during preloader
+    // Show the overlay and start animation
+    setShow(true)
+
+    // Lock scroll
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        markSeen()
-        setPhase('done')
-        document.body.style.removeProperty('overflow')
-        document.documentElement.style.removeProperty('overflow')
-      },
-    })
+    const finish = () => {
+      if (doneRef.current) return
+      doneRef.current = true
+      markSeen()
+      document.body.style.removeProperty('overflow')
+      document.documentElement.style.removeProperty('overflow')
+      setDone(true)
+    }
 
-    setPhase('animating')
+    // Failsafe
+    const failsafe = window.setTimeout(finish, FAILSAFE_MS)
 
-    // 1. Curtains slide down from top (cover screen)
-    tl.fromTo(
-      [topRef.current, bottomRef.current],
-      { yPercent: -105 },
-      {
-        yPercent: 0,
-        duration: 0.72,
-        ease: 'power3.inOut',
-        stagger: 0.08, // bottom slightly after top
-      },
-      0,
-    )
+    // Small delay to ensure DOM refs are ready after setShow(true)
+    const startTimer = window.setTimeout(() => {
+      const tl = gsap.timeline({ onComplete: finish })
 
-    // 2. Content fade in (eyebrow + title placeholder)
-    tl.fromTo(
-      contentRef.current,
-      { opacity: 0, y: 12 },
-      { opacity: 1, y: 0, duration: 0.42, ease: 'power2.out' },
-      0.5,
-    )
+      // 1. Curtains slide in from top
+      tl.fromTo(
+        [topRef.current, bottomRef.current],
+        { yPercent: -105 },
+        { yPercent: 0, duration: 0.68, ease: 'power3.inOut', stagger: 0.07 },
+        0,
+      )
 
-    // 3. Typewriter reveal: stagger each char with bounce
-    tl.fromTo(
-      charsRef.current,
-      { opacity: 0, y: 18, rotationX: -45 },
-      {
-        opacity: 1,
-        y: 0,
-        rotationX: 0,
-        duration: 0.22,
-        ease: 'back.out(1.4)',
-        stagger: 0.045, // per-char delay
-      },
-      1.1,
-    )
+      // 2. Content fade in
+      tl.fromTo(
+        contentRef.current,
+        { opacity: 0, y: 10 },
+        { opacity: 1, y: 0, duration: 0.38, ease: 'power2.out' },
+        0.52,
+      )
 
-    // 4. Hold for a beat
-    tl.to({}, { duration: 0.65 }, '>')
+      // 3. Per-char stagger reveal (PLOSOREJO)
+      tl.fromTo(
+        charsRef.current.filter(Boolean),
+        { opacity: 0, y: 16, rotationX: -50 },
+        {
+          opacity: 1, y: 0, rotationX: 0,
+          duration: 0.2, ease: 'back.out(1.6)',
+          stagger: 0.048,
+        },
+        1.05,
+      )
 
-    // 5. Content fade out
-    tl.to(contentRef.current, { opacity: 0, y: -12, duration: 0.32, ease: 'power2.in' }, '>')
+      // 4. Hold
+      tl.to({}, { duration: 0.7 }, '>')
 
-    // 6. Curtains slide up (reveal site)
-    tl.to(
-      [bottomRef.current, topRef.current],
-      {
-        yPercent: -105,
-        duration: 0.68,
-        ease: 'power3.inOut',
-        stagger: 0.06,
-      },
-      '>-0.1',
-    )
+      // 5. Content fade out
+      tl.to(contentRef.current, { opacity: 0, y: -10, duration: 0.28, ease: 'power2.in' }, '>')
 
-    // Failsafe: force done after timeout
-    const failsafe = window.setTimeout(() => {
-      if (!doneRef.current) {
-        doneRef.current = true
-        markSeen()
-        setPhase('done')
-        document.body.style.removeProperty('overflow')
-        document.documentElement.style.removeProperty('overflow')
-      }
-    }, FAILSAFE_MS)
+      // 6. Curtains exit upward
+      tl.to(
+        [bottomRef.current, topRef.current],
+        { yPercent: -105, duration: 0.62, ease: 'power3.inOut', stagger: 0.06 },
+        '>-0.05',
+      )
+    }, 30)
 
     return () => {
       window.clearTimeout(failsafe)
-      tl.kill()
+      window.clearTimeout(startTimer)
+      gsap.killTweensOf([topRef.current, bottomRef.current, contentRef.current, ...charsRef.current])
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (phase === 'done') return null
+  // SSR: nothing rendered
+  if (!show || done) return null
 
-  const text = 'PLOSOREJO'
-  const chars = text.split('')
+  const chars = 'PLOSOREJO'.split('')
 
   return (
     <div
-      ref={rootRef}
-      className="site-preloader"
+      aria-hidden="true"
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
-        pointerEvents: 'auto',
+        pointerEvents: 'none',
         isolation: 'isolate',
       }}
-      aria-hidden="false"
     >
-      {/* Top curtain (gold) */}
+      {/* Top curtain — gold */}
       <div
         ref={topRef}
-        className="site-preloader__layer site-preloader__layer--gold"
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           height: '50%',
-          background: 'linear-gradient(135deg, #d4af37 0%, #b8941f 100%)',
+          background: 'linear-gradient(160deg, #c9a227 0%, #d4af37 60%, #b8941f 100%)',
+          transform: 'translate3d(0,-105%,0)',
           zIndex: 1,
-          transform: 'translate3d(0, -105%, 0)',
         }}
       />
 
-      {/* Bottom curtain (black) */}
+      {/* Bottom curtain — near-black */}
       <div
         ref={bottomRef}
-        className="site-preloader__layer site-preloader__layer--black"
         style={{
           position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
           height: '50%',
-          background: '#0a0a0a',
+          background: '#090807',
+          transform: 'translate3d(0,-105%,0)',
           zIndex: 1,
-          transform: 'translate3d(0, -105%, 0)',
         }}
       />
 
-      {/* Content overlay */}
+      {/* Center content */}
       <div
         ref={contentRef}
-        className="site-preloader__content"
         style={{
           position: 'absolute',
           inset: 0,
@@ -192,44 +173,36 @@ export default function SitePreloader() {
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 2,
-          pointerEvents: 'none',
-          color: '#ecfdf5',
+          opacity: 0,
           textAlign: 'center',
           padding: '0 1.5rem',
-          opacity: 0,
+          pointerEvents: 'none',
         }}
       >
-        <p
-          className="site-preloader__eyebrow"
-          style={{
-            fontSize: '0.7rem',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            color: '#d4af37',
-            marginBottom: '0.75rem',
-          }}
-        >
+        <p style={{
+          fontSize: '0.68rem',
+          fontWeight: 700,
+          textTransform: 'uppercase',
+          letterSpacing: '0.16em',
+          color: '#d4af37',
+          marginBottom: '0.7rem',
+        }}>
           Padukuhan Plosorejo · Cangkringan
         </p>
 
-        <h1
-          className="site-preloader__title"
-          style={{
-            fontFamily: 'var(--font-syne), sans-serif',
-            fontSize: 'clamp(1.85rem, 10vw, 2.85rem)',
-            fontWeight: 800,
-            letterSpacing: '0.08em',
-            lineHeight: 1.1,
-            color: '#ecfdf5',
-          }}
-        >
+        <h1 style={{
+          fontFamily: 'var(--font-syne, sans-serif)',
+          fontSize: 'clamp(2rem, 11vw, 3rem)',
+          fontWeight: 800,
+          letterSpacing: '0.1em',
+          color: '#f5f0e8',
+          lineHeight: 1,
+          margin: 0,
+        }}>
           {chars.map((ch, i) => (
             <span
               key={i}
-              ref={(el) => {
-                if (el) charsRef.current[i] = el
-              }}
+              ref={(el) => { if (el) charsRef.current[i] = el }}
               style={{
                 display: 'inline-block',
                 opacity: 0,
@@ -241,17 +214,14 @@ export default function SitePreloader() {
           ))}
         </h1>
 
-        <p
-          className="site-preloader__sub"
-          style={{
-            fontSize: '0.65rem',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.12em',
-            color: 'rgba(236,253,245,0.62)',
-            marginTop: '0.55rem',
-          }}
-        >
+        <p style={{
+          fontSize: '0.6rem',
+          fontWeight: 600,
+          textTransform: 'uppercase',
+          letterSpacing: '0.13em',
+          color: 'rgba(245,240,232,0.55)',
+          marginTop: '0.6rem',
+        }}>
           Umbulharjo · Sleman · Lereng Merapi
         </p>
       </div>
