@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import PageHeader from '@/components/PageHeader'
-import StatCard from '@/components/StatCard'
 import Icon from '@/components/Icon'
 import sektorData from '@/content/sektor.json'
 
@@ -12,147 +11,130 @@ export const metadata: Metadata = {
 const sektor = sektorData.pertanian
 
 const komoditas = [
-  {
-    nama: 'Padi',
-    varietas: 'IR64 & Ciherang',
-    luas: '52 ha',
-    panen: '6,2 t/ha',
-    musim: '2× / tahun',
-    icon: 'pertanian',
-    color: 'var(--gold)',
-  },
-  {
-    nama: 'Salak Pondoh',
-    varietas: 'Salak Pondoh Super',
-    luas: '18 ha',
-    panen: '15 t/ha',
-    musim: 'Sepanjang tahun',
-    icon: 'pertanian',
-    color: 'var(--gold)',
-  },
-  {
-    nama: 'Cabai Merah',
-    varietas: 'Keriting & Rawit',
-    luas: '9 ha',
-    panen: '8 t/ha',
-    musim: '3× / tahun',
-    icon: 'pertanian',
-    color: 'var(--gold)',
-  },
-  {
-    nama: 'Jagung Hibrida',
-    varietas: 'NK 212',
-    luas: '5 ha',
-    panen: '8,5 t/ha',
-    musim: '2× / tahun',
-    icon: 'pertanian',
-    color: 'var(--gold)',
-  },
-  {
-    nama: 'Kedelai Edamame',
-    varietas: 'Ryoko',
-    luas: '2 ha',
-    panen: '4 t/ha',
-    musim: '2× / tahun',
-    icon: 'pertanian',
-    color: 'var(--gold)',
-  },
-  {
-    nama: 'Sayuran Organik',
-    varietas: 'Kangkung, Bayam, Sawi',
-    luas: '1 ha',
-    panen: '10 t/ha',
-    musim: 'Sepanjang tahun',
-    icon: 'pertanian',
-    color: 'var(--gold)',
-  },
+  { nama: 'Padi',            varietas: 'IR64 & Ciherang',       luas: '52 ha',  panen: '6,2 t/ha', musim: '2× / tahun'    },
+  { nama: 'Salak Pondoh',    varietas: 'Salak Pondoh Super',    luas: '18 ha',  panen: '15 t/ha',  musim: 'Sepanjang tahun' },
+  { nama: 'Cabai Merah',     varietas: 'Keriting & Rawit',      luas: '9 ha',   panen: '8 t/ha',   musim: '3× / tahun'    },
+  { nama: 'Jagung Hibrida',  varietas: 'NK 212',                luas: '5 ha',   panen: '8,5 t/ha', musim: '2× / tahun'    },
+  { nama: 'Kedelai Edamame', varietas: 'Ryoko',                 luas: '2 ha',   panen: '4 t/ha',   musim: '2× / tahun'    },
+  { nama: 'Sayuran Organik', varietas: 'Kangkung, Bayam, Sawi', luas: '1 ha',   panen: '10 t/ha',  musim: 'Sepanjang tahun' },
 ]
 
 const jadwalMusimTanam = [
-  { musim: 'MT I (Nov – Feb)', komoditas: 'Padi IR64', status: 'Selesai', color: 'var(--gold)' },
-  { musim: 'MT II (Mar – Jun)', komoditas: 'Padi Ciherang', status: 'Selesai', color: 'var(--gold)' },
-  { musim: 'MT III (Jul – Okt)', komoditas: 'Cabai & Jagung', status: 'Berjalan', color: 'var(--gold)' },
+  { musim: 'MT I (Nov – Feb)',  komoditas: 'Padi IR64',      status: 'Selesai',  dot: '#22c55e' },
+  { musim: 'MT II (Mar – Jun)', komoditas: 'Padi Ciherang',  status: 'Selesai',  dot: '#22c55e' },
+  { musim: 'MT III (Jul – Okt)',komoditas: 'Cabai & Jagung', status: 'Berjalan', dot: '#f59e0b' },
+]
+
+const irigasiInfo = [
+  { label: 'Panjang Saluran', val: '8,4 km' },
+  { label: 'Lahan Terlayani', val: '87 ha'  },
+  { label: 'Pompa Air',       val: '4 unit' },
 ]
 
 export default function PertanianPage() {
   return (
-    <div className="page-shell space-y-10">
-      <PageHeader
-        eyebrow="Komoditas dan kelompok tani"
-        title="Pertanian"
-        highlight="Plosorejo"
-        description={sektor.deskripsi}
-      />
+    <div className="page-shell pb-16">
 
-      {/* Stats */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4" aria-label="Statistik pertanian">
-        {sektor.stats.map(({ label, value }, i) => (
-          <StatCard
-            key={label}
-            label={label}
-            value={value}
-            accent="amber"
-          />
-        ))}
+      {/* ── Header ── */}
+      <div className="px-4 pt-4 pb-6">
+        <PageHeader
+          eyebrow="Komoditas & Kelompok Tani"
+          title="Pertanian"
+          highlight="Plosorejo"
+          description={sektor.deskripsi}
+          backLabel="Sektor"
+          backHref="/sektor"
+        />
+      </div>
+
+      {/* ── Stats horizontal scroll ── */}
+      <section aria-label="Statistik pertanian" className="mb-6">
+        <p className="px-4 mb-2 text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--muted)' }}>
+          Ringkasan
+        </p>
+        <div className="flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none snap-x snap-mandatory">
+          {sektor.stats.map(({ label, value }) => (
+            <div
+              key={label}
+              className="flex-shrink-0 snap-start w-28 rounded-2xl p-3 text-center"
+              style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+            >
+              <p className="text-lg font-black tabular-nums" style={{ color: 'var(--gold)' }}>{value}</p>
+              <p className="text-[10px] mt-0.5 leading-tight" style={{ color: 'var(--muted)' }}>{label}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* Komoditas unggulan */}
-      <section aria-label="Komoditas unggulan">
-        <h2 className="text-2xl font-black mb-5">Komoditas Unggulan</h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {komoditas.map(({ nama, varietas, luas, panen, musim, icon, color }) => (
+      {/* ── Komoditas unggulan — iOS grouped list ── */}
+      <section aria-label="Komoditas unggulan" className="mb-6">
+        <p className="px-4 mb-2 text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--muted)' }}>
+          Komoditas Unggulan
+        </p>
+        <div
+          className="mx-4 rounded-2xl overflow-hidden"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          {komoditas.map(({ nama, varietas, luas, panen, musim }, i) => (
             <div
               key={nama}
-              className="rounded-xl border p-5 space-y-3"
-              style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
+              className="flex items-center gap-3 px-4 py-3"
+              style={{ borderTop: i > 0 ? '1px solid var(--border)' : undefined }}
             >
-              <div className="flex items-center gap-3">
-                <span
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                  style={{ backgroundColor: `${color}12` }}
-                  aria-hidden="true"
-                ><Icon name={icon} size={20} /></span>
-                <div>
-                  <h3 className="font-bold text-[var(--text)]">{nama}</h3>
-                  <p className="text-xs text-[var(--muted)]">{varietas}</p>
-                </div>
+              {/* Icon tile */}
+              <span
+                className="w-8 h-8 rounded-xl flex items-center justify-center text-base flex-shrink-0"
+                style={{ backgroundColor: 'rgba(34,197,94,0.12)' }}
+                aria-hidden="true"
+              >
+                <Icon name="pertanian" size={16} />
+              </span>
+
+              {/* Name + varietas */}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{nama}</p>
+                <p className="text-[11px] mt-0.5" style={{ color: 'var(--muted)' }}>{varietas}</p>
               </div>
-              <div className="grid grid-cols-3 gap-2 pt-2 border-t text-center" style={{ borderColor: 'var(--border)' }}>
-                {[
-                  { l: 'Luas', v: luas },
-                  { l: 'Hasil', v: panen },
-                  { l: 'Musim', v: musim },
-                ].map(({ l, v }) => (
-                  <div key={l}>
-                    <p className="text-xs font-semibold tabular-nums" style={{ color }}>{v}</p>
-                    <p className="text-xs text-[var(--muted2)]">{l}</p>
-                  </div>
-                ))}
+
+              {/* Micro stats */}
+              <div className="text-right flex-shrink-0">
+                <p className="text-xs font-bold tabular-nums" style={{ color: 'var(--gold)' }}>{panen}</p>
+                <p className="text-[10px]" style={{ color: 'var(--muted)' }}>{luas} · {musim}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Jadwal musim tanam */}
-      <section aria-label="Jadwal musim tanam">
-        <h2 className="text-2xl font-black mb-5">Jadwal Musim Tanam 2026</h2>
-        <div className="space-y-3">
-          {jadwalMusimTanam.map(({ musim, komoditas: k, status, color }) => (
+      {/* ── Jadwal musim tanam — iOS grouped list ── */}
+      <section aria-label="Jadwal musim tanam" className="mb-6">
+        <p className="px-4 mb-2 text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--muted)' }}>
+          Jadwal Musim Tanam 2026
+        </p>
+        <div
+          className="mx-4 rounded-2xl overflow-hidden"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          {jadwalMusimTanam.map(({ musim, komoditas: k, status, dot }, i) => (
             <div
               key={musim}
-              className="rounded-xl border p-4 flex items-center justify-between gap-4 flex-wrap"
-              style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
+              className="flex items-center gap-3 px-4 py-3"
+              style={{ borderTop: i > 0 ? '1px solid var(--border)' : undefined }}
             >
-              <div>
-                <p className="font-semibold text-[var(--text)] text-sm">{musim}</p>
-                <p className="text-xs text-[var(--muted)] mt-0.5">{k}</p>
+              {/* Status dot */}
+              <span
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: dot }}
+                aria-hidden="true"
+              />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{musim}</p>
+                <p className="text-[11px] mt-0.5" style={{ color: 'var(--muted)' }}>{k}</p>
               </div>
               <span
-                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full"
-                style={{ color, backgroundColor: `${color}18` }}
+                className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: `${dot}1a`, color: dot }}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-current" aria-hidden="true" />
                 {status}
               </span>
             </div>
@@ -160,30 +142,30 @@ export default function PertanianPage() {
         </div>
       </section>
 
-      {/* Info irigasi */}
-      <section
-        className="rounded-xl border p-6 space-y-3"
-        style={{ backgroundColor: 'var(--s1)', borderColor: 'var(--border)' }}
-        aria-label="Sistem irigasi"
-      >
-        <h2 className="text-lg font-black">💧 Sistem Irigasi Terpadu</h2>
-        <p className="text-sm text-[var(--text)] leading-relaxed">
-          Padukuhan Plosorejo dilengkapi jaringan irigasi teknis sepanjang 8,4 km yang mengalirkan
-          air dari Sungai Lesti melalui saluran primer dan sekunder ke seluruh lahan pertanian.
-          Program pompanisasi juga tersedia untuk lahan yang tidak terjangkau irigasi gravitasi,
-          memastikan pasokan air sepanjang tahun.
+      {/* ── Irigasi — iOS info section ── */}
+      <section aria-label="Sistem irigasi" className="mb-6">
+        <p className="px-4 mb-2 text-[11px] font-semibold uppercase tracking-[0.14em]" style={{ color: 'var(--muted)' }}>
+          Sistem Irigasi Terpadu
         </p>
-        <div className="flex flex-wrap gap-4 pt-2">
-          {[
-            { label: 'Panjang Saluran', val: '8,4 km' },
-            { label: 'Lahan Terlayani', val: '87 ha' },
-            { label: 'Pompa Air', val: '4 unit' },
-          ].map(({ label, val }) => (
-            <div key={label}>
-              <p className="text-sm font-bold" style={{ color: 'var(--gold)' }}>{val}</p>
-              <p className="text-xs text-[var(--muted)]">{label}</p>
-            </div>
-          ))}
+        <div
+          className="mx-4 rounded-2xl p-4 space-y-3"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+            Jaringan irigasi teknis sepanjang 8,4 km mengalirkan air dari Sungai Lesti melalui saluran
+            primer dan sekunder ke seluruh lahan. Program pompanisasi memastikan pasokan air sepanjang tahun.
+          </p>
+          <div
+            className="grid grid-cols-3 gap-2 pt-3"
+            style={{ borderTop: '1px solid var(--border)' }}
+          >
+            {irigasiInfo.map(({ label, val }) => (
+              <div key={label} className="text-center">
+                <p className="text-sm font-black" style={{ color: 'var(--gold)' }}>{val}</p>
+                <p className="text-[10px] mt-0.5" style={{ color: 'var(--muted)' }}>{label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

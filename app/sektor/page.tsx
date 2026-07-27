@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Icon from '@/components/Icon'
 import sektorData from '@/content/sektor.json'
 
 export const metadata: Metadata = {
@@ -20,10 +19,14 @@ const sektors = [
 
 export default function SektorIndexPage() {
   return (
-    <main className="min-h-screen" style={{ backgroundColor: 'var(--bg)' }}>
-      {/* Header */}
-      <div className="px-5 pt-24 pb-6">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] mb-1" style={{ color: 'var(--gold)' }}>
+    <main className="min-h-screen pb-16" style={{ backgroundColor: 'var(--bg)' }}>
+
+      {/* ── iOS-style page header ── */}
+      <div className="px-5 pt-24 pb-4">
+        <p
+          className="text-[10px] font-bold uppercase tracking-[0.18em] mb-1"
+          style={{ color: 'var(--gold)' }}
+        >
           Padukuhan Plosorejo
         </p>
         <h1 className="text-2xl font-black" style={{ color: 'var(--text)' }}>
@@ -34,7 +37,17 @@ export default function SektorIndexPage() {
         </p>
       </div>
 
-      {/* iOS-style app grid */}
+      {/* ── Section label "Semua Sektor" ── */}
+      <div className="px-4 mb-2">
+        <p
+          className="text-[11px] font-semibold uppercase tracking-[0.14em]"
+          style={{ color: 'var(--muted)' }}
+        >
+          Semua Sektor
+        </p>
+      </div>
+
+      {/* ── iOS 3-column app grid ── */}
       <div className="px-4 pb-8">
         <div className="grid grid-cols-3 gap-3">
           {sektors.map((s) => (
@@ -58,61 +71,57 @@ export default function SektorIndexPage() {
               >
                 <span aria-hidden="true">{s.emoji}</span>
               </div>
+
               {/* Label */}
-              <span
+              <p
                 className="text-[11px] font-semibold text-center leading-tight"
                 style={{ color: 'var(--text)' }}
               >
                 {s.nama}
-              </span>
-              {/* Stat pill */}
-              {s.stats?.[0] && (
-                <span
-                  className="text-[9px] font-bold px-2 py-0.5 rounded-full"
-                  style={{
-                    background: `${s.color}18`,
-                    color: s.color,
-                  }}
-                >
-                  {s.stats[0].value}
-                </span>
-              )}
+              </p>
             </Link>
           ))}
         </div>
       </div>
 
-      {/* Detail cards (list view below grid) */}
-      <div className="px-4 pb-16 space-y-3">
-        <p className="text-xs font-bold uppercase tracking-[0.14em] mb-3" style={{ color: 'var(--muted)' }}>
+      {/* ── List view (secondary, below grid) ── */}
+      <div className="px-4">
+        <p
+          className="text-[11px] font-semibold uppercase tracking-[0.14em] mb-2"
+          style={{ color: 'var(--muted)' }}
+        >
           Detail Sektor
         </p>
-        {sektors.map((s) => (
-          <Link
-            key={`detail-${s.slug}`}
-            href={`/sektor/${s.slug}`}
-            className="flex items-center gap-4 p-4 rounded-2xl active:scale-[0.99] transition-transform"
-            style={{
-              background: 'var(--surface)',
-              border: '1px solid var(--border)',
-            }}
-          >
-            <div
-              className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-              style={{ background: `${s.color}20`, border: `1px solid ${s.color}35` }}
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{ backgroundColor: 'var(--surface)', border: '1px solid var(--border)' }}
+        >
+          {sektors.map((s, i) => (
+            <Link
+              key={`list-${s.slug}`}
+              href={`/sektor/${s.slug}`}
+              className="flex items-center gap-3 px-4 py-3 active:opacity-70 transition-opacity"
+              style={{ borderTop: i > 0 ? '1px solid var(--border)' : undefined }}
+              aria-label={`Sektor ${s.nama}`}
             >
-              {s.emoji}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm" style={{ color: 'var(--text)' }}>{s.nama}</p>
-              <p className="text-xs line-clamp-1 mt-0.5" style={{ color: 'var(--muted)' }}>{s.deskripsi}</p>
-            </div>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-              <path d="M5 3l4 4-4 4" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Link>
-        ))}
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
+                style={{ background: `${s.color}20`, border: `1px solid ${s.color}35` }}
+              >
+                {s.emoji}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-bold text-sm" style={{ color: 'var(--text)' }}>{s.nama}</p>
+                <p className="text-xs line-clamp-1 mt-0.5" style={{ color: 'var(--muted)' }}>{s.deskripsi}</p>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M5 3l4 4-4 4" stroke="var(--muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </Link>
+          ))}
+        </div>
       </div>
+
     </main>
   )
 }
