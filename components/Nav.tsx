@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import NavLink from '@/components/NavLink'
 import { usePathname } from 'next/navigation'
 import Icon from '@/components/Icon'
 import ThemeToggle from '@/components/ThemeToggle'
@@ -184,7 +185,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                 const active = isActive(href)
                 return (
                   <li key={href}>
-                    <Link
+                    <NavLink
                       href={href}
                       onClick={closeMenus}
                       className="site-header__link"
@@ -192,7 +193,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                       aria-current={active ? 'page' : undefined}
                     >
                       {label}
-                    </Link>
+                    </NavLink>
                   </li>
                 )
               })}
@@ -210,7 +211,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                 {sektorOpen ? (
                   <div className="site-header__dropdown" role="menu">
                     {sektorLinks.map(({ href, label, icon }) => (
-                      <Link
+                      <NavLink
                         key={href}
                         href={href}
                         role="menuitem"
@@ -222,7 +223,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                       >
                         <Icon name={icon} size={16} />
                         {label}
-                      </Link>
+                      </NavLink>
                     ))}
                   </div>
                 ) : null}
@@ -304,7 +305,7 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
         <div className="site-mobile-panel__inner">
           <nav aria-label="Menu mobile">
             {navLinks.map(({ href, label }) => (
-              <Link
+              <NavLink
                 key={href}
                 href={href}
                 onClick={closeMenus}
@@ -313,14 +314,14 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
                 aria-current={isActive(href) ? 'page' : undefined}
               >
                 {label}
-              </Link>
+              </NavLink>
             ))}
           </nav>
 
           <p className="site-mobile-panel__section-label">Sektor</p>
           <div className="grid grid-cols-2 gap-2">
             {sektorLinks.map(({ href, label, icon }) => (
-              <Link
+              <NavLink
                 key={href}
                 href={href}
                 onClick={closeMenus}
@@ -331,23 +332,23 @@ export default function Nav({ whatsapp }: { whatsapp?: string }) {
               >
                 <Icon name={icon} size={14} />
                 {label}
-              </Link>
+              </NavLink>
             ))}
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/layanan/ajukan" onClick={closeMenus} className="btn-primary">
+            <NavLink href="/layanan/ajukan" onClick={closeMenus} className="btn-primary">
               Ajukan Surat
-            </Link>
-            <Link href="/layanan/status" onClick={closeMenus} className="btn-ghost">
+            </NavLink>
+            <NavLink href="/layanan/status" onClick={closeMenus} className="btn-ghost">
               Cek Status
-            </Link>
-            <Link href="/darurat" onClick={closeMenus} className="btn-ghost">
+            </NavLink>
+            <NavLink href="/darurat" onClick={closeMenus} className="btn-ghost">
               Info Darurat
-            </Link>
-            <Link href="/sektor/umkm" onClick={closeMenus} className="btn-ghost">
+            </NavLink>
+            <NavLink href="/sektor/umkm" onClick={closeMenus} className="btn-ghost">
               UMKM
-            </Link>
+            </NavLink>
             {waReady ? (
               <a
                 href={waHref}
