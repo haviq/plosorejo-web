@@ -168,7 +168,7 @@ export default function RouteCurtain() {
       if (url.pathname === window.location.pathname && url.search === window.location.search) return
 
       // Skip if site preloader still active
-      if (document.getElementById('site-preloader-v15')) return
+      if (document.getElementById('site-preloader-v16')) return
 
       // Kick cover early; pathname effect will re-sync label/finish
       if (!busy.current) {
