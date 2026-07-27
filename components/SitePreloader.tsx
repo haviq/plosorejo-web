@@ -3,162 +3,196 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * v15 — NO useState, NO conditional render
- * Server renders preloader VISIBLE (panels off-screen below via CSS)
- * CSS @keyframes fire immediately on mount — zero hydration race
- * body.overflow:hidden di-set lewat CSS selama animasi (no JS scroll lock race)
+ * v16 — FINAL
+ * Sequence:
+ * 1. Panel hitam + gold MASUK DARI ATAS ke bawah (slide down, cover screen)
+ * 2. PLOSOREJO typewriter per huruf (smooth, satu per satu)
+ * 3. Panel hitam + gold KELUAR KE ATAS dari bawah (slide up, reveal page)
+ *
+ * Server renders VISIBLE — tidak ada useState SSR null race.
+ * CSS @keyframes — zero GSAP, zero hydration issue.
+ * body overflow:hidden via CSS :has() selector.
  */
 export default function SitePreloader() {
   const doneRef = useRef(false)
 
   useEffect(() => {
     if (doneRef.current) return
-    // Total animasi = panel exit selesai pada ~4.45s + buffer
+    // Hapus dari DOM setelah semua animasi selesai (~5s)
     const t = setTimeout(() => {
       doneRef.current = true
-      // Hapus dari DOM setelah animasi selesai
-      const el = document.getElementById('site-preloader-v15')
+      const el = document.getElementById('site-preloader-v16')
       if (el) el.remove()
-    }, 4600)
+    }, 5200)
     return () => clearTimeout(t)
   }, [])
 
   const chars = 'PLOSOREJO'.split('')
 
   return (
-    <div
-      id="site-preloader-v15"
-      aria-hidden="true"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 99999,
-        overflow: 'hidden',
-        // pointer-events: none selama animasi supaya user bisa tap setelah selesai
-        // tapi full visible dari server
-      }}
-    >
+    <div id="site-preloader-v16" aria-hidden="true">
       <style>{`
         /* Lock scroll selama preloader aktif */
-        body:has(#site-preloader-v15) {
-          overflow: hidden !important;
-        }
+        body:has(#site-preloader-v16) { overflow: hidden !important; }
 
-        @keyframes pl-in {
-          from { transform: translateY(105%); }
+        /* ── Keyframes ───────────────────────────────────────────── */
+
+        /* Panel masuk: dari ATAS ke bawah (slide down) */
+        @keyframes pl-enter {
+          from { transform: translateY(-105%); }
           to   { transform: translateY(0%); }
         }
-        @keyframes pl-out {
+
+        /* Panel keluar: ke ATAS dari bawah (slide up) */
+        @keyframes pl-exit {
           from { transform: translateY(0%); }
           to   { transform: translateY(-105%); }
         }
-        @keyframes pl-content-in {
-          from { opacity: 0; transform: translateY(14px); }
-          to   { opacity: 1; transform: translateY(0px); }
+
+        /* Content fade in */
+        @keyframes pl-show {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-        @keyframes pl-content-out {
-          from { opacity: 1; transform: translateY(0px); }
-          to   { opacity: 0; transform: translateY(-12px); }
+
+        /* Content fade out */
+        @keyframes pl-hide {
+          from { opacity: 1; }
+          to   { opacity: 0; }
         }
-        @keyframes pl-char {
-          from { opacity: 0; transform: translateY(20px); filter: blur(8px); }
-          to   { opacity: 1; transform: translateY(0px);  filter: blur(0px); }
+
+        /* Per-char typewriter reveal */
+        @keyframes pl-type {
+          from { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+          to   { opacity: 1; transform: translateY(0);    filter: blur(0); }
         }
+
+        /* Eyebrow letter-spacing reveal */
         @keyframes pl-eyebrow {
-          from { opacity: 0; letter-spacing: 0.38em; }
+          from { opacity: 0; letter-spacing: 0.45em; }
           to   { opacity: 1; letter-spacing: 0.22em; }
         }
-        @keyframes pl-line {
-          from { opacity: 0; transform: scaleX(0); }
-          to   { opacity: 1; transform: scaleX(1); }
+
+        /* Divider line grow */
+        @keyframes pl-divider {
+          from { transform: scaleX(0); opacity: 0; }
+          to   { transform: scaleX(1); opacity: 1; }
         }
 
-        /* Panel hitam — masuk dari bawah (0s), keluar ke atas (3.65s) */
-        #site-preloader-v15 .pl-blk {
+        /* ── Wrapper ─────────────────────────────────────────────── */
+        #site-preloader-v16 {
+          position: fixed;
+          inset: 0;
+          z-index: 99999;
+          overflow: hidden;
+          pointer-events: all;
+        }
+
+        /* ── Panel hitam (masuk dulu, keluar belakangan) ─────────── */
+        #site-preloader-v16 .pl-blk {
           position: absolute; inset: 0; z-index: 1;
           background: #08070a;
-          transform: translateY(105%);
+          /* start: di atas layar */
+          transform: translateY(-105%);
           will-change: transform;
           animation:
-            pl-in  0.72s cubic-bezier(0.76,0,0.24,1) 0s    forwards,
-            pl-out 0.78s cubic-bezier(0.76,0,0.24,1) 3.65s forwards;
+            pl-enter 0.7s cubic-bezier(0.76,0,0.24,1) 0s    forwards,
+            pl-exit  0.78s cubic-bezier(0.76,0,0.24,1) 3.8s  forwards;
         }
 
-        /* Panel gold — masuk 90ms setelah hitam, keluar 90ms setelah hitam */
-        #site-preloader-v15 .pl-gld {
+        /* ── Panel gold (masuk +80ms, keluar +80ms) ──────────────── */
+        #site-preloader-v16 .pl-gld {
           position: absolute; inset: 0; z-index: 2;
           background:
             radial-gradient(ellipse 75% 55% at 50% 46%, rgba(212,175,55,0.28) 0%, transparent 68%),
-            linear-gradient(150deg, #0d0b07 0%, #110f0a 100%);
-          transform: translateY(105%);
+            linear-gradient(160deg, #0d0b07 0%, #110f0a 100%);
+          transform: translateY(-105%);
           will-change: transform;
           animation:
-            pl-in  0.72s cubic-bezier(0.76,0,0.24,1) 0.09s forwards,
-            pl-out 0.78s cubic-bezier(0.76,0,0.24,1) 3.74s forwards;
+            pl-enter 0.7s cubic-bezier(0.76,0,0.24,1) 0.08s forwards,
+            pl-exit  0.78s cubic-bezier(0.76,0,0.24,1) 3.88s forwards;
         }
 
-        /* Content */
-        #site-preloader-v15 .pl-cnt {
+        /* ── Content layer ───────────────────────────────────────── */
+        #site-preloader-v16 .pl-cnt {
           position: absolute; inset: 0; z-index: 3;
           display: flex; flex-direction: column;
           align-items: center; justify-content: center;
-          text-align: center; padding: 0 1.5rem; gap: 0.5rem;
-          pointer-events: none; opacity: 0;
+          text-align: center; padding: 0 2rem;
+          gap: 0.4rem; pointer-events: none;
+          opacity: 0;
           animation:
-            pl-content-in  0.45s ease-out 0.85s forwards,
-            pl-content-out 0.35s ease-in  3.1s  forwards;
+            pl-show 0.4s ease-out 0.85s forwards,
+            pl-hide 0.3s ease-in  3.3s  forwards;
         }
 
-        #site-preloader-v15 .pl-eyebrow {
+        /* Eyebrow */
+        #site-preloader-v16 .pl-eye {
           font-size: 0.62rem; font-weight: 700;
           letter-spacing: 0.22em; text-transform: uppercase;
-          color: #d4af37; margin-bottom: 0.5rem;
+          color: #d4af37; margin-bottom: 0.4rem;
           opacity: 0;
-          animation: pl-eyebrow 0.6s ease-out 0.9s forwards;
+          animation: pl-eyebrow 0.55s ease-out 0.95s forwards;
         }
 
-        #site-preloader-v15 .pl-title {
+        /* Title wrapper */
+        #site-preloader-v16 .pl-ttl {
           font-family: 'Moderniz', var(--font-syne, sans-serif);
-          font-size: clamp(2.8rem, 15vw, 4.2rem);
+          font-size: clamp(2.8rem, 15vw, 4.4rem);
           font-weight: 900; letter-spacing: 0.08em;
           color: #f0ebe0; line-height: 1; margin: 0;
         }
 
-        #site-preloader-v15 .pl-ch {
+        /* Per-char span */
+        #site-preloader-v16 .pl-ch {
           display: inline-block; opacity: 0;
-          animation: pl-char 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+          animation: pl-type 0.38s cubic-bezier(0.34,1.56,0.64,1) forwards;
         }
 
-        #site-preloader-v15 .pl-div {
-          width: 2.5rem; height: 1px;
+        /* Divider */
+        #site-preloader-v16 .pl-div {
+          width: 3rem; height: 1px;
           background: linear-gradient(90deg, transparent, #d4af37, transparent);
-          transform-origin: center; opacity: 0;
-          animation: pl-line 0.5s ease-out 1.72s forwards;
+          transform-origin: center; transform: scaleX(0); opacity: 0;
+          margin: 0.35rem 0;
+          animation: pl-divider 0.45s ease-out 1.8s forwards;
         }
 
-        #site-preloader-v15 .pl-sub {
-          font-size: 0.6rem; font-weight: 600;
-          letter-spacing: 0.16em; text-transform: uppercase;
-          color: rgba(240,235,224,0.45); opacity: 0;
-          animation: pl-content-in 0.5s ease-out 1.8s forwards;
+        /* Sub */
+        #site-preloader-v16 .pl-sub {
+          font-size: 0.58rem; font-weight: 600;
+          letter-spacing: 0.15em; text-transform: uppercase;
+          color: rgba(240,235,224,0.42); opacity: 0;
+          animation: pl-show 0.45s ease-out 1.9s forwards;
         }
       `}</style>
 
+      {/* Panel hitam — masuk dari atas */}
       <div className="pl-blk" />
+
+      {/* Panel gold — masuk dari atas +80ms */}
       <div className="pl-gld" />
+
+      {/* Content */}
       <div className="pl-cnt">
-        <p className="pl-eyebrow">Padukuhan Plosorejo · Cangkringan</p>
-        <h1 className="pl-title">
+        <p className="pl-eye">Padukuhan Plosorejo · Cangkringan</p>
+
+        {/* PLOSOREJO typewriter per huruf */}
+        <h1 className="pl-ttl">
           {chars.map((ch, i) => (
             <span
               key={i}
               className="pl-ch"
-              style={{ animationDelay: `${0.95 + i * 0.06}s` }}
+              style={{
+                // Setiap huruf muncul berurutan (typewriter feel)
+                animationDelay: `${1.05 + i * 0.07}s`,
+              }}
             >
               {ch}
             </span>
           ))}
         </h1>
+
         <div className="pl-div" />
         <p className="pl-sub">Umbulharjo · Sleman · Lereng Merapi</p>
       </div>
