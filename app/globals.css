@@ -1243,22 +1243,12 @@ td {
 .route-curtain__panel--gold {
   z-index: 2;
   background:
-    radial-gradient(120% 80% at 50% 35%, #f3c84a 0%, #d4af37 42%, #7a5a14 78%, #1a1408 100%);
+    radial-gradient(ellipse 75% 55% at 50% 46%, rgba(212,175,55,0.22) 0%, transparent 68%),
+    linear-gradient(160deg, #0d0b07 0%, #110f0a 100%);
 }
 
 .route-curtain__panel--gold::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 45%),
-    repeating-linear-gradient(
-      -18deg,
-      rgba(255, 255, 255, 0.04) 0 1px,
-      transparent 1px 12px
-    );
-  opacity: 0.55;
-  pointer-events: none;
+  display: none;
 }
 
 .route-curtain__mark {
