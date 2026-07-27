@@ -3,271 +3,202 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 
-const KEY = 'plosorejo-preloader-v8'
-const FAILSAFE_MS = 5000
+// Bump this key whenever you want ALL users to see the preloader again
+const KEY = 'plosorejo-seen-v9'
+const FAILSAFE_MS = 6000
 
-function isSeen(): boolean {
-  try {
-    if (document.documentElement.getAttribute('data-preloader') === 'skip') return true
-    if (sessionStorage.getItem(KEY) === '1') return true
-    if (localStorage.getItem(KEY) === '1') return true
-  } catch {}
+function isSeen() {
+  try { return sessionStorage.getItem(KEY) === '1' || localStorage.getItem(KEY) === '1' } catch {}
   return false
 }
-
 function markSeen() {
-  try {
-    sessionStorage.setItem(KEY, '1')
-    localStorage.setItem(KEY, '1')
-    document.documentElement.setAttribute('data-preloader', 'skip')
-  } catch {}
+  try { sessionStorage.setItem(KEY, '1'); localStorage.setItem(KEY, '1') } catch {}
 }
 
-const CHARS = 'PLOSOREJO'.split('')
-
 export default function SitePreloader() {
-  const doneRef = useRef(false)
-
-  const containerRef = useRef<HTMLDivElement>(null)
-  const panelARef = useRef<HTMLDivElement>(null)
-  const panelBRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const charsRef = useRef<HTMLSpanElement[]>([])
+  const wrapRef  = useRef<HTMLDivElement>(null)
+  const blkRef   = useRef<HTMLDivElement>(null)
+  const goldRef  = useRef<HTMLDivElement>(null)
+  const bodyRef  = useRef<HTMLDivElement>(null)
+  const doneRef  = useRef(false)
+  // Store span refs in an array — populated by the ref callback below
+  const charRefs = useRef<HTMLSpanElement[]>([])
 
   useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+    const wrap = wrapRef.current
+    if (!wrap) return
 
-    // Already seen → hide immediately, no animation
+    // ── Already seen → remove from DOM immediately ──────────────────────
     if (isSeen()) {
-      container.style.display = 'none'
+      wrap.remove()
       return
     }
 
-    // Make container visible (was rendered hidden for SSR safety)
-    container.style.visibility = 'visible'
-    container.style.opacity = '1'
+    // ── Make container visible ───────────────────────────────────────────
+    // (was display:none in CSS for SSR, now show it)
+    wrap.style.display = 'block'
 
     // Lock scroll
     document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
 
     const finish = () => {
       if (doneRef.current) return
       doneRef.current = true
       markSeen()
-      // Hide container after animation
-      if (container) container.style.display = 'none'
       document.body.style.removeProperty('overflow')
-      document.documentElement.style.removeProperty('overflow')
+      // Slide wrap off-screen then remove
+      gsap.to(wrap, {
+        opacity: 0, duration: 0.2, onComplete: () => wrap.remove(),
+      })
     }
 
-    const failsafe = window.setTimeout(finish, FAILSAFE_MS)
+    const failsafe = setTimeout(finish, FAILSAFE_MS)
 
-    // 1 rAF is enough — refs are already attached (DOM rendered before this effect)
-    const rafId = requestAnimationFrame(() => {
-      const chars = charsRef.current.filter(Boolean)
-
-      if (!panelARef.current || !panelBRef.current || !contentRef.current) {
-        finish()
-        return
+    // Wait 2 frames so browser has painted the newly-visible container
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const chars = charRefs.current.filter(Boolean)
+      if (!blkRef.current || !goldRef.current || !bodyRef.current) {
+        finish(); return
       }
 
       const tl = gsap.timeline({ onComplete: finish })
 
-      // ── 1. Panel B enters from below ───────────────────────────────────
-      tl.fromTo(
-        panelBRef.current,
-        { y: '100vh' },
-        { y: '0vh', duration: 0.7, ease: 'power3.inOut' },
-        0,
-      )
+      // 1 ── black panel slides up from below
+      tl.fromTo(blkRef.current,
+        { yPercent: 100 },
+        { yPercent: 0, duration: 0.65, ease: 'power3.inOut' }, 0)
 
-      // ── 2. Panel A enters from below, stagger +0.08s ───────────────────
-      tl.fromTo(
-        panelARef.current,
-        { y: '100vh' },
-        { y: '0vh', duration: 0.7, ease: 'power3.inOut' },
-        0.08,
-      )
+      // 2 ── gold panel slides up, 80ms after black
+      tl.fromTo(goldRef.current,
+        { yPercent: 100 },
+        { yPercent: 0, duration: 0.65, ease: 'power3.inOut' }, 0.08)
 
-      // ── 3. Content fade in ─────────────────────────────────────────────
-      tl.fromTo(
-        contentRef.current,
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.38, ease: 'power2.out' },
-        0.8,
-      )
+      // 3 ── body content fades in
+      tl.fromTo(bodyRef.current,
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }, 0.75)
 
-      // ── 4. PLOSOREJO per-char: opacity + translateY + blur ─────────────
-      if (chars.length > 0) {
-        tl.fromTo(
-          chars,
-          { opacity: 0, y: 20, filter: 'blur(8px)' },
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 0.5,
-            ease: 'power2.out',
-            stagger: 0.05,
-          },
-          0.85,
-        )
+      // 4 ── PLOSOREJO typewriter wave (per-char)
+      if (chars.length) {
+        tl.fromTo(chars,
+          { opacity: 0, y: 16, filter: 'blur(6px)' },
+          { opacity: 1, y: 0, filter: 'blur(0px)',
+            duration: 0.45, ease: 'power2.out', stagger: 0.055 }, 0.82)
       }
 
-      // ── 5. Hold 0.8s ──────────────────────────────────────────────────
-      tl.to({}, { duration: 0.8 }, '>')
+      // 5 ── Hold
+      tl.to({}, { duration: 0.85 }, '>')
 
-      // ── 6. Content fade out ────────────────────────────────────────────
-      tl.to(
-        contentRef.current,
-        { opacity: 0, y: -10, duration: 0.28, ease: 'power2.in' },
-        '>',
-      )
+      // 6 ── body fades out
+      tl.to(bodyRef.current,
+        { opacity: 0, y: -10, duration: 0.25, ease: 'power2.in' }, '>')
 
-      // ── 7. Panel A exits upward ────────────────────────────────────────
-      tl.to(
-        panelARef.current,
-        { y: '-100vh', duration: 0.75, ease: 'power3.inOut' },
-        '>-0.05',
-      )
+      // 7 ── gold exits upward
+      tl.to(goldRef.current,
+        { yPercent: -100, duration: 0.7, ease: 'power3.inOut' }, '>')
 
-      // ── 8. Panel B exits upward, slight overlap ────────────────────────
-      tl.to(
-        panelBRef.current,
-        { y: '-100vh', duration: 0.75, ease: 'power3.inOut' },
-        '<0.08',
-      )
-    })
+      // 8 ── black exits upward, slight overlap
+      tl.to(blkRef.current,
+        { yPercent: -100, duration: 0.7, ease: 'power3.inOut' }, '<0.07')
+    }))
 
     return () => {
-      window.clearTimeout(failsafe)
-      cancelAnimationFrame(rafId)
-      gsap.killTweensOf([
-        panelARef.current,
-        panelBRef.current,
-        contentRef.current,
-        ...charsRef.current,
-      ])
+      clearTimeout(failsafe)
+      doneRef.current = true
+      document.body.style.removeProperty('overflow')
     }
   }, [])
 
-  // Always render into the DOM — visibility:hidden + opacity:0 hides it during SSR/hydration.
-  // useEffect will either hide it immediately (isSeen) or reveal + animate it.
+  const WORD = 'PLOSOREJO'
+
   return (
     <div
-      ref={containerRef}
+      ref={wrapRef}
       aria-hidden="true"
       style={{
+        // display:none during SSR — useEffect flips to 'block' on client
+        display: 'none',
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
         overflow: 'hidden',
-        // Hidden until useEffect fires — prevents flash on pages where preloader shouldn't show
-        visibility: 'hidden',
-        opacity: 0,
+        pointerEvents: 'all',
       }}
     >
-      {/* Panel B — pure black, enters first */}
+      {/* ── Panel 1: pure black ── */}
       <div
-        ref={panelBRef}
+        ref={blkRef}
         style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          background: '#090807',
-          transform: 'translateY(100vh)',
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: '#08070a',
+          transform: 'translateY(100%)',
           willChange: 'transform',
         }}
       />
 
-      {/* Panel A — gold-tinted dark, enters 80ms after B */}
+      {/* ── Panel 2: gold-tinted ── */}
       <div
-        ref={panelARef}
+        ref={goldRef}
         style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 2,
+          position: 'absolute', inset: 0, zIndex: 2,
           background: [
-            'radial-gradient(ellipse 80% 50% at 50% 45%, rgba(212,175,55,0.18) 0%, transparent 70%)',
-            'linear-gradient(160deg, #0d0b07 0%, #131008 100%)',
-          ].join(', '),
-          transform: 'translateY(100vh)',
+            'radial-gradient(ellipse 70% 55% at 50% 48%, rgba(212,175,55,0.22) 0%, transparent 68%)',
+            'linear-gradient(150deg, #0c0a06 0%, #100e09 100%)',
+          ].join(','),
+          transform: 'translateY(100%)',
           willChange: 'transform',
         }}
       />
 
-      {/* Content — centered above both panels */}
+      {/* ── Content (above both panels) ── */}
       <div
-        ref={contentRef}
+        ref={bodyRef}
         style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: 'absolute', inset: 0, zIndex: 3,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
           opacity: 0,
-          pointerEvents: 'none',
+          gap: '0.5rem',
+          padding: '0 1.5rem',
           textAlign: 'center',
-          padding: '0 2rem',
-          gap: '0.15rem',
         }}
       >
         {/* Eyebrow */}
-        <p
-          style={{
-            fontSize: '0.64rem',
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '0.2em',
-            color: '#d4af37',
-            marginBottom: '0.6rem',
-          }}
-        >
+        <p style={{
+          fontSize: '0.62rem', fontWeight: 700,
+          letterSpacing: '0.22em', textTransform: 'uppercase',
+          color: '#d4af37', marginBottom: '0.6rem',
+        }}>
           Padukuhan Plosorejo · Cangkringan
         </p>
 
-        {/* PLOSOREJO per-char */}
-        <h1
-          style={{
-            fontFamily: 'var(--font-syne, sans-serif)',
-            fontSize: 'clamp(2.4rem, 13vw, 3.4rem)',
-            fontWeight: 800,
-            letterSpacing: '0.1em',
-            color: '#f5f0e8',
-            lineHeight: 1,
-            margin: 0,
-          }}
-        >
-          {CHARS.map((ch, i) => (
+        {/* PLOSOREJO — per-char spans */}
+        <h1 style={{
+          fontFamily: 'var(--font-syne, sans-serif)',
+          fontSize: 'clamp(2.6rem, 14vw, 3.8rem)',
+          fontWeight: 900,
+          letterSpacing: '0.08em',
+          color: '#f0ebe0',
+          lineHeight: 1,
+          margin: 0,
+        }}>
+          {WORD.split('').map((ch, i) => (
             <span
               key={i}
-              ref={(el) => { if (el) charsRef.current[i] = el }}
-              style={{
-                display: 'inline-block',
-                opacity: 0,
-                transformOrigin: '50% 100%',
-              }}
+              ref={el => { if (el) charRefs.current[i] = el }}
+              style={{ display: 'inline-block', opacity: 0 }}
             >
               {ch}
             </span>
           ))}
         </h1>
 
-        {/* Sub */}
-        <p
-          style={{
-            fontSize: '0.58rem',
-            fontWeight: 600,
-            textTransform: 'uppercase',
-            letterSpacing: '0.14em',
-            color: 'rgba(245,240,232,0.48)',
-            marginTop: '0.55rem',
-          }}
-        >
+        {/* Subtitle */}
+        <p style={{
+          fontSize: '0.58rem', fontWeight: 600,
+          letterSpacing: '0.14em', textTransform: 'uppercase',
+          color: 'rgba(240,235,224,0.42)', marginTop: '0.4rem',
+        }}>
           Umbulharjo · Sleman · Lereng Merapi
         </p>
       </div>
