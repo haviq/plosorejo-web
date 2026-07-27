@@ -46,8 +46,7 @@ export default function SitePreloader() {
   return (
     <div id="site-preloader-v16" aria-hidden="true">
       <style>{`
-        /* Lock scroll selama preloader aktif */
-        body:has(#site-preloader-v16) { overflow: hidden !important; }
+        /* Scroll lock di-handle via JS, bukan CSS */
 
         /* ── Keyframes ───────────────────────────────────────────── */
 
