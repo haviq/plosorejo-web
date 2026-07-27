@@ -1210,15 +1210,24 @@ td {
   position: fixed;
   inset: 0;
   z-index: 19000;
-  pointer-events: none !important;
+  pointer-events: none;
   overflow: hidden;
 }
 
-/* Only block briefly during cover; never trap permanently */
-.route-curtain--cover {
+/* rc-* are the new direct-DOM class names — synchronous, no React setState */
+.route-curtain.rc-cover {
   pointer-events: auto;
 }
 
+.route-curtain.rc-idle,
+.route-curtain.rc-reveal {
+  pointer-events: none;
+}
+
+/* Legacy BEM phase classes — keep for backwards compat */
+.route-curtain--cover {
+  pointer-events: auto;
+}
 .route-curtain--hold,
 .route-curtain--reveal,
 .route-curtain--idle {
@@ -1281,6 +1290,30 @@ td {
   color: rgba(26, 18, 4, 0.62);
 }
 
+/* ── rc-* direct-DOM classes (synchronous, no React setState) ── */
+.route-curtain.rc-cover .route-curtain__panel--black {
+  animation: route-curtain-down 0.45s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+.route-curtain.rc-cover .route-curtain__panel--gold {
+  animation: route-curtain-down 0.50s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.04s;
+}
+.route-curtain.rc-cover .route-curtain__mark {
+  animation: route-curtain-mark-in 0.28s ease both;
+  animation-delay: 0.20s;
+}
+.route-curtain.rc-reveal .route-curtain__panel--gold {
+  animation: route-curtain-up 0.45s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+.route-curtain.rc-reveal .route-curtain__panel--black {
+  animation: route-curtain-up 0.40s cubic-bezier(0.77, 0, 0.18, 1) both;
+  animation-delay: 0.06s;
+}
+.route-curtain.rc-reveal .route-curtain__mark {
+  animation: route-curtain-mark-out 0.22s ease both;
+}
+
+/* ── Legacy BEM classes — keep for backwards compat ── */
 /* Cover: slide top → bottom */
 .route-curtain--cover .route-curtain__panel--black {
   animation: route-curtain-down 0.42s cubic-bezier(0.77, 0, 0.18, 1) both;
