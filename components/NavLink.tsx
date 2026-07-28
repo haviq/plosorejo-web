@@ -36,6 +36,9 @@ function injectCurtain(label: string) {
   // Hapus portal lama
   document.getElementById(PORTAL_ID)?.remove()
 
+  // Set sessionStorage SEGERA — mencegah SitePreloader muncul di halaman tujuan
+  try { sessionStorage.setItem('plosorejo-preloader-seen', '1') } catch (_) {}
+
   const chars = 'PLOSOREJO'.split('')
 
   const el = document.createElement('div')
