@@ -97,9 +97,6 @@ export default function NavLink({ href, onClick, children, ...rest }: LinkProps)
     const targetPath = hrefStr.split('?')[0].split('#')[0]
     if (window.location.pathname === targetPath) return
 
-    // Skip if preloader still active
-    if (document.getElementById('site-preloader-v16')) return
-
     // BLOCK default navigation
     e.preventDefault()
 

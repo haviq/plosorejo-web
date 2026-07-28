@@ -18,15 +18,18 @@ export default function SitePreloader() {
 
   useEffect(() => {
     if (doneRef.current) return
+    // Set sessionStorage segera setelah animasi cover selesai (~4s)
+    // Ini mencegah preloader muncul lagi jika user navigate sebelum remove timer
+    const seenTimer = setTimeout(() => {
+      try { sessionStorage.setItem('plosorejo-preloader-seen', '1') } catch (_) {}
+    }, 4000)
     // Remove element dari DOM setelah semua animasi selesai (~5s)
     const removeTimer = setTimeout(() => {
       doneRef.current = true
       const el = document.getElementById('site-preloader-v16')
       if (el) el.remove()
-      // Mark as seen so navigasi berikutnya dalam sesi ini skip preloader
-      try { sessionStorage.setItem('plosorejo-preloader-seen', '1') } catch (_) {}
     }, 5000)
-    return () => clearTimeout(removeTimer)
+    return () => { clearTimeout(seenTimer); clearTimeout(removeTimer) }
   }, [])
 
   const chars = 'PLOSOREJO'.split('')
