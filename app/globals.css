@@ -1240,13 +1240,14 @@ td {
 }
 #rc-curtain-portal .rc-brand {
   display: flex;
-  gap: 0.04em;
+  gap: 0;
   font-family: var(--font-syne), sans-serif;
   font-weight: 900;
-  font-size: clamp(2.5rem, 10vw, 5rem);
-  letter-spacing: 0.12em;
+  font-size: clamp(2rem, 8vw, 5rem);
+  letter-spacing: 0.08em;
   color: #d4af37;
   line-height: 1;
+  white-space: nowrap;
 }
 #rc-curtain-portal .rc-char {
   display: inline-block;
