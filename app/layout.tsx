@@ -82,11 +82,14 @@ const bootHeadScript = `
   } catch (e) {}
   try {
     var seen = false;
-    // Skip intro on internal routes only (admin / studio)
+    // Skip intro on internal routes (admin / studio) OR if already shown this session
     try {
       var p = (location && location.pathname) || '';
       if (p.indexOf('/admin') === 0 || p.indexOf('/studio') === 0) seen = true;
     } catch (ePath) {}
+    try {
+      if (sessionStorage.getItem('plosorejo-preloader-seen') === '1') seen = true;
+    } catch (eSS) {}
     if (seen) {
       document.documentElement.setAttribute('data-preloader', 'skip');
     }
@@ -150,11 +153,11 @@ const bootHeadScript = `
     }, true);
   } catch (e) {}
 
-  /* Hard failsafe: never leave intro longer than ~1.8s */
+  /* Hard failsafe: never leave intro longer than ~5.5s */
   try {
     window.setTimeout(function(){
       try {
-        var el = document.getElementById('site-preloader');
+        var el = document.getElementById('site-preloader-v16');
         document.documentElement.setAttribute('data-preloader', 'skip');
         if (el) {
           el.style.pointerEvents = 'none';
@@ -162,10 +165,8 @@ const bootHeadScript = `
         }
         document.body.style.overflow = '';
         document.documentElement.style.overflow = '';
-        try { sessionStorage.setItem('plosorejo-preloader', '1'); } catch (e3) {}
-        try { localStorage.setItem('plosorejo-preloader', '1'); } catch (e4) {}
       } catch (e5) {}
-    }, 1800);
+    }, 5500);
   } catch (e) {}
 })();`
 

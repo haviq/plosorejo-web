@@ -23,6 +23,8 @@ export default function SitePreloader() {
       doneRef.current = true
       const el = document.getElementById('site-preloader-v16')
       if (el) el.remove()
+      // Mark as seen so navigasi berikutnya dalam sesi ini skip preloader
+      try { sessionStorage.setItem('plosorejo-preloader-seen', '1') } catch (_) {}
     }, 5000)
     return () => clearTimeout(removeTimer)
   }, [])
