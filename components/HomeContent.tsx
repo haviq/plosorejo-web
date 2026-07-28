@@ -2,9 +2,11 @@ import Link from 'next/link'
 import SektorCard from '@/components/SektorCard'
 import BeritaCard from '@/components/BeritaCard'
 import MerapiStatusServer from '@/components/MerapiStatusServer'
+import MerapiStatusSkeleton from '@/components/MerapiStatusSkeleton'
 import StatsBar from '@/components/StatsBar'
 import Icon from '@/components/Icon'
 import ScrollReveal from '@/components/ScrollReveal'
+import { Suspense } from 'react'
 
 type SektorCardData = {
     href: string
@@ -216,7 +218,9 @@ export default function HomeContent({
 
                     {/* right column */}
                     <div className="w-full max-w-md mx-auto lg:max-w-none lg:ml-auto space-y-4" style={{ color: 'var(--text)' }}>
-                        <MerapiStatusServer />
+                        <Suspense fallback={<MerapiStatusSkeleton />}>
+                          <MerapiStatusServer />
+                        </Suspense>
 
                         <div className="surface-panel p-5 space-y-4">
                             <div className="flex items-start justify-between gap-3">

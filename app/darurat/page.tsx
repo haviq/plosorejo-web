@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import PageHeader from '@/components/PageHeader'
 import Icon from '@/components/Icon'
+import { Suspense } from 'react'
 import MerapiStatusServer from '@/components/MerapiStatusServer'
+import MerapiStatusSkeleton from '@/components/MerapiStatusSkeleton'
 import { getDaruratData, getSiteSettings } from '@/lib/data'
 import { formatWaDisplay, isPlaceholderWa, normalizeWa, waLink } from '@/lib/site'
 import { safeOfficialHref } from '@/lib/safe-url'
@@ -38,7 +40,9 @@ export default async function DaruratPage() {
         description="Status Merapi, titik kumpul, dan nomor penting. Simpan halaman ini di HP (PWA) agar cepat dibuka saat dibutuhkan."
       />
 
-      <MerapiStatusServer />
+      <Suspense fallback={<MerapiStatusSkeleton />}>
+        <MerapiStatusServer />
+      </Suspense>
 
       <section className="grid md:grid-cols-2 gap-4">
         <div className="card-surface p-5 space-y-2">

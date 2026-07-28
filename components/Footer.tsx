@@ -148,7 +148,8 @@ export default async function Footer() {
         className="border-t px-6 py-4 text-center text-xs"
         style={{ borderColor: 'var(--border)', color: 'var(--muted2)' }}
       >
-        © {new Date().getFullYear()} Padukuhan Plosorejo · Dibangun bersama KKN UNRIYO Unit 9
+        © {new Date().getFullYear()} Padukuhan Plosorejo · Portal Resmi Padukuhan Digital ·{' '}
+        <span title="Platform ini dibangun bersama KKN UNRIYO 2026">KKN UNRIYO 2026</span>
       </div>
     </footer>
   )

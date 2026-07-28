@@ -1,13 +1,14 @@
 'use client'
 
+import Link from 'next/link'
 import StatCounter from '@/components/StatCounter'
 
 const stats = [
-  { value: '658', label: 'Jiwa' },
-  { value: '4', label: 'RT' },
-  { value: '312', label: 'Sapi Perah' },
-  { value: '89', label: 'UMKM' },
-  { value: '3', label: 'Destinasi Wisata' },
+  { value: '658', label: 'Jiwa', href: '/profil' },
+  { value: '4', label: 'RT', href: '/peta' },
+  { value: '312', label: 'Sapi Perah', href: '/sektor/peternakan' },
+  { value: '89', label: 'UMKM', href: '/sektor/umkm' },
+  { value: '3', label: 'Destinasi Wisata', href: '/sektor/pariwisata' },
 ]
 
 /** No framer-motion here — pure static grid for max mobile reliability. */
@@ -36,7 +37,13 @@ export default function StatsBar() {
           {stats.map((stat, i) => (
             <div key={stat.label} className="flex items-center">
               <div className="flex-1">
-                <StatCounter value={stat.value} label={stat.label} />
+                <Link
+                  href={stat.href}
+                  className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--gold)] rounded-lg"
+                  aria-label={`${stat.value} ${stat.label} — lihat detail`}
+                >
+                  <StatCounter value={stat.value} label={stat.label} />
+                </Link>
               </div>
               {i < stats.length - 1 && (
                 <div

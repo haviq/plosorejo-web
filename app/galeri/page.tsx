@@ -5,8 +5,8 @@ import Icon from '@/components/Icon'
 import { getGaleriList } from '@/lib/data'
 
 export const metadata: Metadata = {
-  title: 'Galeri KKN 2026',
-  description: 'Dokumentasi foto kegiatan KKN UNRIYO 2026 di Padukuhan Plosorejo.',
+  title: 'Galeri Padukuhan',
+  description: 'Dokumentasi foto kegiatan dan kehidupan Padukuhan Plosorejo — dari program pemberdayaan hingga potensi lokal.',
 }
 
 export const revalidate = 60
@@ -18,10 +18,10 @@ export default async function GaleriPage() {
   return (
     <div className="page-shell space-y-10">
       <PageHeader
-        eyebrow="KKN UNRIYO 2026 · Juli – Agustus"
+        eyebrow="Padukuhan Plosorejo · Dokumentasi"
         title="Galeri"
-        highlight="Dokumentasi"
-        description="Dokumentasi foto kegiatan KKN UNRIYO angkatan 2026 di Padukuhan Plosorejo selama masa pengabdian 60 hari."
+        highlight="Padukuhan"
+        description="Dokumentasi foto kegiatan dan kehidupan Padukuhan Plosorejo — dari program pemberdayaan hingga potensi lokal dan pariwisata lereng Merapi."
       />
 
       <section
