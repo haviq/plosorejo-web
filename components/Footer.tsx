@@ -7,27 +7,10 @@ const quickLinks = [
   { href: '/profil', label: 'Profil' },
   { href: '/berita', label: 'Berita' },
   { href: '/layanan', label: 'Layanan' },
-  { href: '/layanan/ajukan', label: 'Ajukan Surat' },
-  { href: '/layanan/status', label: 'Cek Status' },
   { href: '/agenda', label: 'Agenda' },
-  { href: '/darurat', label: 'Info Darurat' },
-  { href: '/demo', label: 'Demo Multi-Desa' },
-  { href: '/proposal', label: 'Proposal' },
   { href: '/galeri', label: 'Galeri' },
   { href: '/peta', label: 'Peta' },
   { href: '/kontak', label: 'Kontak' },
-  { href: '/kkn', label: 'Arsip KKN' },
-]
-
-const sektorLinks = [
-  { href: '/sektor/peternakan', label: 'Peternakan' },
-  { href: '/sektor/pertanian', label: 'Pertanian' },
-  { href: '/sektor/umkm', label: 'UMKM' },
-  { href: '/sektor/pariwisata', label: 'Pariwisata' },
-  { href: '/sektor/pendidikan', label: 'Pendidikan' },
-  { href: '/sektor/kesehatan', label: 'Kesehatan' },
-  { href: '/sektor/budaya', label: 'Budaya' },
-  { href: '/susu', label: 'Produksi Susu' },
 ]
 
 export default async function Footer() {
@@ -38,6 +21,7 @@ export default async function Footer() {
       className="border-t mt-auto relative overflow-hidden"
       style={{ borderColor: 'var(--border)', backgroundColor: 'var(--s1)' }}
     >
+      {/* garis emas tipis di atas */}
       <div
         className="absolute inset-x-0 top-0 h-px"
         style={{
@@ -47,62 +31,37 @@ export default async function Footer() {
         aria-hidden="true"
       />
 
-      <div className="max-w-7xl mx-auto px-6 py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-        <div className="space-y-4">
-          <div>
-            <p
-              className="font-black text-xl tracking-[0.15em] uppercase"
-              style={{
-                fontFamily: 'var(--font-playfair), Georgia, serif',
-                color: 'var(--gold)',
-              }}
-            >
-              PLOSOREJO
-            </p>
-            <p className="text-xs tracking-[0.18em] uppercase mt-1" style={{ color: 'var(--muted)' }}>
-              Padukuhan Digital
-            </p>
-          </div>
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
-            {site.tagline}. Portal informasi Padukuhan Plosorejo, Umbulharjo, Cangkringan, Sleman.
+      <div className="max-w-2xl mx-auto px-6 py-10 flex flex-col items-center gap-6 text-center">
+
+        {/* Baris 1 — Brand + info singkat */}
+        <div className="space-y-1">
+          <p
+            className="font-black text-lg tracking-[0.15em] uppercase"
+            style={{
+              fontFamily: 'var(--font-playfair), Georgia, serif',
+              color: 'var(--gold)',
+            }}
+          >
+            PLOSOREJO
           </p>
-          <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-            {site.alamat}
+          <p className="text-xs tracking-[0.18em] uppercase" style={{ color: 'var(--muted)' }}>
+            Padukuhan Digital · Umbulharjo · Cangkringan · Sleman
           </p>
-          <div className="flex flex-wrap gap-2 pt-1">
-            <span className="badge" style={{ color: 'var(--muted)', background: 'var(--surface-soft)' }}>
-              KKN UNRIYO 2026
-            </span>
-            {isPlaceholderWa(site.whatsapp) ? (
-              <span
-                className="badge"
-                style={{ color: 'var(--muted)', background: 'var(--surface-soft)' }}
-                title="Nomor WhatsApp admin belum diisi"
-              >
-                WA belum diisi
-              </span>
-            ) : (
-              <a
-                href={waLink(site.whatsapp)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="badge"
-                style={{ color: 'var(--gold)', background: 'var(--gold-glow)' }}
-              >
-                WA {formatWaDisplay(site.whatsapp)}
-              </a>
-            )}
-          </div>
+          {site.email && (
+            <p className="text-xs" style={{ color: 'var(--muted2)' }}>
+              {site.email}
+            </p>
+          )}
         </div>
 
-        <div>
-          <p className="section-label mb-4">Navigasi</p>
-          <ul className="space-y-2">
+        {/* Baris 2 — Quick links horizontal */}
+        <nav aria-label="Footer navigasi">
+          <ul className="flex flex-wrap justify-center gap-x-4 gap-y-2">
             {quickLinks.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-sm transition-colors hover:text-[var(--text)]"
+                  className="text-xs transition-colors hover:text-[var(--text)]"
                   style={{ color: 'var(--muted)' }}
                 >
                   {item.label}
@@ -110,42 +69,25 @@ export default async function Footer() {
               </li>
             ))}
           </ul>
-        </div>
+        </nav>
 
-        <div>
-          <p className="section-label mb-4">Sektor</p>
-          <ul className="space-y-2">
-            {sektorLinks.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-sm transition-colors hover:text-[var(--text)]"
-                  style={{ color: 'var(--muted)' }}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="space-y-4">
-          <p className="section-label mb-1">Kontak</p>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>{site.jamLayanan}</p>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>{site.email}</p>
-          <div className="flex flex-wrap gap-2">
-            <Link href="/layanan" className="btn-ghost text-xs px-3 py-2">
-              Layanan
-            </Link>
-            <Link href="/kontak" className="btn-primary text-xs px-3 py-2">
-              Hubungi
-            </Link>
-          </div>
-        </div>
+        {/* WA badge jika tersedia */}
+        {!isPlaceholderWa(site.whatsapp) && (
+          <a
+            href={waLink(site.whatsapp)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="badge text-xs"
+            style={{ color: 'var(--gold)', background: 'var(--gold-glow)' }}
+          >
+            WhatsApp {formatWaDisplay(site.whatsapp)}
+          </a>
+        )}
       </div>
 
+      {/* Copyright bar */}
       <div
-        className="border-t px-6 py-4 text-center text-xs"
+        className="border-t px-6 py-3 text-center text-xs"
         style={{ borderColor: 'var(--border)', color: 'var(--muted2)' }}
       >
         © {new Date().getFullYear()} Padukuhan Plosorejo · Portal Resmi Padukuhan Digital ·{' '}
