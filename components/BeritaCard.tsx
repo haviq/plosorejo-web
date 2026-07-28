@@ -15,7 +15,7 @@ export default function BeritaCard({
   judul,
   tanggal,
   kategori,
-  ringkasan: _ringkasan,
+  ringkasan,
 }: BeritaCardProps) {
   return (
     <Link
@@ -62,6 +62,23 @@ export default function BeritaCard({
         >
           {judul}
         </p>
+
+        {/* Ringkasan / excerpt */}
+        {ringkasan ? (
+          <p
+            className="text-xs line-clamp-2 mt-1"
+            style={{ color: 'var(--muted)' }}
+          >
+            {ringkasan}
+          </p>
+        ) : (
+          <p
+            className="text-xs mt-1"
+            style={{ color: 'var(--muted2)' }}
+          >
+            Baca selengkapnya...
+          </p>
+        )}
       </div>
 
       {/* Chevron */}

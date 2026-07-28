@@ -282,6 +282,7 @@ export default function PengajuanSuratForm({
             placeholder="Sesuai KTP"
             maxLength={80}
             autoComplete="name"
+            aria-required="true"
             className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
             style={inputStyle}
           />
@@ -297,6 +298,8 @@ export default function PengajuanSuratForm({
             value={nik}
             onChange={(e) => setNik(e.target.value.replace(/\D/g, '').slice(0, 16))}
             placeholder="16 digit"
+            aria-required="true"
+            aria-describedby="nik-hint"
             maxLength={16}
             autoComplete="off"
             className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
@@ -310,6 +313,16 @@ export default function PengajuanSuratForm({
               NIK harus 16 digit angka
             </p>
           )}
+           {nikOk && (
+             <p className="text-xs mt-1 flex items-center gap-1" style={{ color: '#4caf50' }}>
+               <span aria-hidden="true">✓</span> NIK valid
+             </p>
+           )}
+           {!nik && (
+             <p id="nik-hint" className="text-xs mt-1" style={{ color: 'var(--muted2)' }}>
+               16 digit angka
+             </p>
+           )}
         </div>
       </div>
 
@@ -361,6 +374,7 @@ export default function PengajuanSuratForm({
           placeholder="Jelaskan keperluan Anda…"
           rows={3}
           maxLength={500}
+           aria-required="true"
           className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)] resize-none"
           style={inputStyle}
         />
@@ -384,7 +398,7 @@ export default function PengajuanSuratForm({
 
       {/* Soft file upload */}
       <div>
-        <label className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+        <label htmlFor="soft-file" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
           Soft file pendukung (opsional)
         </label>
         <p className="text-xs mb-2" style={{ color: 'var(--muted2)' }}>

@@ -19,8 +19,8 @@ export default function PageHeader({
   title,
   highlight,
   description,
-  backHref = '/sektor',
-  backLabel = 'Sektor',
+  backHref = '/',
+  backLabel = 'Beranda',
   children,
 }: PageHeaderProps) {
   return (
