@@ -1207,7 +1207,58 @@ td {
 
 /* Route curtain removed — navigasi langsung tanpa animasi transisi */
 
-/* Route curtain CSS removed — navigasi langsung tanpa animasi */
+/* ══ Route curtain — muncul saat klik navbar ══ */
+#rc-curtain-portal {
+  position: fixed;
+  inset: 0;
+  z-index: 19000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#rc-curtain-portal.rc-visible {
+  pointer-events: auto;
+  opacity: 1;
+}
+#rc-curtain-portal .rc-bg {
+  position: absolute;
+  inset: 0;
+  background: #08070a;
+}
+#rc-curtain-portal .rc-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+#rc-curtain-portal .rc-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(212,175,55,0.2);
+  border-top-color: #d4af37;
+  border-radius: 50%;
+  animation: rc-spin 0.7s linear infinite;
+}
+#rc-curtain-portal .rc-brand {
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  letter-spacing: 0.18em;
+  color: #d4af37;
+}
+#rc-curtain-portal .rc-lbl {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: rgba(212,175,55,0.55);
+}
+@keyframes rc-spin {
+  to { transform: rotate(360deg); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .site-preloader__layer--black,
