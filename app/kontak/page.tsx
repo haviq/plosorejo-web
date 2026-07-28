@@ -23,7 +23,7 @@ export default async function KontakPage() {
       icon: 'phone',
       label: 'Telepon Dukuh',
       value: isPlaceholderWa(site.whatsapp) && !site.telepon
-        ? 'Belum diisi (atur di /studio)'
+        ? 'Belum diisi'
         : site.telepon && !isPlaceholderWa(site.telepon)
           ? site.telepon
           : formatWaDisplay(site.whatsapp),
@@ -77,17 +77,13 @@ export default async function KontakPage() {
               Buka di Google Maps →
             </a>
           )}
-
-          <p className="text-xs" style={{ color: 'var(--muted2)' }}>
-            Data kontak bisa diubah admin lewat <strong>/studio → Pengaturan Situs</strong>.
-          </p>
         </section>
 
         <section className="space-y-4" aria-label="Kontak perangkat desa">
           <h2 className="section-label">Perangkat Padukuhan</h2>
           <div className="space-y-3">
             {site.perangkat.map(({ nama, jabatan, whatsapp, icon }) => {
-              const canWa = !isPlaceholderWa(whatsapp)
+              const canWa = whatsapp && !isPlaceholderWa(whatsapp)
               return (
               <div key={nama} className="card-surface p-4 flex items-center gap-4">
                 <span
@@ -111,15 +107,7 @@ export default async function KontakPage() {
                   >
                     WA
                   </a>
-                ) : (
-                  <span
-                    className="badge border text-[10px]"
-                    style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}
-                    title="Nomor belum diisi di CMS"
-                  >
-                    WA —
-                  </span>
-                )}
+                ) : null}
               </div>
               )
             })}

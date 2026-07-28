@@ -45,7 +45,10 @@ export default function PengajuanSuratForm({
 
   const nikOk = /^\d{16}$/.test(nik.trim())
   const isValid =
-    nama.trim().length >= 3 && nikOk && keperluan.trim().length >= 5 && Boolean(selected)
+    nama.trim().length >= 3 &&
+    nikOk &&
+    keperluan.trim().length >= 5 &&
+    (layanan.length === 0 || Boolean(selected))
 
   const waReady = waLink(whatsapp || '', 'x') !== '#'
 

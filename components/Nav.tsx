@@ -28,6 +28,7 @@ const sektorLinks = [
   { href: '/sektor/pendidikan', label: 'Pendidikan', icon: 'pendidikan' },
   { href: '/sektor/kesehatan', label: 'Kesehatan', icon: 'kesehatan' },
   { href: '/sektor/budaya', label: 'Budaya', icon: 'budaya' },
+  { href: '/susu', label: 'Produksi Susu', icon: 'susu' },
 ]
 
 export default function Nav({ whatsapp }: { whatsapp?: string }) {

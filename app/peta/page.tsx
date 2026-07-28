@@ -90,7 +90,7 @@ export default async function PetaPage() {
 
       <section aria-label="Legenda peta">
         <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)] mb-4">
-          Titik penting (dari content/poi.json)
+          Lokasi Penting di Padukuhan
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {groups.map(([type, items]) => {
@@ -141,7 +141,7 @@ export default async function PetaPage() {
       <p className="text-xs text-[var(--muted2)] text-center">
         * Batas padukuhan & RT: estimasi organik mengikuti jalan OSM (Jl. Raya Merapi Golf,
         Jl. Menuju Lapangan Golf). Validasi GPS lapangan diperlukan untuk akurasi resmi.
-        Edit POI di <code>content/poi.json</code>.
+        * Batas dan titik POI dapat diperbarui melalui panel pengelola.
       </p>
     </div>
   )
