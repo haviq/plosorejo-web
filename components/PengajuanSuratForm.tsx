@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import type { LayananItem } from '@/lib/types'
 import { waLink } from '@/lib/site'
@@ -33,6 +33,11 @@ export default function PengajuanSuratForm({
   const [resultKode, setResultKode] = useState<string | null>(null)
   const [formError, setFormError] = useState('')
 
+  // Soft file state
+  const [softFile, setSoftFile] = useState<File | null>(null)
+  const [uploadingFile, setUploadingFile] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const selected = useMemo(
     () => layanan.find((l) => l.id === layananId) || layanan[0],
     [layanan, layananId],
@@ -44,6 +49,18 @@ export default function PengajuanSuratForm({
 
   const waReady = waLink(whatsapp || '', 'x') !== '#'
 
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null
+    setSoftFile(file)
+    setFormError('')
+  }
+
+  function handleFileRemove() {
+    setSoftFile(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+    setFormError('')
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!isValid || !selected || submitting) return
@@ -51,7 +68,42 @@ export default function PengajuanSuratForm({
     setFormError('')
     setResultKode(null)
 
+    let softFileUrl: string | undefined
+    let softFileName: string | undefined
+
     try {
+      // Upload soft file first if one is selected
+      if (softFile) {
+        setUploadingFile(true)
+        try {
+          const fd = new FormData()
+          fd.append('file', softFile)
+          const uploadRes = await fetch('/api/upload-file', {
+            method: 'POST',
+            body: fd,
+          })
+          const uploadData = await uploadRes.json()
+          if (!uploadRes.ok || !uploadData.ok) {
+            setFormError(
+              uploadData.error === 'rate_limited'
+                ? 'Terlalu banyak upload. Coba lagi beberapa menit.'
+                : uploadData.error === 'file_too_large'
+                  ? 'File terlalu besar (maks 5 MB).'
+                  : uploadData.error === 'invalid_file_type'
+                    ? 'Tipe file tidak didukung. Gunakan PDF, JPG, atau PNG.'
+                    : uploadData.error === 'upload_not_configured'
+                      ? 'Fitur upload belum dikonfigurasi.'
+                      : 'Gagal mengupload file. Coba lagi.',
+            )
+            return
+          }
+          softFileUrl = uploadData.url as string
+          softFileName = softFile.name
+        } finally {
+          setUploadingFile(false)
+        }
+      }
+
       const res = await fetch('/api/pengajuan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -64,6 +116,8 @@ export default function PengajuanSuratForm({
           telepon: telepon.trim() || undefined,
           keperluan: keperluan.trim(),
           catatan: catatan.trim() || undefined,
+          softFileUrl,
+          softFileName,
         }),
       })
       const data = await res.json()
@@ -94,6 +148,7 @@ export default function PengajuanSuratForm({
           `Keperluan:`,
           keperluan.trim(),
           catatan.trim() ? `\nCatatan:\n${catatan.trim()}` : null,
+          softFileUrl ? `Soft file: ${softFileUrl}` : null,
           ``,
           `_Dikirim dari portal plosorejo-web_`,
         ]
@@ -107,6 +162,7 @@ export default function PengajuanSuratForm({
       setFormError('Jaringan bermasalah. Coba lagi.')
     } finally {
       setSubmitting(false)
+      setUploadingFile(false)
     }
   }
 
@@ -126,14 +182,14 @@ export default function PengajuanSuratForm({
           {resultKode}
         </p>
         <p className="text-sm" style={{ color: 'var(--muted)' }}>
-          Simpan kode ini. Cek status kapan saja, dan lanjutkan chat WA jika sudah terbuka.
+          Simpan kode ini untuk melacak status pengajuan Anda.
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
           <Link
             href={`/layanan/status?kode=${encodeURIComponent(resultKode)}`}
             className="btn-primary"
           >
-            Cek status surat
+            Cek status →
           </Link>
           <button
             type="button"
@@ -142,8 +198,12 @@ export default function PengajuanSuratForm({
               setResultKode(null)
               setNama('')
               setNik('')
+              setRt('01')
+              setTelepon('')
               setKeperluan('')
               setCatatan('')
+              setSoftFile(null)
+              if (fileInputRef.current) fileInputRef.current.value = ''
             }}
           >
             Ajukan lagi
@@ -154,172 +214,215 @@ export default function PengajuanSuratForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" aria-label="Form pengajuan surat online">
-      <div className="card-surface p-4 md:p-5 space-y-4">
+    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5" noValidate>
+      <div className="card-surface p-4 space-y-1">
         <div className="flex items-start gap-3">
-          <span
-            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-            style={{ background: 'var(--gold-glow)', color: 'var(--gold)' }}
-          >
-            <Icon name="document" size={18} />
-          </span>
+          <Icon name="info" size={16} className="mt-0.5 shrink-0" style={{ color: 'var(--gold)' }} />
           <div>
-            <h2 className="font-bold" style={{ color: 'var(--text)' }}>
-              Form pengajuan online
-            </h2>
-            <p className="text-sm mt-0.5" style={{ color: 'var(--muted)' }}>
-              Data disimpan untuk pelacakan status, lalu dibuka WhatsApp ke petugas (jika nomor tersedia).
+            <p className="text-sm font-medium" style={{ color: 'var(--text)' }}>
+              Pengajuan surat layanan
+            </p>
+            <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
+              Isi form di bawah. Admin padukuhan akan memproses dan menghubungi Anda (jika nomor tersedia).
             </p>
           </div>
         </div>
-
-        <div>
-          <label htmlFor="layanan-jenis" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
-            Jenis layanan <span style={{ color: 'var(--gold)' }}>*</span>
-          </label>
-          <select
-            id="layanan-jenis"
-            value={layananId}
-            onChange={(e) => setLayananId(e.target.value)}
-            className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
-            style={inputStyle}
-          >
-            {layanan.map((l) => (
-              <option key={l.id} value={l.id}>
-                {l.nama} · {l.waktu}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {selected && (
-          <div
-            className="rounded-xl p-3 text-sm space-y-1"
-            style={{ background: 'var(--surface-soft)', border: '1px solid var(--border)' }}
-          >
-            <p style={{ color: 'var(--muted)' }}>{selected.deskripsi}</p>
-            <p className="text-xs" style={{ color: 'var(--gold)' }}>
-              PIC: {selected.pic} · Biaya: {selected.biaya}
-            </p>
-            {selected.syarat?.length > 0 && (
-              <ul className="text-xs mt-2 space-y-0.5" style={{ color: 'var(--muted)' }}>
-                {selected.syarat.slice(0, 4).map((s) => (
-                  <li key={s}>• {s}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
       </div>
 
-      <div className="card-surface p-4 md:p-5 grid sm:grid-cols-2 gap-4">
-        <div className="sm:col-span-2">
-          <label htmlFor="pg-nama" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+      <div>
+        <label htmlFor="layanan-jenis" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+          Jenis layanan <span style={{ color: 'var(--gold)' }}>*</span>
+        </label>
+        <select
+          id="layanan-jenis"
+          value={layananId}
+          onChange={(e) => setLayananId(e.target.value)}
+          className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
+          style={inputStyle}
+        >
+          {layanan.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.nama} · {l.waktu}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {selected && (
+        <div
+          className="rounded-xl px-4 py-3 text-xs space-y-1"
+          style={{ background: 'var(--surface-soft)', color: 'var(--muted)' }}
+        >
+          <p>
+            <span className="font-semibold" style={{ color: 'var(--text)' }}>
+              {selected.nama}
+            </span>{' '}
+            · {selected.kategori}
+          </p>
+          <p>Estimasi: {selected.waktu} · Biaya: {selected.biaya}</p>
+          {selected.syarat && selected.syarat.length > 0 && (
+            <p>Syarat: {selected.syarat.join(', ')}</p>
+          )}
+        </div>
+      )}
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label htmlFor="nama" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
             Nama lengkap <span style={{ color: 'var(--gold)' }}>*</span>
           </label>
           <input
-            id="pg-nama"
+            id="nama"
             type="text"
-            required
-            minLength={3}
             value={nama}
             onChange={(e) => setNama(e.target.value)}
             placeholder="Sesuai KTP"
+            maxLength={80}
+            autoComplete="name"
             className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
             style={inputStyle}
           />
         </div>
-
         <div>
-          <label htmlFor="pg-nik" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
-            NIK (16 digit) <span style={{ color: 'var(--gold)' }}>*</span>
+          <label htmlFor="nik" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+            NIK <span style={{ color: 'var(--gold)' }}>*</span>
           </label>
           <input
-            id="pg-nik"
+            id="nik"
             type="text"
             inputMode="numeric"
-            pattern="\d{16}"
-            maxLength={16}
-            required
             value={nik}
             onChange={(e) => setNik(e.target.value.replace(/\D/g, '').slice(0, 16))}
-            placeholder="3201xxxxxxxxxxxx"
+            placeholder="16 digit"
+            maxLength={16}
+            autoComplete="off"
             className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
-            style={inputStyle}
-            aria-invalid={nik.length > 0 && !nikOk}
+            style={{
+              ...inputStyle,
+              borderColor: nik && !nikOk ? '#e57373' : inputStyle.borderColor,
+            }}
           />
-          {nik.length > 0 && !nikOk && (
+          {nik && !nikOk && (
             <p className="text-xs mt-1" style={{ color: '#e57373' }}>
               NIK harus 16 digit angka
             </p>
           )}
         </div>
+      </div>
 
+      <div className="grid sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="pg-rt" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+          <label htmlFor="rt" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
             RT
           </label>
           <select
-            id="pg-rt"
+            id="rt"
             value={rt}
             onChange={(e) => setRt(e.target.value)}
             className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
             style={inputStyle}
           >
-            {['01', '02', '03', '04'].map((r) => (
+            {['01', '02', '03', '04', '05', '06'].map((r) => (
               <option key={r} value={r}>
                 RT {r}
               </option>
             ))}
           </select>
         </div>
-
         <div>
-          <label htmlFor="pg-tel" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+          <label htmlFor="telepon" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
             No. HP / WhatsApp
           </label>
           <input
-            id="pg-tel"
+            id="telepon"
             type="tel"
             value={telepon}
             onChange={(e) => setTelepon(e.target.value)}
-            placeholder="08xxxxxxxxxx"
+            placeholder="Opsional"
+            maxLength={20}
+            autoComplete="tel"
             className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
             style={inputStyle}
           />
         </div>
+      </div>
 
-        <div className="sm:col-span-2">
-          <label htmlFor="pg-kep" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
-            Keperluan surat <span style={{ color: 'var(--gold)' }}>*</span>
-          </label>
-          <textarea
-            id="pg-kep"
-            required
-            minLength={5}
-            rows={3}
-            value={keperluan}
-            onChange={(e) => setKeperluan(e.target.value)}
-            placeholder="Contoh: untuk melamar kerja / daftar sekolah / buka rekening"
-            className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)] resize-none"
-            style={inputStyle}
-          />
-        </div>
+      <div>
+        <label htmlFor="keperluan" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+          Keperluan / keterangan <span style={{ color: 'var(--gold)' }}>*</span>
+        </label>
+        <textarea
+          id="keperluan"
+          value={keperluan}
+          onChange={(e) => setKeperluan(e.target.value)}
+          placeholder="Jelaskan keperluan Anda…"
+          rows={3}
+          maxLength={500}
+          className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)] resize-none"
+          style={inputStyle}
+        />
+      </div>
 
-        <div className="sm:col-span-2">
-          <label htmlFor="pg-cat" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
-            Catatan tambahan
-          </label>
-          <textarea
-            id="pg-cat"
-            rows={2}
-            value={catatan}
-            onChange={(e) => setCatatan(e.target.value)}
-            placeholder="Opsional"
-            className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)] resize-none"
+      <div>
+        <label htmlFor="catatan" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+          Catatan tambahan
+        </label>
+        <textarea
+          id="catatan"
+          value={catatan}
+          onChange={(e) => setCatatan(e.target.value)}
+          placeholder="Opsional — info tambahan untuk admin…"
+          rows={2}
+          maxLength={400}
+          className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)] resize-none"
+          style={inputStyle}
+        />
+      </div>
+
+      {/* Soft file upload */}
+      <div>
+        <label className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
+          Soft file pendukung (opsional)
+        </label>
+        <p className="text-xs mb-2" style={{ color: 'var(--muted2)' }}>
+          KTP, KK, atau dokumen lain · PDF/JPG/PNG maks 5 MB
+        </p>
+
+        {softFile ? (
+          <div
+            className="flex items-center justify-between rounded-xl px-3 py-2.5 border text-sm"
             style={inputStyle}
-          />
-        </div>
+          >
+            <span className="truncate max-w-[calc(100%-2rem)]" style={{ color: 'var(--text)' }}>
+              📎 {softFile.name}
+            </span>
+            <button
+              type="button"
+              aria-label="Hapus file"
+              onClick={handleFileRemove}
+              className="ml-2 shrink-0 text-lg leading-none hover:opacity-70 transition-opacity"
+              style={{ color: 'var(--muted)' }}
+            >
+              ×
+            </button>
+          </div>
+        ) : (
+          <label
+            htmlFor="soft-file"
+            className="flex items-center gap-2 w-full rounded-xl px-3 py-3 text-sm border outline-none cursor-pointer hover:border-[var(--gold)] transition-colors"
+            style={inputStyle}
+          >
+            <span style={{ color: 'var(--muted)' }}>Pilih file…</span>
+            <input
+              id="soft-file"
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              onChange={handleFileChange}
+              className="sr-only"
+            />
+          </label>
+        )}
       </div>
 
       {formError && (
@@ -333,11 +436,13 @@ export default function PengajuanSuratForm({
         disabled={!isValid || submitting}
         className="btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed touch-manipulation min-h-[48px]"
       >
-        {submitting
-          ? 'Menyimpan…'
-          : waReady
-            ? 'Simpan & kirim via WhatsApp →'
-            : 'Simpan pengajuan (WA admin belum diisi)'}
+        {uploadingFile
+          ? 'Mengupload file…'
+          : submitting
+            ? 'Menyimpan…'
+            : waReady
+              ? 'Simpan & kirim via WhatsApp →'
+              : 'Simpan pengajuan (WA admin belum diisi)'}
       </button>
       <p className="text-xs text-center" style={{ color: 'var(--muted2)' }}>
         Setelah submit Anda dapat kode pelacakan. NIK tidak ditampilkan penuh di status publik.

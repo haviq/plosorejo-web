@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requestIsAdmin } from '@/lib/admin-auth'
 import {
+  adminView,
   createPengajuan,
   getPengajuan,
   listPengajuan,
@@ -28,12 +29,12 @@ export async function GET(req: Request) {
     )
   }
 
-  // Admin list
+  // Admin list — use adminView so softFileUrl is included
   if (url.searchParams.get('all') === '1') {
     if (!requestIsAdmin(req)) {
       return NextResponse.json({ ok: false, error: 'unauthorized' }, { status: 401 })
     }
-    const items = listPengajuan()
+    const items = listPengajuan().map(adminView)
     return NextResponse.json(
       { ok: true, items },
       { headers: { 'Cache-Control': 'no-store', ...rateLimitHeaders(rl) } },
@@ -105,6 +106,8 @@ export async function POST(req: Request) {
   const telepon = body.telepon ? String(body.telepon).slice(0, 20) : undefined
   const catatan = body.catatan ? String(body.catatan).slice(0, 400) : undefined
   const preferredKode = body.kode ? String(body.kode).toUpperCase().slice(0, 16) : undefined
+  const softFileUrl = body.softFileUrl ? String(body.softFileUrl).slice(0, 1000) : undefined
+  const softFileName = body.softFileName ? String(body.softFileName).slice(0, 255) : undefined
 
   if (nama.length < 3 || nik.length !== 16 || !layananNama || keperluan.length < 5) {
     return NextResponse.json({ ok: false, error: 'invalid_payload' }, { status: 400 })
@@ -120,6 +123,8 @@ export async function POST(req: Request) {
     keperluan,
     catatan,
     kode: preferredKode,
+    softFileUrl,
+    softFileName,
   })
 
   return NextResponse.json(

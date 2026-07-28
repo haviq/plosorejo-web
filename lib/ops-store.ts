@@ -27,6 +27,8 @@ export interface PengajuanItem {
   createdAt: string
   updatedAt: string
   adminNote?: string
+  softFileUrl?: string
+  softFileName?: string
 }
 
 const g = globalThis as unknown as { __plosorejoPengajuan?: Map<string, PengajuanItem> }
@@ -81,6 +83,8 @@ export function createPengajuan(input: {
   keperluan: string
   catatan?: string
   kode?: string
+  softFileUrl?: string
+  softFileName?: string
 }): PengajuanItem {
   const now = new Date().toISOString()
   let kode = (input.kode || makeKode()).toUpperCase()
@@ -98,6 +102,8 @@ export function createPengajuan(input: {
     status: 'diterima',
     createdAt: now,
     updatedAt: now,
+    ...(input.softFileUrl ? { softFileUrl: input.softFileUrl.slice(0, 1000) } : {}),
+    ...(input.softFileName ? { softFileName: input.softFileName.slice(0, 255) } : {}),
   }
   store().set(kode, item)
   return item
@@ -135,5 +141,27 @@ export function publicView(item: PengajuanItem) {
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
     adminNote: item.adminNote || null,
+    // softFileUrl intentionally omitted — admin-only
+  }
+}
+
+/** Admin view — includes all fields including softFileUrl / softFileName */
+export function adminView(item: PengajuanItem) {
+  return {
+    kode: item.kode,
+    layananNama: item.layananNama,
+    nama: item.nama,
+    nikMasked: item.nikMasked,
+    rt: item.rt,
+    telepon: item.telepon,
+    status: item.status,
+    statusLabel: STATUS_LABEL[item.status],
+    keperluan: item.keperluan,
+    catatan: item.catatan,
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+    adminNote: item.adminNote || null,
+    softFileUrl: item.softFileUrl || null,
+    softFileName: item.softFileName || null,
   }
 }

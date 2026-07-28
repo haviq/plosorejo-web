@@ -16,6 +16,8 @@ type Row = {
   updatedAt: string
   adminNote?: string
   telepon?: string
+  softFileUrl?: string
+  softFileName?: string
 }
 
 const STATUSES: { id: PengajuanStatus; label: string }[] = [
@@ -82,150 +84,66 @@ export default function AdminDashboard() {
         if (typeof data?.pinFromEnv === 'boolean') setPinFromEnv(data.pinFromEnv)
         if (data?.admin) {
           setAuthed(true)
-          // Don't block login form forever if list API is slow
+          // Don't block login screen on slow fetch
           void refresh()
         }
       } catch {
-        /* show login form anyway */
+        // ignore
       } finally {
         if (!cancelled) setBooting(false)
+        clearTimeout(failsafe)
       }
     })()
 
     return () => {
       cancelled = true
-      clearTimeout(failsafe)
     }
   }, [refresh])
 
   async function login(e: React.FormEvent) {
     e.preventDefault()
-    setError('')
+    if (submitting) return
     setSubmitting(true)
+    setError('')
     try {
       const { r, data } = await fetchJson('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pin }),
       })
-      if (!r.ok || !data?.ok) {
-        setError(
-          data?.error === 'too_many_attempts'
-            ? 'Terlalu banyak percobaan. Tunggu sebentar.'
-            : 'Kode akses salah.',
-        )
-        return
+      if (r.ok && data?.ok) {
+        setAuthed(true)
+        setPin('')
+        await refresh()
+      } else {
+        setError(data?.error === 'wrong_pin' ? 'PIN salah.' : 'Login gagal.')
       }
-      setAuthed(true)
-      setPin('')
-      await refresh()
     } catch {
-      setError('Jaringan bermasalah. Coba lagi.')
+      setError('Jaringan bermasalah.')
     } finally {
       setSubmitting(false)
     }
   }
 
   async function logout() {
-    try {
-      await fetchJson('/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'logout' }),
-      })
-    } catch {
-      /* ignore */
-    }
+    await fetchJson('/api/admin/login', { method: 'DELETE' })
     setAuthed(false)
     setItems([])
   }
 
   async function setStatus(kode: string, status: PengajuanStatus) {
+    if (busyKode) return
     setBusyKode(kode)
     try {
-      const { r } = await fetchJson('/api/pengajuan', {
+      await fetchJson('/api/pengajuan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'update_status', kode, status }),
       })
-      if (r.ok) await refresh()
+      await refresh()
     } finally {
       setBusyKode(null)
     }
-  }
-
-  const inputStyle: React.CSSProperties = {
-    backgroundColor: 'var(--s2)',
-    borderColor: 'var(--border)',
-    color: 'var(--text)',
-  }
-
-  // Brief boot spinner only — never permanent
-  if (booting && !authed) {
-    return (
-      <div className="card-surface p-6 max-w-md mx-auto space-y-3 text-center">
-        <p className="text-sm" style={{ color: 'var(--muted)' }}>
-          Memuat…
-        </p>
-        <button
-          type="button"
-          className="btn-ghost text-xs"
-          onClick={() => setBooting(false)}
-        >
-          Lewati
-        </button>
-      </div>
-    )
-  }
-
-  if (!authed) {
-    return (
-      <form onSubmit={login} className="card-surface p-6 max-w-md space-y-4 mx-auto">
-        <div>
-          <h2 className="font-bold text-lg" style={{ color: 'var(--text)' }}>
-            Akses internal
-          </h2>
-          <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
-            Halaman ini tidak dipublikasikan. Masukkan kode akses.
-          </p>
-        </div>
-        <div>
-          <label htmlFor="admin-pin" className="block text-xs mb-1" style={{ color: 'var(--muted)' }}>
-            Kode akses
-          </label>
-          <input
-            id="admin-pin"
-            type="password"
-            autoComplete="current-password"
-            value={pin}
-            onChange={(e) => setPin(e.target.value)}
-            className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
-            style={inputStyle}
-            required
-            minLength={4}
-            autoFocus
-          />
-        </div>
-        {error && (
-          <p className="text-sm" style={{ color: '#e57373' }}>
-            {error}
-          </p>
-        )}
-        {pinFromEnv === false && (
-          <p className="text-xs rounded-lg p-2" style={{ background: 'var(--surface-soft)', color: 'var(--muted)' }}>
-            Env <code>ADMIN_PIN</code> belum terbaca di server. Di Vercel: Settings → Environment
-            Variables → Production → simpan → <strong>Redeploy</strong>.
-          </p>
-        )}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="btn-primary w-full min-h-[48px] disabled:opacity-50"
-        >
-          {submitting ? 'Memeriksa…' : 'Masuk'}
-        </button>
-      </form>
-    )
   }
 
   const counts = STATUSES.reduce(
@@ -233,20 +151,63 @@ export default function AdminDashboard() {
       acc[s.id] = items.filter((i) => i.status === s.id).length
       return acc
     },
-    {} as Record<string, number>,
+    {} as Record<PengajuanStatus, number>,
   )
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 className="font-bold text-xl" style={{ color: 'var(--text)' }}>
-            Antrian pengajuan
-          </h2>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            {items.length} data · sesi 12 jam
+  if (booting) {
+    return (
+      <div className="p-8 text-center text-sm" style={{ color: 'var(--muted)' }}>
+        Memuat…
+      </div>
+    )
+  }
+
+  if (!authed) {
+    return (
+      <div className="max-w-sm mx-auto space-y-6">
+        <div className="card-surface p-6 space-y-4">
+          <p className="font-semibold text-center" style={{ color: 'var(--text)' }}>
+            Login Admin
           </p>
+          {pinFromEnv === false && (
+            <p className="text-xs text-center rounded-lg px-3 py-2" style={{ background: 'var(--surface-soft)', color: '#e57373' }}>
+              ADMIN_PIN belum diset di environment. Dashboard tidak dapat diakses.
+            </p>
+          )}
+          <form onSubmit={(e) => void login(e)} className="space-y-3">
+            <input
+              type="password"
+              value={pin}
+              onChange={(e) => setPin(e.target.value)}
+              placeholder="PIN admin"
+              autoComplete="current-password"
+              className="w-full rounded-xl px-3 py-3 text-sm border outline-none focus:border-[var(--gold)]"
+              style={{ backgroundColor: 'var(--s2)', borderColor: 'var(--border)', color: 'var(--text)' }}
+            />
+            {error && (
+              <p className="text-xs text-center" style={{ color: '#e57373' }}>
+                {error}
+              </p>
+            )}
+            <button
+              type="submit"
+              disabled={submitting || !pin}
+              className="btn-primary w-full disabled:opacity-40 disabled:cursor-not-allowed min-h-[44px]"
+            >
+              {submitting ? 'Masuk…' : 'Masuk'}
+            </button>
+          </form>
         </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="font-semibold" style={{ color: 'var(--text)' }}>
+          Dashboard Admin · {items.length} pengajuan
+        </p>
         <div className="flex gap-2">
           <button type="button" className="btn-ghost text-sm" onClick={() => void refresh()}>
             Refresh
@@ -307,12 +268,25 @@ export default function AdminDashboard() {
                   Catatan: {row.adminNote}
                 </p>
               )}
-              <div className="flex flex-wrap gap-2 items-center">
-                <label className="text-xs" style={{ color: 'var(--muted)' }}>
-                  Ubah status
+              {row.softFileUrl && (
+                <p className="text-xs">
+                  <a
+                    href={row.softFileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline-offset-2 hover:underline"
+                    style={{ color: 'var(--gold)' }}
+                  >
+                    📎 {row.softFileName || 'Lihat soft file'} →
+                  </a>
+                </p>
+              )}
+              <div className="flex flex-wrap items-center gap-3 pt-1">
+                <label className="flex items-center gap-2 text-xs" style={{ color: 'var(--muted)' }}>
+                  Status:
                   <select
-                    className="ml-2 rounded-lg px-2 py-1.5 text-xs border outline-none"
-                    style={inputStyle}
+                    className="rounded-lg px-2 py-1 text-xs border outline-none focus:border-[var(--gold)]"
+                    style={{ backgroundColor: 'var(--s2)', borderColor: 'var(--border)', color: 'var(--text)' }}
                     value={row.status}
                     disabled={busyKode === row.kode}
                     onChange={(e) => setStatus(row.kode, e.target.value as PengajuanStatus)}
