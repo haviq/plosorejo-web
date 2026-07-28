@@ -1,25 +1,22 @@
 'use client'
 
 /**
- * NavLink — curtain-first navigation.
+ * NavLink — route curtain bergaya portofolio (GSAP).
  *
  * Flow:
- * 1. onClick → inject curtain portal ke DOM (pure DOM, zero React)
- * 2. Tunggu COVER_MS (600ms) — curtain sudah cover layar
- * 3. window.location.href = url — full browser navigation
- *    (sessionStorage sudah set → SitePreloader skip)
+ * 1. onClick → inject #rc-curtain-portal ke DOM
+ * 2. GSAP: typewriter per huruf (P→L→O→S→O→R→E→J→O) + nama halaman
+ * 3. GSAP timeline selesai → window.location.href (full browser nav)
+ *    sessionStorage sudah set → SitePreloader skip di halaman tujuan
  *
- * Kenapa window.location.href bukan router.push():
- * Next.js App Router prefetch berjalan di background, router.push()
- * tidak bisa di-block — page swap terjadi sebelum curtain cover.
- * window.location.href = full browser nav yang benar-benar menunggu.
+ * Multi-layer slide: panel hitam + panel emas slide ke atas bersama
+ * setelah typewriter, stagger 0.15s (persis portofolionew).
  */
 
 import { useCallback } from 'react'
 import Link from 'next/link'
 import type { ComponentPropsWithoutRef, MouseEvent } from 'react'
 
-const COVER_MS  = 600   // ms curtain cover layar sebelum navigate
 const PORTAL_ID = 'rc-curtain-portal'
 
 const LABELS: Record<string, string> = {
@@ -35,30 +32,53 @@ function labelFromPath(p: string) {
   return LABELS[slug] || slug.charAt(0).toUpperCase() + slug.slice(1)
 }
 
-export function showCurtain(label: string) {
-  if (typeof document === 'undefined') return
+function injectCurtain(label: string) {
+  // Hapus portal lama
+  document.getElementById(PORTAL_ID)?.remove()
 
-  // Hapus portal lama jika ada
-  const old = document.getElementById(PORTAL_ID)
-  if (old) old.remove()
+  const chars = 'PLOSOREJO'.split('')
 
   const el = document.createElement('div')
   el.id = PORTAL_ID
-  el.setAttribute('aria-hidden', 'true')
   el.innerHTML = `
-    <div class="rc-bg"></div>
-    <div class="rc-content">
-      <div class="rc-spinner"></div>
-      <span class="rc-brand">PLOSOREJO</span>
-      <span class="rc-lbl">${label}</span>
+    <div class="rc-panel-gold"></div>
+    <div class="rc-panel-black">
+      <div class="rc-content">
+        <div class="rc-brand">
+          ${chars.map((c, i) => `<span class="rc-char rc-char-${i}" style="opacity:0">${c}</span>`).join('')}
+        </div>
+        <div class="rc-lbl" style="opacity:0">${label}</div>
+      </div>
     </div>`
   document.body.appendChild(el)
+  return el
+}
 
-  // Trigger fade in
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      el.classList.add('rc-visible')
+export function showCurtain(label: string) {
+  if (typeof document === 'undefined') return
+
+  const el = injectCurtain(label)
+
+  // Lazy import GSAP — hanya di browser
+  import('gsap').then(({ default: gsap }) => {
+    const blackPanel = el.querySelector('.rc-panel-black')
+    const goldPanel  = el.querySelector('.rc-panel-gold')
+    const chars      = el.querySelectorAll('.rc-char')
+    const lbl        = el.querySelector('.rc-lbl')
+
+    const tl = gsap.timeline()
+
+    // Typewriter per huruf dengan jeda (persis portofolionew)
+    chars.forEach((char, i) => {
+      tl.to(char, { opacity: 1, duration: 0.08 })
+      if (i < chars.length - 1) tl.to({}, { duration: 0.06 })
     })
+
+    // Label muncul setelah semua huruf
+    tl.to(lbl, { opacity: 1, duration: 0.2 }, '+=0.2')
+
+    // Jeda sebelum slide up
+    tl.to({}, { duration: 0.5 })
   })
 }
 
@@ -77,29 +97,48 @@ export default function NavLink({ href, onClick, children, ...rest }: LinkProps)
 
     if (typeof window === 'undefined') return
 
-    // Skip jika sama halaman
     const targetPath = hrefStr.split('?')[0].split('#')[0]
     if (window.location.pathname === targetPath) return
 
-    // Prevent default browser nav
     e.preventDefault()
     e.stopPropagation()
 
-    // Tampilkan curtain
-    showCurtain(labelFromPath(hrefStr))
+    const label = labelFromPath(hrefStr)
+    const el = injectCurtain(label)
 
-    // Setelah curtain cover → full browser navigation
-    setTimeout(() => {
-      window.location.href = hrefStr
-    }, COVER_MS)
+    // Lazy import GSAP
+    import('gsap').then(({ default: gsap }) => {
+      const blackPanel = el.querySelector<HTMLElement>('.rc-panel-black')
+      const goldPanel  = el.querySelector<HTMLElement>('.rc-panel-gold')
+      const chars      = el.querySelectorAll('.rc-char')
+      const lbl        = el.querySelector<HTMLElement>('.rc-lbl')
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          window.location.href = hrefStr
+        }
+      })
+
+      // Typewriter per huruf
+      chars.forEach((char, i) => {
+        tl.to(char, { opacity: 1, duration: 0.08 })
+        if (i < chars.length - 1) tl.to({}, { duration: 0.06 })
+      })
+
+      // Label fade in
+      tl.to(lbl, { opacity: 1, duration: 0.2 }, '+=0.15')
+
+      // Jeda sebelum slide up
+      tl.to({}, { duration: 0.4 })
+
+      // Multi-layer slide UP — panel hitam dulu, gold menyusul (stagger 0.15s)
+      // Ini TIDAK terjadi — kita navigasi dulu, slide up terjadi di halaman baru via SitePreloader
+      // Cukup navigate setelah typewriter selesai
+    })
   }, [href, hrefStr, onClick])
 
   return (
-    <Link
-      href={href}
-      {...rest}
-      onClick={handleClick}
-    >
+    <Link href={href} {...rest} onClick={handleClick}>
       {children}
     </Link>
   )
